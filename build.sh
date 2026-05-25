@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# build.sh
+# /qompassai/ONTrack/build.sh
 # Copyright (C) 2026 Qompass AI, All rights reserved
 # ----------------------------------------
 set -euo pipefail
