@@ -314,7 +314,9 @@ the other forms are Console-only.
 | `aidl is missing` | build-tools not installed | `sdkmanager "build-tools;36.0.0"` |
 | `Py_DEPRECATED(VERSION_UNUSED) __attribute__((__deprecated__))` during `toolchain create` | Mixing p4a `master` with Python 3.14, or running NDK r25 against Python 3.14 sources | Use Python 3.14 venv + `p4a.branch = develop` + NDK r29 as documented in §1–2 |
 | Build cache wedged after upgrading p4a | Stale `.buildozer/` | `./build.sh clean` |
-| `buildozer not found` from `build.sh` | Venv not activated or installed elsewhere | `source ~/venv_p4a_develop/bin/activate` (see §1) |
+| `buildozer not found` from `build.sh` | Venv not activated or installed elsewhere | One-shot: `./scripts/setup-venv.sh` (creates `~/venv_p4a_develop` with buildozer master + cython 0.29.34). Or manual setup per §1. |
+| `bash: /home/<user>/venv_p4a_develop/bin/activate: No such file or directory` | The Python 3.14 venv was never created | Run `./scripts/setup-venv.sh` from the repo root |
+| `gradlew clean bundleRelease` exits 1 with no visible stack trace | Buildozer suppresses subprocess stderr at default log level | `build.sh` now passes `--verbose` automatically. If you invoke buildozer directly, use `buildozer --verbose android release` and read `~/.buildozer/android/platform/build-*/dists/ontrack/build_output.log` for the gradle output |
 | `python -m pythonforandroid.toolchain: error: unrecognized arguments: --feature ...` | p4a develop removed the `--feature` CLI flag; buildozer still emits it for any value in `android.features` | Don't use `android.features` — declare `<uses-feature>` nodes in `android_manifest_extras.xml` and reference it with `android.extra_manifest_xml = ./android_manifest_extras.xml`. Already configured in this branch. |
 
 ## Reference

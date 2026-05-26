@@ -1,13 +1,2 @@
-<!--
-  Extra <manifest> children injected by buildozer via android.extra_manifest_xml.
-  These nodes used to come from the `android.features` config key, but p4a
-  develop (>=2025) removed the `--feature` CLI flag, so we declare them
-  explicitly in the manifest instead. See:
-    https://github.com/kivy/python-for-android/blob/develop/pythonforandroid/bootstraps/common/build/build.py
-
-  android:required="false" lets the app install on devices without a GPS sensor
-  (e.g. Wi-Fi-only tablets) while still declaring the capability for Play Store
-  filtering on phones that have it.
--->
 <uses-feature android:name="android.hardware.location" android:required="false" />
 <uses-feature android:name="android.hardware.location.gps" android:required="false" />

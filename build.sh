@@ -56,8 +56,11 @@ for cand in \
     fi
 done
 if [ -z "${BUILDOZER_BIN}" ]; then
-    echo "[build.sh] buildozer not found. See docs/ANDROID_BUILD.md §1 to set up" >&2
-    echo "           a Python 3.14 venv with buildozer master + cython 0.29.34." >&2
+    echo "[build.sh] buildozer not found." >&2
+    echo "           Quick fix: run ./scripts/setup-venv.sh once (creates" >&2
+    echo "           ~/venv_p4a_develop with the correct toolchain), then re-run" >&2
+    echo "           ./build.sh release." >&2
+    echo "           Manual setup: see docs/ANDROID_BUILD.md §1." >&2
     exit 127
 fi
 
@@ -93,5 +96,8 @@ echo "[build.sh] ANDROIDNDK=${ANDROIDNDK}"
 echo "[build.sh] BUILDOZER=${BUILDOZER_BIN}"
 echo "[build.sh] target=${TARGET}"
 
+# Run buildozer with --verbose so any failing subprocess (gradle, p4a,
+# javac, etc.) prints its full stderr. Without this, buildozer truncates
+# the upstream tool output and you only see the wrapper's error code.
 # shellcheck disable=SC2086
-"${PIP_CLEAN_ENV[@]}" "${BUILDOZER_BIN}" ${TARGET} "$@" 2>&1 | tee ~/buildozer_debug.log
+"${PIP_CLEAN_ENV[@]}" "${BUILDOZER_BIN}" --verbose ${TARGET} "$@" 2>&1 | tee ~/buildozer_debug.log
