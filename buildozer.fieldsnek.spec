@@ -4,10 +4,18 @@
 # ----------------------------------------------------
 # FieldSnek is the Play Store branding of the ONTrack codebase.
 # Same source tree, different package_name and listing.
-# Build with:
-#   buildozer -v --spec buildozer.fieldsnek.spec android release
-# or via the helper:
-#   bash scripts/build-android.sh aab fieldsnek
+#
+# Build via the helper (recommended):
+#   bash scripts/build-android.sh aab fieldsnek    # AAB for Play
+#   bash scripts/build-android.sh apk fieldsnek    # APK for sideload
+#
+# Buildozer has no --spec flag; it always reads ./buildozer.spec from cwd.
+# The wrapper symlinks this file to buildozer.spec for the duration of the
+# build, then restores the original. To bypass the wrapper manually:
+#   mv buildozer.spec buildozer.spec.bak
+#   ln -s buildozer.fieldsnek.spec buildozer.spec
+#   buildozer --verbose android release
+#   rm buildozer.spec && mv buildozer.spec.bak buildozer.spec
 # ----------------------------------------------------
 # Tested combinations (May 2026, Python 3.14 / Play Store target):
 #   buildozer            == git+https://github.com/kivy/buildozer  (master)

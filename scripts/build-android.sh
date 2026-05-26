@@ -93,15 +93,47 @@ echo "==> Buildozer  : $(command -v buildozer)"
 echo "==> Python     : $(python --version 2>&1)"
 echo
 
+# Buildozer hardcodes the spec filename to ./buildozer.spec (no --spec flag
+# exists in its argparse, despite what other docs claim). To support multiple
+# specs in one repo, we temporarily swap buildozer.spec for the target spec,
+# then restore the original on exit. The swap is symlink-based so the file
+# contents on disk are never copied around.
+SWAPPED=0
+restore_spec() {
+  if [ "$SWAPPED" = "1" ]; then
+    rm -f buildozer.spec
+    if [ -f buildozer.spec.bak ]; then
+      mv buildozer.spec.bak buildozer.spec
+    fi
+    SWAPPED=0
+  fi
+}
+trap restore_spec EXIT INT TERM
+
+activate_spec() {
+  if [ "$SPEC" = "buildozer.spec" ]; then
+    return 0
+  fi
+  if [ -e buildozer.spec ] && [ ! -L buildozer.spec ]; then
+    mv buildozer.spec buildozer.spec.bak
+  elif [ -L buildozer.spec ]; then
+    rm -f buildozer.spec
+  fi
+  ln -s "$SPEC" buildozer.spec
+  SWAPPED=1
+}
+
 build_release_aab() {
   echo "==> [$APP] buildozer android release  (AAB)"
-  buildozer -v --spec "$SPEC" android release
+  activate_spec
+  buildozer --verbose android release
 }
 
 build_debug_apk() {
   echo "==> [$APP] buildozer android debug  (APK, sideload)"
   # Buildozer's `debug` artifact is an APK, regardless of android.release_artifact.
-  buildozer -v --spec "$SPEC" android debug
+  activate_spec
+  buildozer --verbose android debug
 }
 
 case "$MODE" in

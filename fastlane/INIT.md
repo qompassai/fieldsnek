@@ -143,14 +143,26 @@ the Console.
 
 FieldSnek and ONTrack ship from the same git repo. The Python source tree
 is identical; only `package_name`, `title`, and the Play Console listing
-differ. Switching between them is a `--spec` flag away:
+differ. Switching between them is one command:
 
 ```bash
-buildozer -v --spec buildozer.spec             android release   # ONTrack
-buildozer -v --spec buildozer.fieldsnek.spec   android release   # FieldSnek
-# or just:
 bash scripts/build-android.sh aab ontrack
 bash scripts/build-android.sh aab fieldsnek
+```
+
+Under the hood, the wrapper symlinks the right spec to `./buildozer.spec`
+before each invocation, because **buildozer has no `--spec` CLI flag** —
+it always reads `./buildozer.spec` from cwd. The original file is restored
+on exit (the wrapper traps EXIT/INT/TERM), so an interrupted build won't
+leave your tree in a half-swapped state. If you ever need to invoke
+buildozer directly for the FieldSnek spec:
+
+```bash
+# manual swap (only do this if you have a reason to bypass the wrapper)
+mv buildozer.spec buildozer.spec.bak
+ln -s buildozer.fieldsnek.spec buildozer.spec
+buildozer --verbose android release
+rm buildozer.spec && mv buildozer.spec.bak buildozer.spec
 ```
 
 Each app has its own `bin_dir` and `build_dir` under `/var/tmp/buildozer/`,
