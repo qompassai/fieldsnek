@@ -22,11 +22,6 @@
         config.allowUnfree = true;
         overlays = [rust-overlay.overlays.default];
       };
-      winPkgs = import nixpkgs {
-        localSystem = system;
-        crossSystem = {config = "x86_64-w64-mingw32";};
-        config.allowUnfree = true;
-      };
       rustToolchain = pkgs.rust-bin.stable.latest.default.override {
         extensions = [
           "clippy"
@@ -42,10 +37,10 @@
       buildozerBase = "/var/tmp/buildozer/ontrack";
       meta = with pkgs.lib; {
         broken = false;
-        changelog = "https://github.com/qompassai/ontrack/blob/main/ontrack/CHANGELOG.md";
+        changelog = "https://github.com/qompassai/ONTrack/blob/main/CHANGELOG.md";
         description = "OnTrack productivity app for field service technicians";
-        downloadPage = "https://github.com/qompassai/Python/releases";
-        homepage = "https://github.com/qompassai/Python/tree/main/ontrack";
+        downloadPage = "https://github.com/qompassai/ONTrack/releases";
+        homepage = "https://github.com/qompassai/ONTrack/tree/main";
         hydraPlatforms = [];
         license = licenses.unfree;
         longDescription = ''
@@ -54,9 +49,14 @@
           offline-capable workflows, and streamlined field reporting.
           Desktop builds use PyInstaller; Android builds use Buildozer /
           python-for-android targeting armeabi-v7a and arm64-v8a.
+          Rust core modules are built with Maturin and exposed via PyO3.
         '';
-        maintainers = ["Qompass AI"];
-        platforms = ["x86_64-linux"];
+        maintainers = [
+          "Qompass AI"
+        ];
+        platforms = [
+          "x86_64-linux"
+        ];
         sourceProvenance = with sourceTypes; [
           binaryBytecode
           binaryNativeCode
@@ -76,6 +76,7 @@
         sqlite
         zlib
       ];
+      mingwCC = pkgs.pkgsCross.mingwW64.stdenv.cc;
     in {
       devShells.default = pkgs.mkShell {
         name = "ontrack-linux";
@@ -92,15 +93,15 @@
           echo "OnTrack Linux desktop env"
           echo "  Python  : $(python3 --version)"
           echo "  uv      : $(uv --version)"
-          if [ ! -d .venv-linux ]; then
+          if [ ! -d .venv ]; then
             echo "  Creating Linux venv with uv..."
-            uv venv .venv-linux
+            uv venv .venv
             uv pip install --quiet --no-cache \
               customtkinter \
               Pillow \
               pyinstaller
           fi
-          source .venv-linux/bin/activate
+          source .venv/bin/activate
           echo "  PyInstaller: $(pyinstaller --version 2>/dev/null || echo 'not installed')"
           echo ""
           echo "  Ready. Run: pyinstaller ontrack.spec"
@@ -183,12 +184,12 @@
           commonPythonInputs
           ++ commonNativeInputs
           ++ (with pkgs; [
-            pkgsCross.mingwW64.stdenv.cc
+            mingwCC
             pkgsCross.mingwW64.windows.pthreads
             wineWowPackages.stable
             upx
           ]);
-        CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER = "${pkgs.pkgsCross.mingwW64.stdenv.cc}/bin/x86_64-w64-mingw32-gcc";
+        CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER = "${mingwCC}/bin/x86_64-w64-mingw32-gcc";
         shellHook = ''
           echo "OnTrack Windows cross-compile env"
           echo "  MinGW CC : $(x86_64-w64-mingw32-gcc --version 2>/dev/null | head -1 || echo 'not found')"
@@ -213,7 +214,7 @@
       };
       devShells.maturin = pkgs.mkShell {
         name = "ontrack-maturin";
-        CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER = "${pkgs.pkgsCross.mingwW64.stdenv.cc}/bin/x86_64-w64-mingw32-gcc";
+        CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER = "${mingwCC}/bin/x86_64-w64-mingw32-gcc";
         RUST_BACKTRACE = "1";
         RUST_SRC_PATH = "${rustToolchain}/lib/rustlib/src/rust/library";
         buildInputs =
@@ -222,7 +223,7 @@
             maturin
             openssl
             pkg-config
-            pkgsCross.mingwW64.stdenv.cc
+            mingwCC
             rustToolchain
             zlib
           ]);
@@ -242,6 +243,7 @@
           echo ""
           echo "  Linux build  : maturin develop"
           echo "  Windows build: cargo build --target x86_64-pc-windows-gnu"
+          echo "  PyO3 check   : python3 -c 'import ontrack; print(ontrack.__doc__)'"
         '';
       };
     });
