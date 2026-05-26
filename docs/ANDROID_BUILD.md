@@ -87,8 +87,8 @@ git checkout fix/android-build
 
 Output lands in `./bin/`:
 
-- `ontrack-1.0-arm64-v8a-debug.apk`
-- `ontrack-1.0-arm64-v8a-release.aab`
+- `ontrack-2.0.0-arm64-v8a-debug.apk`
+- `ontrack-2.0.0-arm64-v8a-release.aab`
 
 A full debug log is tee'd to `~/buildozer_debug.log`.
 
@@ -113,17 +113,164 @@ export P4A_RELEASE_KEYALIAS=ontrack-upload
 export P4A_RELEASE_KEYALIAS_PASSWD='<your-key-passwd>'
 ```
 
-## 6. Upload to Google Play Console
+## 6. Upload to Google Play Console (CLI)
+
+Google Play has a first-class CLI workflow via the **Google Play Developer
+API v3**. Two solid tools — pick one:
+
+- **`fastlane supply`** (Ruby, batteries-included, recommended)
+- **`gpapi` / raw `curl` to `androidpublisher.googleapis.com`** (no extra deps)
+
+The one-time setup (service account + JSON key) is identical for both.
+
+### 6a. One-time setup — service account + Play API access
 
 1. Sign in to <https://play.google.com/console> as **phaedrusflow**
-   (account ID `7351560589446098345`).
-2. Pick the OnTrack app (or create it: Internal app → Productivity → English (US)).
-3. Left nav → **Release → Testing → Internal testing → Create new release**.
-4. Upload `bin/ontrack-1.0-arm64-v8a-release.aab`.
-5. Fill in release notes, **Save → Review release → Start rollout**.
+   (account ID `7351560589446098345`) **once** to create the app shell:
+   - **All apps → Create app**
+   - Name: `OnTrack`, language `en-US`, App, Free
+   - Accept the two declarations → **Create app**
+   - Note the package name `com.tds.ontrack.ontrack` (must match
+     `package.domain` + `package.name` in `buildozer.spec`).
 
-The Computer agent can drive the upload step via a local Comet browser
-session if Comet is already signed in as `phaedrusflow`.
+2. **Setup → API access** → **Choose a project to link** →
+   *Create new Google Cloud project* (or link an existing one).
+
+3. **Service accounts → Create new service account** → click the Google
+   Cloud Console link → **Create service account**:
+   - Name: `ontrack-publisher`
+   - Skip role grants in Cloud Console (Play Console grants the role).
+   - Open the new service account → **Keys → Add key → JSON** →
+     download `ontrack-publisher.json` and store it at
+     `~/.config/ontrack/play-service-account.json` (chmod 600).
+
+4. Back in Play Console **API access**, click **Grant access** on the new
+   service account:
+   - App permissions: add **OnTrack**
+   - Account permissions: **Release manager** (Admin not required for uploads)
+   - **Invite user → Send invite** (auto-accepts for service accounts).
+
+### 6b. Upload with `fastlane supply`
+
+```bash
+# One-time install (Arch).
+sudo pacman -S --needed ruby
+gem install --user-install fastlane -NV
+export PATH="$(ruby -e 'puts Gem.user_dir')/bin:$PATH"
+
+# One-time bootstrap inside the repo (creates fastlane/Appfile + metadata/).
+cd ~/ONTrack
+fastlane supply init \
+    --package_name com.tds.ontrack.ontrack \
+    --json_key ~/.config/ontrack/play-service-account.json
+
+# Upload the AAB to the Internal Testing track.
+fastlane supply \
+    --package_name com.tds.ontrack.ontrack \
+    --json_key ~/.config/ontrack/play-service-account.json \
+    --aab bin/ontrack-2.0.0-arm64-v8a-release.aab \
+    --track internal \
+    --release_status draft \
+    --skip_upload_metadata false \
+    --skip_upload_images true \
+    --skip_upload_screenshots true
+```
+
+Promote internal → closed/production later with:
+
+```bash
+fastlane supply \
+    --package_name com.tds.ontrack.ontrack \
+    --json_key ~/.config/ontrack/play-service-account.json \
+    --track internal \
+    --track_promote_to production \
+    --rollout 0.1   # 10% staged rollout
+```
+
+### 6c. Upload with pure `curl` (no Ruby)
+
+Useful if you want zero extra deps or to script from CI.
+
+```bash
+SA=~/.config/ontrack/play-service-account.json
+PKG=com.tds.ontrack.ontrack
+AAB=bin/ontrack-2.0.0-arm64-v8a-release.aab
+
+# 1. Mint a short-lived access token from the service-account JWT.
+TOKEN=$(python - <<'PY'
+import json, time, base64, pathlib, urllib.request, urllib.parse
+import jwt  # pip install --user pyjwt cryptography
+sa = json.loads(pathlib.Path.home().joinpath(".config/ontrack/play-service-account.json").read_text())
+now = int(time.time())
+assertion = jwt.encode(
+    {"iss": sa["client_email"], "scope": "https://www.googleapis.com/auth/androidpublisher",
+     "aud": "https://oauth2.googleapis.com/token", "iat": now, "exp": now + 3600},
+    sa["private_key"], algorithm="RS256")
+body = urllib.parse.urlencode({"grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer", "assertion": assertion}).encode()
+resp = json.loads(urllib.request.urlopen("https://oauth2.googleapis.com/token", body).read())
+print(resp["access_token"])
+PY
+)
+
+# 2. Open an edit.
+EDIT_ID=$(curl -sX POST \
+    -H "Authorization: Bearer $TOKEN" \
+    "https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${PKG}/edits" \
+    | jq -r .id)
+
+# 3. Upload the AAB.
+VERSION_CODE=$(curl -sX POST \
+    -H "Authorization: Bearer $TOKEN" \
+    -H "Content-Type: application/octet-stream" \
+    --data-binary @"$AAB" \
+    "https://androidpublisher.googleapis.com/upload/androidpublisher/v3/applications/${PKG}/edits/${EDIT_ID}/bundles?uploadType=media" \
+    | jq -r .versionCode)
+echo "uploaded versionCode=$VERSION_CODE"
+
+# 4. Assign it to the internal track as a draft release.
+curl -sX PUT \
+    -H "Authorization: Bearer $TOKEN" \
+    -H "Content-Type: application/json" \
+    --data @<(cat <<JSON
+{
+  "track": "internal",
+  "releases": [{
+    "name": "2.0.0-internal-${VERSION_CODE}",
+    "versionCodes": ["${VERSION_CODE}"],
+    "status": "draft",
+    "releaseNotes": [{"language":"en-US","text":"Initial internal test build."}]
+  }]
+}
+JSON
+) "https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${PKG}/edits/${EDIT_ID}/tracks/internal"
+
+# 5. Commit the edit (this is what actually publishes the draft).
+curl -sX POST \
+    -H "Authorization: Bearer $TOKEN" \
+    "https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${PKG}/edits/${EDIT_ID}:commit"
+```
+
+Swap `"status": "draft"` for `"completed"` to start the rollout
+immediately, or `"inProgress"` + `"userFraction": 0.1` for a staged rollout.
+
+### 6d. Required Play Console app-content forms
+
+Internal-testing uploads work before these are complete, but you cannot
+promote to production until every item below is green under
+**Policy → App content**:
+
+- Privacy policy URL
+- App access (login credentials for review, if any)
+- Ads declaration
+- Content rating questionnaire
+- Target audience and content
+- Data safety form
+- News app declaration
+- Government app declaration
+
+Fastlane can manage Data Safety via
+`metadata/android/en-US/data_safety.yaml` once you have it filled in once;
+the other forms are Console-only.
 
 ---
 
