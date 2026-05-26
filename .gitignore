@@ -10,15 +10,12 @@ __pycache__/
 tags
 .tags
 
-# Build / runtime logs (these often capture secrets such as cargo / pip
-# tokens from the environment — never commit them).
 *.log
 log.txt
 buildozer_debug.log
 .buildozer/
 bin/
 
-# fastlane / bundler
 vendor/bundle/
 .bundle/cache/
 fastlane/report.xml

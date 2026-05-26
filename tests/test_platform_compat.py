@@ -25,6 +25,8 @@ import sys
 
 import pytest
 
+
+def _importable(name: str) -> bool:
     try:
         importlib.import_module(name)
         return True

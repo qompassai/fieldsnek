@@ -60,4 +60,4 @@ class FieldSnekMobileApp(App):
 
     def navigate(self, screen_name: str, direction: str = 'left'):
         self.root.transition.direction = direction
-        self.root.current = screen_nameame
+        self.root.current = screen_name

@@ -19,7 +19,7 @@ Callbacks receive the updated address list as their only argument so callers
 never need to call get_addresses() in response to a mutation event.
 """
 
-import tkinter as tk
+import customtkinter as ctk
 from typing import Callable, Optional
 
 
@@ -307,4 +307,5 @@ class AddressTable(ctk.CTkFrame):
         """Update text colours without a full re-render."""
         for i, rw in enumerate(self._row_widgets):
             lbl = rw.get('addr')
+            if lbl:
                 lbl.configure(text_color=_ORANGE if i == selected_idx else _WHITE)

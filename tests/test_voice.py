@@ -348,7 +348,7 @@ class TestIntegration:
     def test_transcribe_completes_in_reasonable_time(self, tone_audio):
         from core.voice import _transcribe
         start = time.monotonic()
-        result = _transcribe(tone_audio, model_size="tiny")
+        _transcribe(tone_audio, model_size="tiny")
         elapsed = time.monotonic() - start
 
         assert elapsed < 30.0, f"Transcription took {elapsed:.1f}s"

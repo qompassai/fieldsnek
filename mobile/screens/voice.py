@@ -55,7 +55,6 @@ class VoiceScreen(Screen):
         except Exception as exc:
             self._voice_unavailable(str(exc))
             return
-        from core.voice import VoiceRecognizer
         if self._recognizer is None:
             self._recognizer = VoiceRecognizer(model_size="base")
             try:

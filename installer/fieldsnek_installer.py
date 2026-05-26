@@ -40,7 +40,7 @@ def default_install_dir() -> str:
     if IS_WINDOWS:
         base = os.environ.get("LOCALAPPDATA", os.path.expanduser("~\\AppData\\Local"))
         return os.path.join(base, APP_ORG, APP_NAME)
-    return os.path.expanduser(f"~/.local/share/fieldsnek")
+    return os.path.expanduser("~/.local/share/fieldsnek")
 
 def desktop_dir() -> str:
     if IS_WINDOWS:
