@@ -121,6 +121,37 @@ Output lands in `./bin/`:
 
 A full debug log is tee'd to `~/buildozer_debug.log`.
 
+### 4b. Build the FieldSnek variant
+
+FieldSnek is the same Python codebase shipped under a separate Play Store
+listing (`com.qompassai.fieldsnek`). It has its own buildozer spec and its
+own bin/build dirs so it doesn't clobber ONTrack's incremental state.
+
+```bash
+source ~/venv_p4a_develop/bin/activate
+
+# AAB for Play Console upload
+bash scripts/build-android.sh aab fieldsnek
+# -> /var/tmp/buildozer/fieldsnek/bin/fieldsnek-2.0.0-arm64-v8a_armeabi-v7a-release.aab
+
+# Debug APK for sideloading to non-Google-account testers
+bash scripts/build-android.sh apk fieldsnek
+# -> /var/tmp/buildozer/fieldsnek/bin/fieldsnek-2.0.0-arm64-v8a_armeabi-v7a-debug.apk
+
+# Both in one go
+bash scripts/build-android.sh both fieldsnek
+```
+
+The Play Console bootstrap for FieldSnek (one-time manual upload, service-
+account permission grant) is documented in [`fastlane/INIT.md`](../fastlane/INIT.md).
+After that, uploads run via fastlane:
+
+```bash
+bundle install --path vendor/bundle    # first time only
+bundle exec fastlane android validate  # dry-run
+bundle exec fastlane android internal  # real upload to Internal testing
+```
+
 ## 5. Sign the release AAB
 
 Play Console uses Play App Signing, so you only need an *upload* key. Generate

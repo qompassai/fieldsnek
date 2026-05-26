@@ -6,6 +6,7 @@ __pycache__/
 *.spec
 !ontrack.spec
 !buildozer.spec
+!buildozer.fieldsnek.spec
 !installer/installer.spec
 tags
 .tags
@@ -17,3 +18,14 @@ log.txt
 buildozer_debug.log
 .buildozer/
 bin/
+
+# fastlane / bundler
+vendor/bundle/
+.bundle/cache/
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+*.gem
+Gemfile.lock
+
