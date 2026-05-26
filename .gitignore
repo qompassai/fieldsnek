@@ -9,3 +9,11 @@ __pycache__/
 !installer/installer.spec
 tags
 .tags
+
+# Build / runtime logs (these often capture secrets such as cargo / pip
+# tokens from the environment — never commit them).
+*.log
+log.txt
+buildozer_debug.log
+.buildozer/
+bin/
