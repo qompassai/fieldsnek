@@ -1,5 +1,5 @@
 """
-conftest.py — shared fixtures for OnTrack test suite.
+conftest.py — shared fixtures for FieldSnek test suite.
 """
 
 import pathlib

@@ -1,6 +1,15 @@
-# /qompassai/ONTrack/buildozer.spec
-# Qompass AI — ONTrack Android build configuration
+# /qompassai/FieldSnek/buildozer.spec
+# Qompass AI — FieldSnek Android build configuration
 # Copyright (C) 2026 Qompass AI, All rights reserved.
+# ----------------------------------------------------
+# Build via the helper (recommended):
+#   bash scripts/build-android.sh aab     # AAB for Play Console upload
+#   bash scripts/build-android.sh apk     # debug APK for sideloading
+#   bash scripts/build-android.sh both    # both in one run
+#
+# Or invoke buildozer directly:
+#   buildozer --verbose android release   # AAB
+#   buildozer --verbose android debug     # debug APK
 # ----------------------------------------------------
 # Tested combinations (May 2026, Python 3.14 / Play Store target):
 #   buildozer            == git+https://github.com/kivy/buildozer  (master)
@@ -26,18 +35,18 @@
 # pandas / numpy / pyproj here. They either have no p4a recipe or pull in
 # native libs that cannot be cross-compiled to Android (the failure manifests
 # as the cryptic `Py_DEPRECATED(VERSION_UNUSED)` error). Voice-on-device is
-# handled by the Rust port (qompassai/ONTrack-rs) instead.
+# handled by the Rust port (qompassai/ontrack-rs) instead.
 
 [app]
-title                        = ONTrack
-package.name                 = ontrack
-package.domain               = com.tds.ontrack
+title                        = FieldSnek
+package.name                 = fieldsnek
+package.domain               = com.qompassai
 version                      = 2.0.0
 source.dir                   = .
 source.include_exts          = csv,ico,jpeg,jpg,json,kv,png,py,txt
 source.include_patterns      = assets/*,config/*,core/*,mobile/*
 source.exclude_dirs          = .buildozer,.git,.github,.mypy_cache,.kivy,__pycache__,bin,build,dist,docs,gui,installer,pipewire,src,tests,tools,venv,.venv
-source.exclude_patterns      = ontrack.spec,Cargo.toml,Cargo.lock,flake.nix,flake.lock,find_stubs.sh,tags,.coverage,renovate.jsonc,cliff.toml,gradle.properties
+source.exclude_patterns      = fieldsnek.spec,Cargo.toml,Cargo.lock,flake.nix,flake.lock,find_stubs.sh,tags,.coverage,renovate.jsonc,cliff.toml,gradle.properties
 
 # Comma-separated, single line — buildozer / p4a parses this very strictly.
 # Do NOT mix newlines and commas.
@@ -60,7 +69,7 @@ android.archs                = arm64-v8a, armeabi-v7a
 android.allow_backup         = 0
 android.copy_libs            = 1
 android.hide_statusbar       = 0
-android.manifest.application_name = ONTrack
+android.manifest.application_name = FieldSnek
 android.category             = PRODUCTIVITY
 # android.features was removed: p4a develop dropped the --feature CLI flag
 # (kivy/python-for-android, build.py on develop has no add_argument for it).
@@ -85,8 +94,8 @@ entrypoint                   = main.py
 # Keep pip clean — TDS and many corporate networks have extra-index mirrors
 # that confuse p4a's recipe resolver.
 android.pip_args             = --index-url https://pypi.org/simple/ --no-extra-index-url
-bin_dir                      = /var/tmp/buildozer/ontrack/bin
-build_dir                    = /var/tmp/buildozer/ontrack/build
+bin_dir                      = /var/tmp/buildozer/fieldsnek/bin
+build_dir                    = /var/tmp/buildozer/fieldsnek/build
 build_workers                = 0
 clean_build                  = 0
 log_level                    = 2

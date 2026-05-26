@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-exporter.py — Route export and external map integration for OnTrack.
+exporter.py — Route export and external map integration for FieldSnek.
 
 Provides:
   - CSV export

@@ -48,7 +48,7 @@ TDS_GREEN = '#22C55E'
 TDS_RED = '#EF4444'
 
 OSM_TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
-OSM_HEADERS = {'User-Agent': 'OnTrack-TDS/2.0 (field route optimizer)'}
+OSM_HEADERS = {'User-Agent': 'FieldSnek-TDS/2.0 (field route optimizer)'}
 
 
 def _latlon_to_tile(lat: float, lng: float, zoom: int) -> tuple[int, int]:
@@ -714,7 +714,7 @@ class ResultsView(ctk.CTkFrame):
         path = filedialog.asksaveasfilename(
             defaultextension='.csv',
             filetypes=[('CSV', '*.csv')],
-            initialfile='ontrack_route.csv',
+            initialfile='fieldsnek_route.csv',
         )
         if path:
             export_csv(result.ordered_addresses, path)

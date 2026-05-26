@@ -40,9 +40,9 @@ Store.") and [fastlane/fastlane#14686](https://github.com/fastlane/fastlane/issu
 Build the signed AAB on your workstation:
 
 ```bash
-cd ~/.GH/Qompass/ONTrack
+cd ~/.GH/Qompass/FieldSnek
 source ~/venv_p4a_develop/bin/activate
-bash scripts/build-android.sh aab fieldsnek
+bash scripts/build-android.sh aab
 ls /var/tmp/buildozer/fieldsnek/bin/fieldsnek-2.0.0-*-release.aab
 ```
 
@@ -59,16 +59,16 @@ Then in Play Console:
 The package name `com.qompassai.fieldsnek` is now bound to this app on the
 API side. All future uploads can go through fastlane.
 
-### 3. Wire up the service account (already done for ONTrack)
+### 3. Wire up the service account (already done for FieldSnek)
 
 You're reusing the existing service account at
-`~/.config/fastlane/google-play-ontrack.json`, which is already wired up
-for the ONTrack listing. You need to **grant it permissions on FieldSnek
+`~/.config/fastlane/google-play-fieldsnek.json`, which is already wired up
+for the FieldSnek listing. You need to **grant it permissions on FieldSnek
 too** — Play Console treats permissions per-app:
 
 1. Play Console ▸ **Users and permissions**
 2. Find the service-account email (the `client_email` from
-   `google-play-ontrack.json`) — it should already be in your team.
+   `google-play-fieldsnek.json`) — it should already be in your team.
 3. Click into the user → **App permissions** tab → **Add app** → select
    FieldSnek → grant **Release to testing tracks** (and Production if you
    plan to ship there).
@@ -83,7 +83,7 @@ bundle exec fastlane android check_auth
 ### 4. Now fastlane will work
 
 ```bash
-cd ~/.GH/Qompass/ONTrack
+cd ~/.GH/Qompass/FieldSnek
 
 # Dry-run — validates AAB + credentials without uploading. Run this first.
 bundle exec fastlane android validate
@@ -116,12 +116,12 @@ FASTLANE_TRACK=fieldsnek-private bundle exec fastlane android closed
 | Symptom | Cause | Fix |
 |---------|-------|-----|
 | `Package not found: com.qompassai.fieldsnek` | App not created on Console or no AAB uploaded yet | Follow §1 + §2 above |
-| `forbidden: The caller does not have permission` | Service account has no role on FieldSnek (had one on ONTrack) | §3 — add FieldSnek to its App permissions list |
+| `forbidden: The caller does not have permission` | Service account has no Release role on FieldSnek in Play Console | §3 — invite the service-account email and grant Release-to-testing-tracks |
 | `Unable to find the requested track - 'closed'` | Used UI name instead of API name | Use `internal` / `alpha` / `beta` / `production` |
-| `forbidden: APK has the wrong package name` | `package.name` × `package.domain` in `buildozer.fieldsnek.spec` doesn't concatenate to `com.qompassai.fieldsnek` | Check `package.name = fieldsnek` + `package.domain = com.qompassai` |
+| `forbidden: APK has the wrong package name` | `package.name` × `package.domain` in `buildozer.spec` doesn't concatenate to `com.qompassai.fieldsnek` | Check `package.name = fieldsnek` + `package.domain = com.qompassai` |
 | `Google Api Error: applicationNotFound` | Service-account JSON belongs to a different Cloud project than the app | Recreate the JSON in the project linked to your Play developer account |
 | `apksNotAllowed: This Edit cannot upload APKs because Android App Bundles have been added.` | Trying to upload an APK after an AAB was uploaded | Use `aab:` only, set `skip_upload_apk: true` (already done) |
-| versionCode error on upload | Play rejects a versionCode ≤ the highest already uploaded | Bump `version = 2.0.1` in `buildozer.fieldsnek.spec` before next build |
+| versionCode error on upload | Play rejects a versionCode ≤ the highest already uploaded | Bump `version = 2.0.1` in `buildozer.spec` before next build |
 
 ## Env var quick reference (Fastfile understands)
 
@@ -139,31 +139,16 @@ acknowledge the package-name binding before granting API write access.
 Once done, every subsequent build can ship through CI without touching
 the Console.
 
-## Relationship to ONTrack
+## Direct buildozer invocation
 
-FieldSnek and ONTrack ship from the same git repo. The Python source tree
-is identical; only `package_name`, `title`, and the Play Console listing
-differ. Switching between them is one command:
+The wrapper at `scripts/build-android.sh` is just sugar over:
 
 ```bash
-bash scripts/build-android.sh aab ontrack
-bash scripts/build-android.sh aab fieldsnek
+source ~/venv_p4a_develop/bin/activate
+buildozer --verbose android release   # AAB
+buildozer --verbose android debug     # debug APK (sideloadable)
 ```
 
-Under the hood, the wrapper symlinks the right spec to `./buildozer.spec`
-before each invocation, because **buildozer has no `--spec` CLI flag** —
-it always reads `./buildozer.spec` from cwd. The original file is restored
-on exit (the wrapper traps EXIT/INT/TERM), so an interrupted build won't
-leave your tree in a half-swapped state. If you ever need to invoke
-buildozer directly for the FieldSnek spec:
-
-```bash
-# manual swap (only do this if you have a reason to bypass the wrapper)
-mv buildozer.spec buildozer.spec.bak
-ln -s buildozer.fieldsnek.spec buildozer.spec
-buildozer --verbose android release
-rm buildozer.spec && mv buildozer.spec.bak buildozer.spec
-```
-
-Each app has its own `bin_dir` and `build_dir` under `/var/tmp/buildozer/`,
-so they don't clobber each other's incremental state.
+Buildozer always reads `./buildozer.spec` from the current directory —
+there is no `--spec` flag in its argparse. All bin/build state lives
+under `/var/tmp/buildozer/fieldsnek/`.

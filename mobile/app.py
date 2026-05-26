@@ -1,5 +1,5 @@
 """
-mobile/app.py — Kivy application root for OnTrack Android.
+mobile/app.py — Kivy application root for FieldSnek Android.
 
 Screens:
   home     — address entry + file load + current location
@@ -24,8 +24,8 @@ C_BLUE = get_color_from_hex('#0057A8')
 C_ORANGE = get_color_from_hex('#F26522')
 
 
-class OnTrackMobileApp(App):
-    title = 'OnTrack — TDS Route Optimizer'
+class FieldSnekMobileApp(App):
+    title = 'FieldSnek — TDS Route Optimizer'
 
     # Shared state (screens read/write via App.get_running_app())
     route_result = None

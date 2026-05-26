@@ -90,13 +90,13 @@ class SettingsView(ctk.CTkFrame):
         right.grid(row=0, column=1, padx=(8, 16), pady=16, sticky="nsew")
         right.grid_columnconfigure(0, weight=1)
 
-        ctk.CTkLabel(right, text="About OnTrack",
+        ctk.CTkLabel(right, text="About FieldSnek",
                      font=ctk.CTkFont(size=16, weight="bold"),
                      text_color=TDS_WHITE,
                      ).pack(padx=16, pady=(14, 6), anchor="w")
 
         about_text = (
-            "OnTrack v2.0  ·  TDS Telecom Internal\n"
+            "FieldSnek v2.0  ·  TDS Telecom Internal\n"
             "Field Route Optimizer for service technicians.\n\n"
             "Route solver: OR-Tools TSP/VRP (desktop)\n"
             "               Nearest-neighbor (Android)\n\n"
@@ -228,7 +228,7 @@ class SettingsView(ctk.CTkFrame):
 def _find_env() -> str | None:
     candidates = [
         os.path.join(os.path.dirname(__file__), "..", "..", ".env"),
-        os.path.expanduser("~/.ontrack.env"),
+        os.path.expanduser("~/.fieldsnek.env"),
     ]
     for p in candidates:
         if os.path.exists(p):

@@ -37,7 +37,7 @@ def _cmd_exists(cmd: str) -> bool:
     return shutil.which(cmd) is not None
 
 
-ONTRACK_ROOT = pathlib.Path(__file__).parent.parent
+FIELDSNEK_ROOT = pathlib.Path(__file__).parent.parent
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -110,15 +110,15 @@ class TestLinuxCompat:
         )
 
     @pytest.mark.linux
-    def test_ontrack_spec_exists(self):
-        """ontrack.spec must exist for PyInstaller to reproduce the build."""
-        assert (ONTRACK_ROOT / 'ontrack.spec').exists(), (
-            'ontrack.spec missing — PyInstaller cannot reproduce the frozen build.'
+    def test_fieldsnek_spec_exists(self):
+        """fieldsnek.spec must exist for PyInstaller to reproduce the build."""
+        assert (FIELDSNEK_ROOT / 'fieldsnek.spec').exists(), (
+            'fieldsnek.spec missing — PyInstaller cannot reproduce the frozen build.'
         )
 
     @pytest.mark.linux
     def test_main_entrypoint_exists(self):
-        assert (ONTRACK_ROOT / 'main.py').exists()
+        assert (FIELDSNEK_ROOT / 'main.py').exists()
 
     @pytest.mark.linux
     def test_tkinter_available(self):
@@ -137,7 +137,7 @@ class TestLinuxCompat:
     def test_no_windows_only_imports_in_core(self):
         """Core modules must not import winreg, win32api, or msvcrt."""
         windows_only = {'winreg', 'win32api', 'win32con', 'msvcrt', 'winsound'}
-        core_dir = ONTRACK_ROOT / 'core'
+        core_dir = FIELDSNEK_ROOT / 'core'
         for pyfile in core_dir.glob('*.py'):
             source = pyfile.read_text()
             for mod in windows_only:
@@ -174,7 +174,7 @@ class TestWindowsCompat:
         Windows CI will catch these at import time if they're top-level.
         """
         posix_only = ['os.fork(', 'os.getpwnam(', 'os.getpwuid(']
-        core_dir = ONTRACK_ROOT / 'core'
+        core_dir = FIELDSNEK_ROOT / 'core'
         for pyfile in core_dir.glob('*.py'):
             source = pyfile.read_text()
             for call in posix_only:
@@ -192,7 +192,7 @@ class TestWindowsCompat:
             "open('/'",
             'open("/',
         ]
-        for pyfile in (ONTRACK_ROOT / 'core').glob('*.py'):
+        for pyfile in (FIELDSNEK_ROOT / 'core').glob('*.py'):
             src = pyfile.read_text()
             for pat in danger:
                 assert pat not in src, (
@@ -205,7 +205,7 @@ class TestWindowsCompat:
         export_csv must pass newline='' to open() to avoid double CR on Windows.
         This is a very common Windows bug for csv.writer.
         """
-        src = (ONTRACK_ROOT / 'core' / 'exporter.py').read_text()
+        src = (FIELDSNEK_ROOT / 'core' / 'exporter.py').read_text()
         assert 'newline=""' in src or "newline=''" in src, (
             "exporter.py open() call is missing newline='' — "
             'CSV on Windows will have double carriage returns.'
@@ -225,13 +225,13 @@ class TestAndroidCompat:
 
     @pytest.mark.android
     def test_buildozer_spec_exists(self):
-        assert (ONTRACK_ROOT / 'buildozer.spec').exists(), (
+        assert (FIELDSNEK_ROOT / 'buildozer.spec').exists(), (
             'buildozer.spec is missing. Run: buildozer init'
         )
 
     @pytest.mark.android
     def test_buildozer_spec_has_required_fields(self):
-        spec = (ONTRACK_ROOT / 'buildozer.spec').read_text()
+        spec = (FIELDSNEK_ROOT / 'buildozer.spec').read_text()
         required = [
             'title =',
             'package.name =',
@@ -247,7 +247,7 @@ class TestAndroidCompat:
 
     @pytest.mark.android
     def test_internet_permission_declared(self):
-        spec = (ONTRACK_ROOT / 'buildozer.spec').read_text()
+        spec = (FIELDSNEK_ROOT / 'buildozer.spec').read_text()
         assert 'INTERNET' in spec, (
             'INTERNET permission missing from buildozer.spec — '
             'OSRM/Nominatim calls will be blocked on Android.'
@@ -255,7 +255,7 @@ class TestAndroidCompat:
 
     @pytest.mark.android
     def test_kivy_in_requirements(self):
-        spec = (ONTRACK_ROOT / 'buildozer.spec').read_text()
+        spec = (FIELDSNEK_ROOT / 'buildozer.spec').read_text()
         assert 'kivy' in spec.lower(), (
             'kivy must be listed in buildozer.spec requirements.'
         )
@@ -263,7 +263,7 @@ class TestAndroidCompat:
     @pytest.mark.android
     def test_customtkinter_not_in_requirements(self):
         """CustomTkinter uses Tkinter which is unavailable on Android."""
-        spec = (ONTRACK_ROOT / 'buildozer.spec').read_text()
+        spec = (FIELDSNEK_ROOT / 'buildozer.spec').read_text()
         lines = [
             spec_line
             for spec_line in spec.splitlines()
@@ -287,13 +287,13 @@ class TestAndroidCompat:
             'import customtkinter',
             'from customtkinter',
         }
-        gui_dir = ONTRACK_ROOT / 'gui'
+        gui_dir = FIELDSNEK_ROOT / 'gui'
         offenders = []
         for pyfile in gui_dir.rglob('*.py'):
             src = pyfile.read_text()
             for pattern in tk_imports:
                 if pattern in src:
-                    offenders.append(f"{pyfile.relative_to(ONTRACK_ROOT)}: '{pattern}'")
+                    offenders.append(f"{pyfile.relative_to(FIELDSNEK_ROOT)}: '{pattern}'")
         assert not offenders, (
             "GUI files import Tkinter/CustomTkinter — these won't work on Android:\n"
             + '\n'.join(offenders)
@@ -301,13 +301,13 @@ class TestAndroidCompat:
 
     @pytest.mark.android
     def test_assets_directory_exists(self):
-        assert (ONTRACK_ROOT / 'assets').is_dir()
+        assert (FIELDSNEK_ROOT / 'assets').is_dir()
 
     @pytest.mark.android
     def test_presplash_asset_exists(self):
-        """buildozer.spec references ontrack.jpg as presplash."""
-        assert (ONTRACK_ROOT / 'assets' / 'ontrack.jpg').exists(), (
-            'assets/ontrack.jpg missing — buildozer presplash will fail.'
+        """buildozer.spec references fieldsnek.jpg as presplash."""
+        assert (FIELDSNEK_ROOT / 'assets' / 'fieldsnek.jpg').exists(), (
+            'assets/fieldsnek.jpg missing — buildozer presplash will fail.'
         )
 
     @pytest.mark.android
@@ -317,8 +317,8 @@ class TestAndroidCompat:
         sandboxed on Android. The main entry point should not call
         load_dotenv() at module level without a try/except.
         """
-        main_src = (ONTRACK_ROOT / 'main.py').read_text()
-        config_src = (ONTRACK_ROOT / 'config' / 'settings.py').read_text()
+        main_src = (FIELDSNEK_ROOT / 'main.py').read_text()
+        config_src = (FIELDSNEK_ROOT / 'config' / 'settings.py').read_text()
         combined = main_src + config_src
         if 'load_dotenv' in combined:
             # Acceptable if it's inside a try block
@@ -334,7 +334,7 @@ class TestAndroidCompat:
         compile step. It must either be absent from buildozer requirements
         or replaced with a pure-Python fallback for Android.
         """
-        spec = (ONTRACK_ROOT / 'buildozer.spec').read_text()
+        spec = (FIELDSNEK_ROOT / 'buildozer.spec').read_text()
         req_lines = [
             spec_line
             for spec_line in spec.splitlines()
@@ -351,7 +351,7 @@ class TestAndroidCompat:
 
     @pytest.mark.android
     def test_archs_include_arm64(self):
-        spec = (ONTRACK_ROOT / 'buildozer.spec').read_text()
+        spec = (FIELDSNEK_ROOT / 'buildozer.spec').read_text()
         assert 'arm64-v8a' in spec, (
             'arm64-v8a missing from android.archs — modern Android phones need it.'
         )
@@ -359,7 +359,7 @@ class TestAndroidCompat:
     @pytest.mark.android
     def test_min_api_24_or_higher(self):
         """Android API 24 (Android 7) is the p4a minimum for SDL2 bootstrap."""
-        spec = (ONTRACK_ROOT / 'buildozer.spec').read_text()
+        spec = (FIELDSNEK_ROOT / 'buildozer.spec').read_text()
         for line in spec.splitlines():
             if line.strip().startswith('android.minapi'):
                 val = int(line.split('=')[1].strip())

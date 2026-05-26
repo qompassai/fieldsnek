@@ -5,10 +5,10 @@
 import os
 
 structure = {
-    'main.py': """from gui.app import ONTrackApp
+    'main.py': """from gui.app import FieldSnekApp
 
 if __name__ == "__main__":
-    app = ONTrackApp()
+    app = FieldSnekApp()
     app.mainloop()
 """,
     'requirements.txt': """customtkinter
@@ -23,15 +23,15 @@ pyinstaller
 pyshortcuts
 Pillow
 """,
-    'README.md': '# ONTrack\n\nField service route optimizer for fiber optic address verification.\n',
-    'ontrack.spec': '',
+    'README.md': '# FieldSnek\n\nField service route optimizer for fiber optic address verification.\n',
+    'fieldsnek.spec': '',
     'gui/__init__.py': '',
     'gui/app.py': """import customtkinter as ctk
 
-class ONTrackApp(ctk.CTk):
+class FieldSnekApp(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.title("ONTrack")
+        self.title("FieldSnek")
         self.geometry("900x650")
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("blue")
@@ -57,7 +57,7 @@ def parse_addresses(filepath: str) -> list[str]:
 ''',
     'core/geocoder.py': '''from geopy.geocoders import Nominatim
 
-geolocator = Nominatim(user_agent="ontrack")
+geolocator = Nominatim(user_agent="fieldsnek")
 
 def geocode_addresses(addresses: list[str]) -> list[dict]:
     """Convert addresses to lat/lng dicts."""
@@ -87,7 +87,7 @@ def build_maps_url(ordered_addresses: list[str]) -> str:
 """,
     'assets/icon.png': None,
     'assets/icon.ico': None,
-    'assets/themes/ontrack.json': '{}\n',
+    'assets/themes/fieldsnek.json': '{}\n',
     'config/__init__.py': '',
     'config/settings.py': """from dotenv import load_dotenv
 import os
@@ -121,4 +121,4 @@ def create_structure(base, files):
 if __name__ == '__main__':
     base = os.getcwd()
     create_structure(base, structure)
-    print(f'ONTrack structure created in {base}')
+    print(f'FieldSnek structure created in {base}')

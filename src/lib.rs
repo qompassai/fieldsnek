@@ -56,7 +56,7 @@ fn haversine(lat1: f64, lon1: f64, lat2: f64, lon2: f64) -> f64 {
 }
 
 #[pymodule]
-fn ontrack(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn fieldsnek(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(solve_greedy, m)?)?;
     m.add_function(wrap_pyfunction!(haversine_matrix, m)?)?;
     Ok(())

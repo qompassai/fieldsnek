@@ -1,9 +1,9 @@
 #:tombi schema.strict = false
 
 [project]
-name = "ontrack"
+name = "fieldsnek"
 version = "0.1.0"
-description = "Ontrack"
+description = "FieldSnek"
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
@@ -30,8 +30,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/qompassai/ONTrack"
-Repository = "https://github.com/qompassai/ONTrack"
+Homepage = "https://github.com/qompassai/fieldsnek"
+Repository = "https://github.com/qompassai/fieldsnek"
 
 [build-system]
 requires = ["maturin>=1.4,<2.0"]
@@ -47,7 +47,7 @@ omit = ["tests/*", "assets/*", "installer/*"]
 
 [tool.maturin]
 features = ["pyo3/extension-module"]
-module-name = "ontrack"
+module-name = "fieldsnek"
 python-source = "."
 
 [tool.pip]

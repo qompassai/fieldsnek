@@ -1,5 +1,5 @@
 """
-gui/components/file_picker.py — CSV/Excel file picker widget for OnTrack desktop GUI.
+gui/components/file_picker.py — CSV/Excel file picker widget for FieldSnek desktop GUI.
 
 A self-contained CTkFrame that handles file selection, validation, and
 feedback. Calls on_file(path: str) when a valid file is chosen.

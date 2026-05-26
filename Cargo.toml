@@ -3,12 +3,12 @@
 # Copyright (C) 2026 Qompass AI, All rights reserved
 # ----------------------------------------
 [package]
-name = "ontrack"
+name = "fieldsnek"
 version = "0.1.0"
 edition = "2024"
 
 [lib]
-name = "ontrack"
+name = "fieldsnek"
 crate-type = ["cdylib"]
 
 [dependencies]

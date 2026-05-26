@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to ONTrack are documented here.
+All notable changes to FieldSnek are documented here.
 
 ## [Unreleased]
 

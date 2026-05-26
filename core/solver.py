@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-solver.py — TSP/VRP route solver for OnTrack.
+solver.py — TSP/VRP route solver for FieldSnek.
 
 Primary solver: Google OR-Tools (desktop/Linux/Windows)
 Fallback solver: nearest-neighbor heuristic (Android/p4a — no OR-Tools recipe)
@@ -14,7 +14,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 try:
-    from ontrack import solve_greedy as _solve_greedy_rs  # type: ignore[import-not-found]
+    from fieldsnek import solve_greedy as _solve_greedy_rs  # type: ignore[import-not-found]
     _HAS_RUST = True
 except ImportError:
     _HAS_RUST = False

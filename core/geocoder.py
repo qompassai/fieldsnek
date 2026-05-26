@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-geocoder.py — Address geocoding + current-location detection for OnTrack.
+geocoder.py — Address geocoding + current-location detection for FieldSnek.
 
 Backends:
   - Nominatim (free, default)
@@ -15,7 +15,7 @@ import os
 import requests
 
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
-USER_AGENT = "ontrack-tds/1.0 (matt@aflabs.io)"
+USER_AGENT = "fieldsnek-tds/1.0 (matt@aflabs.io)"
 
 try:
     from android.permissions import request_permissions, Permission  # type: ignore

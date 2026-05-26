@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-main.py — OnTrack entry point.
+main.py — FieldSnek entry point.
 
 Detects runtime environment and launches the appropriate UI:
   - Desktop (Windows/Linux): CustomTkinter GUI
@@ -16,14 +16,14 @@ _PLATFORM = "android" if importlib.util.find_spec("android") is not None else "d
 
 
 def _run_desktop():
-    from gui.app import ONTrackApp
-    app = ONTrackApp()
+    from gui.app import FieldSnekApp
+    app = FieldSnekApp()
     app.mainloop()
 
 
 def _run_mobile():
-    from mobile.app import OnTrackMobileApp
-    OnTrackMobileApp().run()
+    from mobile.app import FieldSnekMobileApp
+    FieldSnekMobileApp().run()
 
 
 if __name__ == "__main__":

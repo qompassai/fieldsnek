@@ -1,6 +1,6 @@
-# OnTrack — Android Build Runbook (Arch Linux)
+# FieldSnek — Android Build Runbook (Arch Linux)
 
-This is the reference procedure for building the OnTrack Kivy app into a
+This is the reference procedure for building the FieldSnek Kivy app into a
 Google Play–ready Android App Bundle (`.aab`) on an Arch Linux workstation.
 
 It documents the exact toolchain pins that work as of May 2026.
@@ -92,8 +92,8 @@ matter — any `29.x.y` install will be picked up.
 ## 3. Clone and check out the fix branch
 
 ```bash
-git clone git@github.com:qompassai/ONTrack.git
-cd ONTrack
+git clone git@github.com:qompassai/fieldsnek.git
+cd FieldSnek
 git checkout fix/android-build
 ```
 
@@ -116,34 +116,33 @@ source ~/venv_p4a_develop/bin/activate
 
 Output lands in `./bin/`:
 
-- `ontrack-2.0.0-arm64-v8a-debug.apk`
-- `ontrack-2.0.0-arm64-v8a-release.aab`
+- `fieldsnek-2.0.0-arm64-v8a-debug.apk`
+- `fieldsnek-2.0.0-arm64-v8a-release.aab`
 
 A full debug log is tee'd to `~/buildozer_debug.log`.
 
-### 4b. Build the FieldSnek variant
+### 4b. Build via the helper script
 
-FieldSnek is the same Python codebase shipped under a separate Play Store
-listing (`com.qompassai.fieldsnek`). It has its own buildozer spec and its
-own bin/build dirs so it doesn't clobber ONTrack's incremental state.
+`scripts/build-android.sh` wraps buildozer with mode dispatch and writes
+to the conventional `/var/tmp/buildozer/fieldsnek/bin/` location:
 
 ```bash
 source ~/venv_p4a_develop/bin/activate
 
 # AAB for Play Console upload
-bash scripts/build-android.sh aab fieldsnek
+bash scripts/build-android.sh aab
 # -> /var/tmp/buildozer/fieldsnek/bin/fieldsnek-2.0.0-arm64-v8a_armeabi-v7a-release.aab
 
 # Debug APK for sideloading to non-Google-account testers
-bash scripts/build-android.sh apk fieldsnek
+bash scripts/build-android.sh apk
 # -> /var/tmp/buildozer/fieldsnek/bin/fieldsnek-2.0.0-arm64-v8a_armeabi-v7a-debug.apk
 
-# Both in one go
-bash scripts/build-android.sh both fieldsnek
+# Both in one run
+bash scripts/build-android.sh both
 ```
 
-The Play Console bootstrap for FieldSnek (one-time manual upload, service-
-account permission grant) is documented in [`fastlane/INIT.md`](../fastlane/INIT.md).
+The Play Console bootstrap (one-time manual upload, service-account
+permission grant) is documented in [`fastlane/INIT.md`](../fastlane/INIT.md).
 After that, uploads run via fastlane:
 
 ```bash
@@ -159,17 +158,17 @@ one once and keep it offline:
 
 ```bash
 keytool -genkey -v \
-    -keystore ~/.android/ontrack-upload.keystore \
-    -alias ontrack-upload \
+    -keystore ~/.android/fieldsnek-upload.keystore \
+    -alias fieldsnek-upload \
     -keyalg RSA -keysize 4096 -validity 10000
 ```
 
 Tell buildozer about it before `./build.sh release` (or export in your shell):
 
 ```bash
-export P4A_RELEASE_KEYSTORE=$HOME/.android/ontrack-upload.keystore
+export P4A_RELEASE_KEYSTORE=$HOME/.android/fieldsnek-upload.keystore
 export P4A_RELEASE_KEYSTORE_PASSWD='<your-keystore-passwd>'
-export P4A_RELEASE_KEYALIAS=ontrack-upload
+export P4A_RELEASE_KEYALIAS=fieldsnek-upload
 export P4A_RELEASE_KEYALIAS_PASSWD='<your-key-passwd>'
 ```
 
@@ -188,9 +187,9 @@ The one-time setup (service account + JSON key) is identical for both.
 1. Sign in to <https://play.google.com/console> as **phaedrusflow**
    (account ID `7351560589446098345`) **once** to create the app shell:
    - **All apps → Create app**
-   - Name: `OnTrack`, language `en-US`, App, Free
+   - Name: `FieldSnek`, language `en-US`, App, Free
    - Accept the two declarations → **Create app**
-   - Note the package name `com.tds.ontrack.ontrack` (must match
+   - Note the package name `com.qompassai.fieldsnek` (must match
      `package.domain` + `package.name` in `buildozer.spec`).
 
 2. **Setup → API access** → **Choose a project to link** →
@@ -198,15 +197,15 @@ The one-time setup (service account + JSON key) is identical for both.
 
 3. **Service accounts → Create new service account** → click the Google
    Cloud Console link → **Create service account**:
-   - Name: `ontrack-publisher`
+   - Name: `fieldsnek-publisher`
    - Skip role grants in Cloud Console (Play Console grants the role).
    - Open the new service account → **Keys → Add key → JSON** →
-     download `ontrack-publisher.json` and store it at
-     `~/.config/ontrack/play-service-account.json` (chmod 600).
+     download `fieldsnek-publisher.json` and store it at
+     `~/.config/fieldsnek/play-service-account.json` (chmod 600).
 
 4. Back in Play Console **API access**, click **Grant access** on the new
    service account:
-   - App permissions: add **OnTrack**
+   - App permissions: add **FieldSnek**
    - Account permissions: **Release manager** (Admin not required for uploads)
    - **Invite user → Send invite** (auto-accepts for service accounts).
 
@@ -219,16 +218,16 @@ gem install --user-install fastlane -NV
 export PATH="$(ruby -e 'puts Gem.user_dir')/bin:$PATH"
 
 # One-time bootstrap inside the repo (creates fastlane/Appfile + metadata/).
-cd ~/ONTrack
+cd ~/FieldSnek
 fastlane supply init \
-    --package_name com.tds.ontrack.ontrack \
-    --json_key ~/.config/ontrack/play-service-account.json
+    --package_name com.qompassai.fieldsnek \
+    --json_key ~/.config/fieldsnek/play-service-account.json
 
 # Upload the AAB to the Internal Testing track.
 fastlane supply \
-    --package_name com.tds.ontrack.ontrack \
-    --json_key ~/.config/ontrack/play-service-account.json \
-    --aab bin/ontrack-2.0.0-arm64-v8a-release.aab \
+    --package_name com.qompassai.fieldsnek \
+    --json_key ~/.config/fieldsnek/play-service-account.json \
+    --aab bin/fieldsnek-2.0.0-arm64-v8a-release.aab \
     --track internal \
     --release_status draft \
     --skip_upload_metadata false \
@@ -240,8 +239,8 @@ Promote internal → closed/production later with:
 
 ```bash
 fastlane supply \
-    --package_name com.tds.ontrack.ontrack \
-    --json_key ~/.config/ontrack/play-service-account.json \
+    --package_name com.qompassai.fieldsnek \
+    --json_key ~/.config/fieldsnek/play-service-account.json \
     --track internal \
     --track_promote_to production \
     --rollout 0.1   # 10% staged rollout
@@ -252,15 +251,15 @@ fastlane supply \
 Useful if you want zero extra deps or to script from CI.
 
 ```bash
-SA=~/.config/ontrack/play-service-account.json
-PKG=com.tds.ontrack.ontrack
-AAB=bin/ontrack-2.0.0-arm64-v8a-release.aab
+SA=~/.config/fieldsnek/play-service-account.json
+PKG=com.qompassai.fieldsnek
+AAB=bin/fieldsnek-2.0.0-arm64-v8a-release.aab
 
 # 1. Mint a short-lived access token from the service-account JWT.
 TOKEN=$(python - <<'PY'
 import json, time, base64, pathlib, urllib.request, urllib.parse
 import jwt  # pip install --user pyjwt cryptography
-sa = json.loads(pathlib.Path.home().joinpath(".config/ontrack/play-service-account.json").read_text())
+sa = json.loads(pathlib.Path.home().joinpath(".config/fieldsnek/play-service-account.json").read_text())
 now = int(time.time())
 assertion = jwt.encode(
     {"iss": sa["client_email"], "scope": "https://www.googleapis.com/auth/androidpublisher",
@@ -347,7 +346,7 @@ the other forms are Console-only.
 | Build cache wedged after upgrading p4a | Stale `.buildozer/` | `./build.sh clean` |
 | `buildozer not found` from `build.sh` | Venv not activated or installed elsewhere | One-shot: `./scripts/setup-venv.sh` (creates `~/venv_p4a_develop` with buildozer master + cython 0.29.34). Or manual setup per §1. |
 | `bash: /home/<user>/venv_p4a_develop/bin/activate: No such file or directory` | The Python 3.14 venv was never created | Run `./scripts/setup-venv.sh` from the repo root |
-| `gradlew clean bundleRelease` exits 1 with no visible stack trace | Buildozer suppresses subprocess stderr at default log level | `build.sh` now passes `--verbose` automatically. If you invoke buildozer directly, use `buildozer --verbose android release` and read `~/.buildozer/android/platform/build-*/dists/ontrack/build_output.log` for the gradle output |
+| `gradlew clean bundleRelease` exits 1 with no visible stack trace | Buildozer suppresses subprocess stderr at default log level | `build.sh` now passes `--verbose` automatically. If you invoke buildozer directly, use `buildozer --verbose android release` and read `~/.buildozer/android/platform/build-*/dists/fieldsnek/build_output.log` for the gradle output |
 | `python -m pythonforandroid.toolchain: error: unrecognized arguments: --feature ...` | p4a develop removed the `--feature` CLI flag; buildozer still emits it for any value in `android.features` | Don't use `android.features` — declare `<uses-feature>` nodes in `android_manifest_extras.xml` and reference it with `android.extra_manifest_xml = ./android_manifest_extras.xml`. Already configured in this branch. |
 
 ## Reference

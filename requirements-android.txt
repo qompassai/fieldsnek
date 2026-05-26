@@ -1,4 +1,4 @@
-# /qompassai/ONTrack/requirements-android.txt
+# /qompassai/FieldSnek/requirements-android.txt
 # Android-only pip requirements (mirrors `requirements =` in buildozer.spec).
 # Heavy desktop deps (faster-whisper, ctranslate2, ortools, sounddevice, pandas,
 # numpy, pyproj, shapely) are intentionally absent — they have no p4a recipe.

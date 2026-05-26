@@ -1,5 +1,5 @@
 """
-gui/components/voice_button.py — Mic button widget for the OnTrack desktop GUI.
+gui/components/voice_button.py — Mic button widget for the FieldSnek desktop GUI.
 
 Embeds into any CustomTkinter parent frame.
 Calls a callback with the transcribed text string when recording completes.

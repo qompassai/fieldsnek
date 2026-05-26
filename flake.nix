@@ -1,7 +1,7 @@
 # vi: ft=nix
 #
 {
-  description = "OnTrack — Route Optimization app (Linux · Android · Windows)";
+  description = "FieldSnek — Route Optimization app (Linux · Android · Windows)";
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -34,17 +34,17 @@
       };
       androidSdkRoot = "/opt/android-sdk";
       androidNdkRoot = "/opt/android-sdk/ndk/29.0.14206865";
-      buildozerBase = "/var/tmp/buildozer/ontrack";
+      buildozerBase = "/var/tmp/buildozer/fieldsnek";
       meta = with pkgs.lib; {
         broken = false;
-        changelog = "https://github.com/qompassai/ONTrack/blob/main/CHANGELOG.md";
-        description = "OnTrack productivity app for field service technicians";
-        downloadPage = "https://github.com/qompassai/ONTrack/releases";
-        homepage = "https://github.com/qompassai/ONTrack/tree/main";
+        changelog = "https://github.com/qompassai/fieldsnek/blob/main/CHANGELOG.md";
+        description = "FieldSnek productivity app for field service technicians";
+        downloadPage = "https://github.com/qompassai/fieldsnek/releases";
+        homepage = "https://github.com/qompassai/fieldsnek/tree/main";
         hydraPlatforms = [];
         license = licenses.unfree;
         longDescription = ''
-          OnTrack is a desktop (Linux + Windows) and Android application for
+          FieldSnek is a desktop (Linux + Windows) and Android application for
           TDS field technicians. It provides location-aware job tracking,
           offline-capable workflows, and streamlined field reporting.
           Desktop builds use PyInstaller; Android builds use Buildozer /
@@ -79,7 +79,7 @@
       mingwCC = pkgs.pkgsCross.mingwW64.stdenv.cc;
     in {
       devShells.default = pkgs.mkShell {
-        name = "ontrack-linux";
+        name = "fieldsnek-linux";
         inherit meta;
         buildInputs =
           commonPythonInputs
@@ -90,7 +90,7 @@
             upx
           ]);
         shellHook = ''
-          echo "OnTrack Linux desktop env"
+          echo "FieldSnek Linux desktop env"
           echo "  Python  : $(python3 --version)"
           echo "  uv      : $(uv --version)"
           if [ ! -d .venv ]; then
@@ -104,11 +104,11 @@
           source .venv/bin/activate
           echo "  PyInstaller: $(pyinstaller --version 2>/dev/null || echo 'not installed')"
           echo ""
-          echo "  Ready. Run: pyinstaller ontrack.spec"
+          echo "  Ready. Run: pyinstaller fieldsnek.spec"
         '';
       };
       devShells.buildozer = pkgs.mkShell {
-        name = "ontrack-buildozer";
+        name = "fieldsnek-buildozer";
         inherit meta;
         ANDROID_HOME = androidSdkRoot;
         ANDROID_NDK_HOME = androidNdkRoot;
@@ -141,7 +141,7 @@
             which
           ]);
         shellHook = ''
-                    echo "OnTrack Android (Buildozer) env"
+                    echo "FieldSnek Android (Buildozer) env"
                     echo "  Java       : $(java -version 2>&1 | head -1)"
                     echo "  NDK        : $ANDROID_NDK_ROOT"
                     echo "  SDK        : $ANDROID_SDK_ROOT"
@@ -179,7 +179,7 @@
         '';
       };
       devShells.windows = pkgs.mkShell {
-        name = "ontrack-windows";
+        name = "fieldsnek-windows";
         buildInputs =
           commonPythonInputs
           ++ commonNativeInputs
@@ -191,11 +191,11 @@
           ]);
         CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER = "${mingwCC}/bin/x86_64-w64-mingw32-gcc";
         shellHook = ''
-          echo "OnTrack Windows cross-compile env"
+          echo "FieldSnek Windows cross-compile env"
           echo "  MinGW CC : $(x86_64-w64-mingw32-gcc --version 2>/dev/null | head -1 || echo 'not found')"
           echo "  Wine     : $(wine --version 2>/dev/null || echo 'not found')"
           echo "  uv       : $(uv --version)"
-          export WINEPREFIX="$HOME/.wine-ontrack"
+          export WINEPREFIX="$HOME/.wine-fieldsnek"
           export WINEARCH="win64"
           mkdir -p "$WINEPREFIX"
           if [ ! -f "$WINEPREFIX/drive_c/Python312/python.exe" ]; then
@@ -209,11 +209,11 @@
             echo "  Wine Python: $(wine C:\\Python312\\python.exe --version 2>/dev/null)"
           fi
           echo ""
-          echo "  Ready. Run: wine C:\\Python312\\Scripts\\pyinstaller.exe ontrack.spec"
+          echo "  Ready. Run: wine C:\\Python312\\Scripts\\pyinstaller.exe fieldsnek.spec"
         '';
       };
       devShells.maturin = pkgs.mkShell {
-        name = "ontrack-maturin";
+        name = "fieldsnek-maturin";
         CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER = "${mingwCC}/bin/x86_64-w64-mingw32-gcc";
         RUST_BACKTRACE = "1";
         RUST_SRC_PATH = "${rustToolchain}/lib/rustlib/src/rust/library";
@@ -228,7 +228,7 @@
             zlib
           ]);
         shellHook = ''
-          echo "OnTrack maturin/Rust dev env"
+          echo "FieldSnek maturin/Rust dev env"
           echo "  Rust    : $(rustc --version)"
           echo "  Cargo   : $(cargo --version)"
           echo "  Maturin : $(maturin --version)"
@@ -243,7 +243,7 @@
           echo ""
           echo "  Linux build  : maturin develop"
           echo "  Windows build: cargo build --target x86_64-pc-windows-gnu"
-          echo "  PyO3 check   : python3 -c 'import ontrack; print(ontrack.__doc__)'"
+          echo "  PyO3 check   : python3 -c 'import fieldsnek; print(fieldsnek.__doc__)'"
         '';
       };
     });

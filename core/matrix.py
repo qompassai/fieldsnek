@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-matrix.py — Distance matrix builder for OnTrack route optimization.
+matrix.py — Distance matrix builder for FieldSnek route optimization.
 Supports OSRM (default, free) and Google Maps Distance Matrix API.
 """
 

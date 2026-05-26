@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# find_stubs.sh — detect empty / stub Python files in the ONTrack repo
+# find_stubs.sh — detect empty / stub Python files in the FieldSnek repo
 # Usage: ./find_stubs.sh [--json] [path]
 
 set -euo pipefail
@@ -136,7 +136,7 @@ PYEOF
 fi
 
 # ── Human output ──────────────────────────────────────────────────────────
-echo -e "\n${BOLD}ONTrack stub / empty file report${RESET}"
+echo -e "\n${BOLD}FieldSnek stub / empty file report${RESET}"
 echo -e "Scanned: ${CYAN}${SCAN_ROOT}${RESET}\n"
 
 total=$(( ${#EMPTY_FILES[@]} + ${#STUB_FILES[@]} + ${#INIT_ONLY[@]} ))

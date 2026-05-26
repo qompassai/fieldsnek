@@ -1,9 +1,9 @@
 """
-core/voice.py — Cross-platform voice capture and transcription for OnTrack.
+core/voice.py — Cross-platform voice capture and transcription for FieldSnek.
 
 Audio capture backend selection (automatic, in priority order):
   Linux    → sounddevice via PipeWire-ALSA or PipeWire-pulse (managed by
-              WirePlumber). If ONTRACK_PIPEWIRE_NODE is set, that node is used
+              WirePlumber). If FIELDSNEK_PIPEWIRE_NODE is set, that node is used
               as the capture source; otherwise the system default is used.
   Windows  → sounddevice via WASAPI
   macOS    → sounddevice via CoreAudio
@@ -12,7 +12,7 @@ Audio capture backend selection (automatic, in priority order):
 
 Transcription engine:
   faster-whisper (CTranslate2 backend) — fully offline, no API key.
-  Model is downloaded once to ~/.cache/ontrack/whisper/ on first use.
+  Model is downloaded once to ~/.cache/fieldsnek/whisper/ on first use.
 
   Model size tradeoffs:
     tiny    —  39M params,  ~1s/min audio,  WER ~12%   (fast, low RAM)
@@ -58,8 +58,8 @@ SILENCE_THRESH = 0.01     # RMS below this → silence
 SILENCE_PAD_S  = 0.6      # seconds of silence to keep after speech ends
 MAX_RECORD_S   = 60       # hard cap on recording length
 
-WHISPER_CACHE  = pathlib.Path.home() / ".cache" / "ontrack" / "whisper"
-DEFAULT_MODEL  = os.getenv("ONTRACK_WHISPER_MODEL", "base")
+WHISPER_CACHE  = pathlib.Path.home() / ".cache" / "fieldsnek" / "whisper"
+DEFAULT_MODEL  = os.getenv("FIELDSNEK_WHISPER_MODEL", "base")
 
 # ── Platform detection ─────────────────────────────────────────────────────
 
@@ -155,10 +155,10 @@ def _get_sounddevice_device() -> Optional[int]:
     Return the sounddevice device index to use for capture.
 
     On Linux with PipeWire:
-      - If ONTRACK_PIPEWIRE_NODE is set, find the device matching that name.
+      - If FIELDSNEK_PIPEWIRE_NODE is set, find the device matching that name.
       - Otherwise use the system default (PipeWire's default source).
     """
-    node_name = os.getenv("ONTRACK_PIPEWIRE_NODE", "")
+    node_name = os.getenv("FIELDSNEK_PIPEWIRE_NODE", "")
     if not node_name:
         return None
 
@@ -361,7 +361,7 @@ def _transcribe(
 
 class VoiceRecognizer:
     """
-    High-level voice recognition interface for OnTrack.
+    High-level voice recognition interface for FieldSnek.
 
     Thread-safe. The recording happens on the calling thread's sounddevice
     stream; transcription runs on a background thread to keep UI responsive.

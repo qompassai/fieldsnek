@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# /qompassai/ONTrack/build.sh
+# /qompassai/FieldSnek/build.sh
 # Copyright (C) 2026 Qompass AI, All rights reserved
 # ----------------------------------------
-# OnTrack Android build driver.
+# FieldSnek Android build driver.
 #
 # Usage:
 #   ./build.sh                  # debug APK (default)

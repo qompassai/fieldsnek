@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# /qompassai/ONTrack/installer/build_installer.sh
+# /qompassai/FieldSnek/installer/build_installer.sh
 set -euo pipefail
 cd "$(dirname "$0")"
-echo "=== OnTrack Installer Build ==="
+echo "=== FieldSnek Installer Build ==="
 if ! command -v uv &> /dev/null; then
     echo "uv not found — installing via astral.sh installer…"
     curl -fsSL https://astral.sh/uv/install.sh | sh
@@ -22,6 +22,6 @@ pyinstaller installer.spec --noconfirm --clean
 
 echo ""
 echo "=== Build complete ==="
-ls -lh dist/OnTrackInstaller* 2> /dev/null || true
+ls -lh dist/FieldSnekInstaller* 2> /dev/null || true
 
 deactivate

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-#/qompassai/ONTrack/installer/ontrack_installer.spec
+#/qompassai/FieldSnek/installer/fieldsnek_installer.spec
 """
-OnTrack — GUI Installer
+FieldSnek — GUI Installer
 """
 
 from __future__ import annotations
@@ -31,7 +31,7 @@ TDS_GRAY    = "#6B7280"
 TDS_GREEN   = "#22C55E"
 TDS_RED     = "#EF4444"
 
-APP_NAME    = "OnTrack"
+APP_NAME    = "FieldSnek"
 APP_VERSION = "2.0.0"
 APP_ORG     = "TDS Telecom"
 
@@ -43,7 +43,7 @@ def default_install_dir() -> str:
     if IS_WINDOWS:
         base = os.environ.get("LOCALAPPDATA", os.path.expanduser("~\\AppData\\Local"))
         return os.path.join(base, APP_ORG, APP_NAME)
-    return os.path.expanduser(f"~/.local/share/ontrack")
+    return os.path.expanduser(f"~/.local/share/fieldsnek")
 
 def desktop_dir() -> str:
     if IS_WINDOWS:
@@ -54,7 +54,7 @@ def desktop_dir() -> str:
 
 def source_root() -> pathlib.Path:
     """
-    Return the root of the ontrack Python source tree.
+    Return the root of the fieldsnek Python source tree.
     Works both when run from source and when frozen by PyInstaller
     (PyInstaller sets sys._MEIPASS to the temp extraction dir).
     """
@@ -164,7 +164,7 @@ $Shortcut = $WshShell.CreateShortcut("{lnk}")
 $Shortcut.TargetPath = "{venv_pythonw}"
 $Shortcut.Arguments = '"{main_py}"'
 $Shortcut.WorkingDirectory = "{self.install_dir}"
-$Shortcut.Description = "OnTrack — TDS Field Route Optimizer"
+$Shortcut.Description = "FieldSnek — TDS Field Route Optimizer"
 $Shortcut.Save()
 """
         subprocess.run(
@@ -191,18 +191,18 @@ $Shortcut.Save()
 
         apps_dir = pathlib.Path.home() / ".local" / "share" / "applications"
         apps_dir.mkdir(parents=True, exist_ok=True)
-        app_file = apps_dir / "ontrack.desktop"
+        app_file = apps_dir / "fieldsnek.desktop"
         app_file.write_text(desktop_entry)
         app_file.chmod(app_file.stat().st_mode | stat.S_IEXEC)
 
         desk = pathlib.Path(desktop_dir())
         if desk.exists():
-            desk_file = desk / "OnTrack.desktop"
+            desk_file = desk / "FieldSnek.desktop"
             desk_file.write_text(desktop_entry)
             desk_file.chmod(desk_file.stat().st_mode | stat.S_IEXEC)
 
 
-class OnTrackInstaller(ctk.CTk):
+class FieldSnekInstaller(ctk.CTk):
     PAGE_WELCOME  = 0
     PAGE_OPTIONS  = 1
     PAGE_PROGRESS = 2
@@ -358,7 +358,7 @@ class OnTrackInstaller(ctk.CTk):
         if IS_WINDOWS:
             ctk.CTkCheckBox(
                 opts_card,
-                text="Add to PATH (allows running 'ontrack' from any terminal)",
+                text="Add to PATH (allows running 'fieldsnek' from any terminal)",
                 variable=self._add_to_path,
                 text_color=TDS_WHITE,
                 fg_color=TDS_BLUE,
@@ -456,7 +456,7 @@ class OnTrackInstaller(ctk.CTk):
         btn_row.pack()
 
         self._launch_btn = ctk.CTkButton(
-            btn_row, text="🚀 Launch OnTrack", width=180, height=44,
+            btn_row, text="🚀 Launch FieldSnek", width=180, height=44,
             fg_color=TDS_ORANGE, hover_color="#D4541A",
             font=ctk.CTkFont(size=15, weight="bold"),
             text_color=TDS_WHITE,
@@ -521,7 +521,7 @@ class OnTrackInstaller(ctk.CTk):
 
         install_dir = self._install_dir.get()
         body = (
-            f"OnTrack has been installed to:\n{install_dir}\n\n"
+            f"FieldSnek has been installed to:\n{install_dir}\n\n"
             f"{'A desktop shortcut has been created.' if self._create_shortcut.get() else ''}"
         )
         self._done_body_lbl.configure(text=body.strip())
@@ -568,7 +568,7 @@ class OnTrackInstaller(ctk.CTk):
 
 
 class UninstallHelper:
-    """Removes OnTrack from the machine. Run with --uninstall flag."""
+    """Removes FieldSnek from the machine. Run with --uninstall flag."""
 
     @staticmethod
     def run():
@@ -576,12 +576,12 @@ class UninstallHelper:
         ctk.set_default_color_theme("blue")
 
         root = ctk.CTk()
-        root.title("OnTrack — Uninstaller")
+        root.title("FieldSnek — Uninstaller")
         root.geometry("460x280")
         root.configure(fg_color=TDS_BG)
 
         ctk.CTkLabel(
-            root, text="Uninstall OnTrack",
+            root, text="Uninstall FieldSnek",
             font=ctk.CTkFont(size=20, weight="bold"),
             text_color=TDS_WHITE,
         ).pack(pady=(32, 8))
@@ -589,7 +589,7 @@ class UninstallHelper:
         install_dir = default_install_dir()
         ctk.CTkLabel(
             root,
-            text=f"Remove OnTrack from:\n{install_dir}",
+            text=f"Remove FieldSnek from:\n{install_dir}",
             font=ctk.CTkFont(size=13),
             text_color=TDS_GRAY,
         ).pack(pady=(0, 24))
@@ -602,9 +602,9 @@ class UninstallHelper:
                 shutil.rmtree(install_dir, ignore_errors=True)
                 # Remove .desktop file on Linux
                 if IS_LINUX:
-                    desk = pathlib.Path.home() / ".local/share/applications/ontrack.desktop"
+                    desk = pathlib.Path.home() / ".local/share/applications/fieldsnek.desktop"
                     desk.unlink(missing_ok=True)
-                messagebox.showinfo("Uninstalled", "OnTrack has been removed.")
+                messagebox.showinfo("Uninstalled", "FieldSnek has been removed.")
             except Exception as e:
                 messagebox.showerror("Error", str(e))
             root.quit()
@@ -630,5 +630,5 @@ if __name__ == "__main__":
     if "--uninstall" in sys.argv:
         UninstallHelper.run()
     else:
-        app = OnTrackInstaller()
+        app = FieldSnekInstaller()
         app.mainloop()

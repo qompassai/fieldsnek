@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# /qompassai/ONTrack/scripts/setup-venv.sh
+# /qompassai/FieldSnek/scripts/setup-venv.sh
 # Copyright (C) 2026 Qompass AI, All rights reserved
 # -----------------------------------------------------------------------------
 # One-shot bootstrap for the Python 3.14 venv that build.sh expects at
@@ -89,7 +89,7 @@ cat <<EOF
 [setup-venv] done. To use:
 
     source ${VENV_DIR}/bin/activate
-    cd ~/.GH/Qompass/ONTrack
+    cd ~/.GH/Qompass/FieldSnek
     ./build.sh release
 
 Or just run ./build.sh release directly — build.sh auto-detects

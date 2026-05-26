@@ -4,9 +4,8 @@ __pycache__/
 *.pyc
 .env
 *.spec
-!ontrack.spec
+!fieldsnek.spec
 !buildozer.spec
-!buildozer.fieldsnek.spec
 !installer/installer.spec
 tags
 .tags
@@ -29,3 +28,4 @@ fastlane/test_output/
 *.gem
 Gemfile.lock
 
+.kivy/logs/

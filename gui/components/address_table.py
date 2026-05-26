@@ -40,7 +40,7 @@ _INPUT = '#243044'
 
 class AddressTable(ctk.CTkFrame):
     """
-    Scrollable, reorderable stop list widget for the OnTrack desktop GUI.
+    Scrollable, reorderable stop list widget for the FieldSnek desktop GUI.
 
     Parameters
     ----------

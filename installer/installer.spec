@@ -1,14 +1,14 @@
-#/qompassai/ONTrack/installer/installer.spec
+#/qompassai/FieldSnek/installer/installer.spec
 # -*- mode: python ; coding: utf-8 -*-
 #
 #
 # Build:
-#   cd ontrack/installer
+#   cd fieldsnek/installer
 #   pyinstaller installer.spec
 #
 # Output:
-#   dist/OnTrackInstaller.exe   (Windows)
-#   dist/OnTrackInstaller       (Linux)
+#   dist/FieldSnekInstaller.exe   (Windows)
+#   dist/FieldSnekInstaller       (Linux)
 
 import sys
 import os
@@ -19,7 +19,7 @@ APP_ROOT = str(pathlib.Path(SPECPATH).parent)
 block_cipher = None
 
 a = Analysis(
-    [os.path.join(SPECPATH, "ontrack_installer.py")],
+    [os.path.join(SPECPATH, "fieldsnek_installer.py")],
     pathex=[SPECPATH, APP_ROOT],
     binaries=[],
     datas=[
@@ -81,7 +81,7 @@ exe = EXE(
     a.zipfiles,
     a.datas,
     [],
-    name="OnTrackInstaller",
+    name="FieldSnekInstaller",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -108,9 +108,9 @@ exe = EXE(
 #TODO: MacOS
 # app = BUNDLE(
 #     exe,
-#     name="OnTrackInstaller.app",
+#     name="FieldSnekInstaller.app",
 #     icon=os.path.join(APP_ROOT, "assets", "icon.icns"),
-#     bundle_identifier="com.amorfatilabs.ontrack.installer",
+#     bundle_identifier="com.amorfatilabs.fieldsnek.installer",
 #     info_plist={
 #         "NSHighResolutionCapable": True,
 #         "LSMinimumSystemVersion": "12.0",

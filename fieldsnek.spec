@@ -1,5 +1,5 @@
 # -*- mode: python ; coding: utf-8 -*-
-# Build: pyinstaller ontrack.spec
+# Build: pyinstaller fieldsnek.spec
 
 import sys
 import os
@@ -105,7 +105,7 @@ exe = EXE(
     a.zipfiles,
     a.datas,
     [],
-    name="OnTrack",
+    name="FieldSnek",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -131,9 +131,9 @@ exe = EXE(
 #TODO: MacOS
 # app = BUNDLE(
 #     exe,
-#     name="OnTrack.app",
+#     name="FieldSnek.app",
 #     icon=os.path.join("assets", "icon.icns"),
-#     bundle_identifier="com.amorfatilabs.ontrack",
+#     bundle_identifier="com.amorfatilabs.fieldsnek",
 #     info_plist={
 #         "NSHighResolutionCapable": True,
 #         "LSMinimumSystemVersion": "12.0",

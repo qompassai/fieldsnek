@@ -1,5 +1,5 @@
 """
-mobile/screens/home.py — Home screen for the OnTrack Kivy mobile app.
+mobile/screens/home.py — Home screen for the FieldSnek Kivy mobile app.
 
 Responsibilities:
   - Address entry (text + voice)
@@ -39,7 +39,7 @@ C_RED = get_color_from_hex('#EF4444ff')
 
 
 def _btn(text: str, bg=C_BLUE, **kw) -> Button:
-    """Return a pre-styled Button using the OnTrack palette."""
+    """Return a pre-styled Button using the FieldSnek palette."""
     return Button(
         text=text,
         background_color=bg,
@@ -77,7 +77,7 @@ class HomeScreen(Screen):
         header = BoxLayout(size_hint_y=None, height=dp(50))
         header.add_widget(
             Label(
-                text='[b]OnTrack[/b]  ·  TDS Field Route Optimizer',
+                text='[b]FieldSnek[/b]  ·  TDS Field Route Optimizer',
                 markup=True,
                 color=C_WHITE,
                 font_size=dp(16),

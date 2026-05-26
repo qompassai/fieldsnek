@@ -20,7 +20,6 @@ default_platform(:android)
 #   See fastlane/INIT.md for the full runbook.
 
 FIELDSNEK_PACKAGE         = "com.qompassai.fieldsnek"
-FIELDSNEK_SPEC            = "buildozer.fieldsnek.spec"
 FIELDSNEK_BIN_DEFAULT     = "/var/tmp/buildozer/fieldsnek/bin"
 FIELDSNEK_VERSION_DEFAULT = "2.0.0"
 
@@ -48,7 +47,7 @@ def ensure_aab(root)
     return existing
   end
 
-  sh("bash #{root}/scripts/build-android.sh aab fieldsnek")
+  sh("bash #{root}/scripts/build-android.sh aab")
   aab = resolve_aab(root)
   UI.user_error!("FieldSnek AAB still missing after buildozer run (expected in #{FIELDSNEK_BIN_DEFAULT}/)") unless aab && File.exist?(aab)
   aab
@@ -78,7 +77,7 @@ rescue => e
     UI.error  "       #{opts[:aab]}"
     UI.error  "  5. Save the draft (no rollout required)."
     UI.error  "  6. Users & permissions -> invite the service-account email"
-    UI.error  "     from google-play-ontrack.json (Release to testing tracks)."
+    UI.error  "     from google-play-fieldsnek.json (Release to testing tracks)."
     UI.error  ""
     UI.error  "Full runbook: fastlane/INIT.md"
     UI.error  "==============================================================="
@@ -124,7 +123,7 @@ platform :android do
   desc "Validate service-account credentials only (no build, no AAB needed)"
   lane :check_auth do
     json_key = File.expand_path(
-      "#{ENV['XDG_CONFIG_HOME'] || "#{ENV['HOME']}/.config"}/fastlane/google-play-ontrack.json"
+      "#{ENV['XDG_CONFIG_HOME'] || "#{ENV['HOME']}/.config"}/fastlane/google-play-fieldsnek.json"
     )
     validate_play_store_json_key(json_key: json_key)
   end

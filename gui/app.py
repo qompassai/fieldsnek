@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-gui/app.py — OnTrack desktop application root (CustomTkinter).
+gui/app.py — FieldSnek desktop application root (CustomTkinter).
 Manages navigation between views and shared state.
 """
 
@@ -23,10 +23,10 @@ TDS_SURFACE = "#1A2535"
 TDS_BG      = "#111827"
 
 
-class ONTrackApp(ctk.CTk):
+class FieldSnekApp(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.title("OnTrack — TDS Field Route Optimizer")
+        self.title("FieldSnek — TDS Field Route Optimizer")
         self.geometry("1200x780")
         self.minsize(900, 600)
         self.configure(fg_color=TDS_BG)
@@ -55,7 +55,7 @@ class ONTrackApp(ctk.CTk):
 
         logo_lbl = ctk.CTkLabel(
             self.header,
-            text="  🗺  OnTrack",
+            text="  🗺  FieldSnek",
             font=ctk.CTkFont(family="Segoe UI", size=20, weight="bold"),
             text_color=TDS_WHITE,
         )

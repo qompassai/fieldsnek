@@ -1,4 +1,4 @@
-# OnTrack — TDS Telecom Field Route Optimizer
+# FieldSnek — TDS Telecom Field Route Optimizer
 
 Route optimization tool for TDS field service technicians.
 Enter addresses manually or load a CSV/Excel file, optimize the drive order,
@@ -70,7 +70,7 @@ python main.py
 | `GOOGLE_MAPS_API_KEY` | No | `""` | Street View, Google geocoding, Google distance matrix |
 | `ARCGIS_ITEM_ID` | No | `""` | Deep-link target for ArcGIS FieldMaps |
 | `OSRM_BASE_URL` | No | `http://router.project-osrm.org` | Override with a self-hosted OSRM instance for offline routing |
-| `ONTRACK_WHISPER_MODEL` | No | `base` | Whisper model size for voice input: `tiny`, `base`, `small`, `medium`, `large` |
+| `FIELDSNEK_WHISPER_MODEL` | No | `base` | Whisper model size for voice input: `tiny`, `base`, `small`, `medium`, `large` |
 
 Set values in `.env` or export them in your shell. The app reads `.env`
 automatically on startup; Android builds use system env vars only.
@@ -86,15 +86,15 @@ automatically on startup; Android builds use system env vars only.
 
 ```bash
 pip install pyinstaller
-pyinstaller ontrack.spec
-# Output: dist/OnTrack
+pyinstaller fieldsnek.spec
+# Output: dist/FieldSnek
 ```
 
 With the Nix dev shell (recommended on NixOS / Arch + Nix):
 
 ```bash
 nix develop
-pyinstaller ontrack.spec
+pyinstaller fieldsnek.spec
 ```
 
 </details>
@@ -110,15 +110,15 @@ pyinstaller ontrack.spec
 
 ```powershell
 pip install pyinstaller
-pyinstaller ontrack.spec
-# Output: dist\OnTrack.exe
+pyinstaller fieldsnek.spec
+# Output: dist\FieldSnek.exe
 ```
 
 **Cross-compile from Linux using Nix + Wine:**
 
 ```bash
 nix develop .#windows
-wine C:\Python312\Scripts\pyinstaller.exe ontrack.spec
+wine C:\Python312\Scripts\pyinstaller.exe fieldsnek.spec
 ```
 
 First-time Wine setup (run once inside the windows shell):
@@ -184,7 +184,7 @@ cargo build --target x86_64-pc-windows-gnu
 Verify the extension loaded correctly:
 
 ```bash
-python3 -c "import ontrack; print(ontrack.__doc__)"
+python3 -c "import fieldsnek; print(fieldsnek.__doc__)"
 ```
 
 </details>
@@ -252,9 +252,9 @@ for local, offline transcription. No audio is sent to any server.
 **Model selection** — set in `.env` or as a shell export:
 
 ```bash
-ONTRACK_WHISPER_MODEL=base   # default — good balance of speed and accuracy
-ONTRACK_WHISPER_MODEL=small  # better accuracy, slightly slower
-ONTRACK_WHISPER_MODEL=tiny   # fastest, lowest memory
+FIELDSNEK_WHISPER_MODEL=base   # default — good balance of speed and accuracy
+FIELDSNEK_WHISPER_MODEL=small  # better accuracy, slightly slower
+FIELDSNEK_WHISPER_MODEL=tiny   # fastest, lowest memory
 ```
 
 **PipeWire echo cancellation** (Linux desktop — recommended when using
@@ -262,7 +262,7 @@ a laptop mic near speakers):
 
 ```bash
 # Install the config file
-cp pipewire/51-ontrack-echo-cancel.conf \
+cp pipewire/51-fieldsnek-echo-cancel.conf \
    ~/.config/pipewire/pipewire.conf.d/
 
 # Restart PipeWire
@@ -282,7 +282,7 @@ troubleshooting.
 <summary>Project structure</summary>
 
 ```
-ONTrack/
+FieldSnek/
 ├── main.py                 # Entry point — detects desktop vs Android
 ├── core/                   # Pure-Python core (being ported to Rust)
 │   ├── parser.py           # CSV/Excel -> address list
@@ -316,7 +316,7 @@ ONTrack/
 ├── pipewire/               # PipeWire echo-cancel config for Linux desktop
 ├── tests/                  # pytest test suite
 ├── buildozer.spec          # Android build config
-├── ontrack.spec            # PyInstaller desktop build config
+├── fieldsnek.spec            # PyInstaller desktop build config
 ├── Cargo.toml              # Rust build manifest
 ├── pyproject.toml          # Python build config (Maturin backend)
 └── flake.nix               # Nix dev shells (linux / buildozer / windows / maturin)

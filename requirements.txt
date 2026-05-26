@@ -1,4 +1,4 @@
-#/ONTrack/requirements.txt
+#/FieldSnek/requirements.txt
 ctranslate2
 customtkinter>=5.2
 faster-whisper>=1.0

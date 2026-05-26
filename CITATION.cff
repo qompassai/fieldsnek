@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: "ONTrack"
+title: "FieldSnek"
 message: "If you use this software, please cite it as below."
 authors:
   - family-names: "Porter"
@@ -8,7 +8,7 @@ authors:
     affiliation: "Qompass AI"
 version: "v2026-05-24"
 date-released: "2026-05-24"
-repository-code: "https://github.com/qompassai/ONTrack"
+repository-code: "https://github.com/qompassai/fieldsnek"
 license: "Q-CDA-1.0"
 keywords:
   - AI

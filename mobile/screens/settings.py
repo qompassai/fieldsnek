@@ -126,9 +126,9 @@ class SettingsScreen(Screen):
         # Try to persist to a local file (works on Android in app storage)
         try:
             from android.storage import app_storage_path  # type: ignore
-            env_path = os.path.join(app_storage_path(), ".ontrack.env")
+            env_path = os.path.join(app_storage_path(), ".fieldsnek.env")
         except ImportError:
-            env_path = os.path.expanduser("~/.ontrack.env")
+            env_path = os.path.expanduser("~/.fieldsnek.env")
 
         try:
             with open(env_path, "w") as f:

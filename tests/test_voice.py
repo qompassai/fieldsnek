@@ -1,5 +1,5 @@
 """
-tests/test_voice.py — Voice recognition tests for OnTrack.
+tests/test_voice.py — Voice recognition tests for FieldSnek.
 
 Test structure:
   Unit tests (fast, no hardware, no model download):
@@ -96,7 +96,7 @@ def mock_sounddevice():
     mock_sd = MagicMock()
     mock_sd.InputStream.return_value = mock_stream
     mock_sd.query_devices.return_value = [
-        {"name": "OnTrack Echo Cancel", "max_input_channels": 1},
+        {"name": "FieldSnek Echo Cancel", "max_input_channels": 1},
         {"name": "Built-in Microphone",  "max_input_channels": 1},
     ]
 
@@ -203,19 +203,19 @@ class TestDeviceListing:
 
 class TestPipeWireNodeSelection:
     def test_env_var_selects_device(self, mock_sounddevice, monkeypatch):
-        monkeypatch.setenv("ONTRACK_PIPEWIRE_NODE", "OnTrack Echo Cancel")
+        monkeypatch.setenv("FIELDSNEK_PIPEWIRE_NODE", "FieldSnek Echo Cancel")
         from core.voice import _get_sounddevice_device
         idx = _get_sounddevice_device()
         assert idx == 0  # first device in mock list matches
 
     def test_no_env_returns_none(self, mock_sounddevice, monkeypatch):
-        monkeypatch.delenv("ONTRACK_PIPEWIRE_NODE", raising=False)
+        monkeypatch.delenv("FIELDSNEK_PIPEWIRE_NODE", raising=False)
         from core.voice import _get_sounddevice_device
         idx = _get_sounddevice_device()
         assert idx is None  # use system default
 
     def test_unknown_node_returns_none(self, mock_sounddevice, monkeypatch):
-        monkeypatch.setenv("ONTRACK_PIPEWIRE_NODE", "NonExistentDevice")
+        monkeypatch.setenv("FIELDSNEK_PIPEWIRE_NODE", "NonExistentDevice")
         from core.voice import _get_sounddevice_device
         idx = _get_sounddevice_device()
         assert idx is None
@@ -325,7 +325,7 @@ class TestAsyncTranscription:
 
 class TestModelPath:
     def test_default_model_env_var(self, monkeypatch):
-        monkeypatch.setenv("ONTRACK_WHISPER_MODEL", "tiny")
+        monkeypatch.setenv("FIELDSNEK_WHISPER_MODEL", "tiny")
         import importlib
         import core.voice as v
         importlib.reload(v)
@@ -334,7 +334,7 @@ class TestModelPath:
     def test_whisper_cache_under_home(self):
         from core.voice import WHISPER_CACHE
         assert str(pathlib.Path.home()) in str(WHISPER_CACHE)
-        assert "ontrack" in str(WHISPER_CACHE)
+        assert "fieldsnek" in str(WHISPER_CACHE)
 
 
 # ── Integration tests (need real faster-whisper) ───────────────────────────
@@ -406,8 +406,8 @@ class TestHardware:
         assert isinstance(result.text, str)
 
     def test_pipewire_echo_cancel_node(self, monkeypatch):
-        """Requires the 51-ontrack-echo-cancel.conf to be installed."""
-        monkeypatch.setenv("ONTRACK_PIPEWIRE_NODE", "OnTrack Echo Cancel")
+        """Requires the 51-fieldsnek-echo-cancel.conf to be installed."""
+        monkeypatch.setenv("FIELDSNEK_PIPEWIRE_NODE", "FieldSnek Echo Cancel")
         from core.voice import VoiceRecognizer
         vr = VoiceRecognizer(model_size="tiny")
         vr.start_recording()
