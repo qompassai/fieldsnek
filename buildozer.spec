@@ -2,13 +2,22 @@
 # Qompass AI — ONTrack Android build configuration
 # Copyright (C) 2026 Qompass AI, All rights reserved.
 # ----------------------------------------------------
-# Tested combinations (May 2026):
-#   buildozer == 1.5.0
-#   python-for-android (p4a) == develop
-#   Android SDK platform 34   build-tools 34.0.0
-#   Android NDK 25b           (25.1.8937393)   <-- newer NDKs break p4a's CPython recipe
+# Tested combinations (May 2026, Python 3.14 / Play Store target):
+#   buildozer            == git+https://github.com/kivy/buildozer  (master)
+#   python-for-android   == develop  (required for Python 3.14)
+#   cython               == 0.29.34  (host) ; p4a builds Kivy with its own cython 0.29.36
+#   Android SDK platform 36   build-tools 36.0.0
+#   Android NDK 29            (r29)         <-- required by p4a develop
 #   JDK 17 (jdk17-openjdk on Arch)
-#   Python 3.11 on host
+#   Python 3.14 on host (`python3.14 -m venv venv_p4a_develop`)
+#
+# Why Kivy is pinned to `master` (not 2.3.1):
+#   Kivy 2.3.1 ships pre-generated Cython C that calls `_PyLong_AsByteArray`
+#   with 5 args. Python 3.14 changed that signature to 6 args (added
+#   `with_exceptions`), so the build dies with:
+#       error: too few arguments to function call, expected 6, have 5
+#   Kivy master regenerates Cython with cython>=3.1 (Python-3.14-aware).
+#   See https://github.com/kivy/python-for-android/pull/3271 (closes #3274).
 #
 # Build:    bash build.sh                     # debug APK -> bin/
 # Release:  buildozer android release         # unsigned AAB -> bin/  (sign with apksigner)
@@ -32,7 +41,7 @@ source.exclude_patterns      = ontrack.spec,Cargo.toml,Cargo.lock,flake.nix,flak
 
 # Comma-separated, single line — buildozer / p4a parses this very strictly.
 # Do NOT mix newlines and commas.
-requirements                 = python3,kivy==2.3.0,android,plyer,pyjnius,requests,certifi,urllib3,chardet,idna,charset-normalizer,python-dotenv,pillow,openssl,sqlite3,libffi
+requirements                 = python3,kivy==master,android,plyer,pyjnius,requests,certifi,urllib3,chardet,idna,charset-normalizer,python-dotenv,pillow,openssl,sqlite3,libffi
 
 orientation                  = portrait
 fullscreen                   = 0
@@ -42,11 +51,11 @@ presplash.color              = #002855
 presplash.keep_on_top        = 1
 
 # ── Android ────────────────────────────────────────────────────────────────
-android.api                  = 34
+android.api                  = 36
 android.minapi               = 26
-android.ndk                  = 25b
+android.ndk                  = 29
 android.ndk_api              = 26
-android.sdk                  = 34
+android.sdk                  = 36
 android.archs                = arm64-v8a, armeabi-v7a
 android.allow_backup         = 0
 android.copy_libs            = 1

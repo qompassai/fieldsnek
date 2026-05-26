@@ -12,9 +12,11 @@
 #
 # Expects an Arch Linux host with:
 #   - jdk17-openjdk
-#   - android-sdk-cmdline-tools-latest (AUR) + platform 34 + build-tools 34.0.0
-#   - Android NDK 25b (25.1.8937393) — installed via sdkmanager (see docs/ANDROID_BUILD.md)
-#   - buildozer >= 1.5.0 (pipx or pip --user)
+#   - android-sdk-cmdline-tools-latest (AUR) + platform 36 + build-tools 36.0.0
+#   - Android NDK r29 — installed via sdkmanager (see docs/ANDROID_BUILD.md)
+#   - Python 3.14 venv at ~/venv_p4a_develop with:
+#       buildozer (master from git), cython==0.29.34, legacy-cgi, setuptools
+#   - See docs/ANDROID_BUILD.md §1 for one-shot setup.
 # ----------------------------------------
 set -euo pipefail
 unset GIT_OPTIONAL_LOCKS
@@ -25,15 +27,39 @@ export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
 export ANDROID_HOME=/opt/android-sdk
 export ANDROID_SDK_ROOT=/opt/android-sdk
 export ANDROIDSDK="${ANDROID_SDK_ROOT}"
-export ANDROIDNDK="${ANDROID_SDK_ROOT}/ndk/25.1.8937393"
-export ANDROIDAPI=34
-export NDKAPI=21          # min SDK — keep ≤ NDK platform floor
-export ANDROIDNDKVER=25b
+# Resolve NDK r29 install path (sdkmanager installs to ndk/<full-version>)
+if [ -z "${ANDROIDNDK:-}" ]; then
+    if [ -d "${ANDROID_SDK_ROOT}/ndk" ]; then
+        ANDROIDNDK="$(find "${ANDROID_SDK_ROOT}/ndk" -maxdepth 1 -mindepth 1 -type d -name '29.*' | sort | tail -1)"
+    fi
+    : "${ANDROIDNDK:=${ANDROID_SDK_ROOT}/ndk/29.0.13599879}"
+fi
+export ANDROIDNDK
+export ANDROIDAPI=36
+export NDKAPI=26          # min SDK — matches android.ndk_api in buildozer.spec
+export ANDROIDNDKVER=29
 
 export PATH="${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${ANDROID_SDK_ROOT}/platform-tools:${JAVA_HOME}/bin:/usr/bin:/bin"
 
 # Strip any pip mirrors that leak from the user shell — they break p4a wheels.
 PIP_CLEAN_ENV=(env -u PIP_EXTRA_INDEX_URL -u PIP_INDEX_URL -u PIP_FIND_LINKS)
+
+# Prefer the Python 3.14 venv if present (matches Buildozer docs p4a-develop path).
+BUILDOZER_BIN=""
+for cand in \
+    "${HOME}/venv_p4a_develop/bin/buildozer" \
+    "${HOME}/.local/bin/buildozer" \
+    "$(command -v buildozer 2>/dev/null || true)"; do
+    if [ -n "${cand}" ] && [ -x "${cand}" ]; then
+        BUILDOZER_BIN="${cand}"
+        break
+    fi
+done
+if [ -z "${BUILDOZER_BIN}" ]; then
+    echo "[build.sh] buildozer not found. See docs/ANDROID_BUILD.md §1 to set up" >&2
+    echo "           a Python 3.14 venv with buildozer master + cython 0.29.34." >&2
+    exit 127
+fi
 
 # ── Subcommand dispatch ──────────────────────────────────────────────────────
 MODE="${1:-debug}"
@@ -42,7 +68,7 @@ shift || true
 case "${MODE}" in
     clean)
         echo "[build.sh] cleaning .buildozer and bin/ ..."
-        "${PIP_CLEAN_ENV[@]}" ~/.local/bin/buildozer android clean || true
+        "${PIP_CLEAN_ENV[@]}" "${BUILDOZER_BIN}" android clean || true
         rm -rf .buildozer bin
         echo "[build.sh] clean complete. Re-run ./build.sh debug or ./build.sh release."
         exit 0
@@ -64,7 +90,8 @@ esac
 echo "[build.sh] JAVA_HOME=${JAVA_HOME}"
 echo "[build.sh] ANDROID_HOME=${ANDROID_HOME}"
 echo "[build.sh] ANDROIDNDK=${ANDROIDNDK}"
+echo "[build.sh] BUILDOZER=${BUILDOZER_BIN}"
 echo "[build.sh] target=${TARGET}"
 
 # shellcheck disable=SC2086
-"${PIP_CLEAN_ENV[@]}" ~/.local/bin/buildozer ${TARGET} "$@" 2>&1 | tee ~/buildozer_debug.log
+"${PIP_CLEAN_ENV[@]}" "${BUILDOZER_BIN}" ${TARGET} "$@" 2>&1 | tee ~/buildozer_debug.log

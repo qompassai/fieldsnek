@@ -3,17 +3,26 @@
 This is the reference procedure for building the OnTrack Kivy app into a
 Google Play–ready Android App Bundle (`.aab`) on an Arch Linux workstation.
 
-It documents the exact toolchain pins that work as of May 2026. The previous
-build failure (`Py_DEPRECATED(VERSION_UNUSED) __attribute__((__deprecated__))`
-during `pythonforandroid.toolchain create`) was caused by:
+It documents the exact toolchain pins that work as of May 2026.
 
-1. A malformed multi-line `requirements =` in `buildozer.spec` that p4a was
-   parsing as a single recipe name.
-2. Desktop-only dependencies (`faster-whisper`, `ctranslate2`, `ortools`,
-   `geopy`, `numpy`, `pandas`) that have no python-for-android recipe.
-3. Android NDK 29, which breaks p4a's CPython recipe.
+### Build failures this branch resolves
 
-The fixes in this branch (`fix/android-build`) address all three.
+1. **`Py_DEPRECATED(VERSION_UNUSED)` during `pythonforandroid.toolchain create`** —
+   caused by a malformed multi-line `requirements =` in `buildozer.spec` that
+   p4a parsed as a single recipe name, plus desktop-only deps
+   (`faster-whisper`, `ctranslate2`, `ortools`, `geopy`, `numpy`, `pandas`) that
+   have no python-for-android recipe.
+2. **`_PyLong_AsByteArray ... too few arguments to function call, expected 6,
+   have 5`** while compiling Kivy/Cython modules — Python 3.14 changed the
+   `_PyLong_AsByteArray` C-API signature, and the pre-generated Cython C in
+   Kivy 2.3.x release tarballs still uses the old 5-arg call. **Fix:** pin
+   `kivy==master` in `requirements`, switch to `p4a.branch = develop`, and
+   target `android.api = 36 / android.ndk = 29` per the
+   [official Buildozer Python 3.14 path](https://buildozer.readthedocs.io/en/latest/installation/).
+   See [p4a PR #3271](https://github.com/kivy/python-for-android/pull/3271)
+   (closes [#3274](https://github.com/kivy/python-for-android/issues/3274)).
+
+All fixes live on the `fix/android-build` branch.
 
 ---
 
@@ -31,12 +40,24 @@ sudo pacman -S --needed base-devel git python python-pip \
     autoconf automake libtool pkgconf cmake ninja \
     zlib openssl libffi sqlite ccache unzip
 
-# Buildozer — pin to a release that knows about NDK 25.
-pip install --user --upgrade 'buildozer>=1.5.0' Cython==0.29.36
+# Python 3.14 — required by p4a develop (the only branch that supports the
+# new _PyLong_AsByteArray signature).
+sudo pacman -S --needed python  # Arch's `python` package is 3.14 in May 2026
 
-# Make sure ~/.local/bin is on PATH (add to ~/.zshrc/.bashrc if missing).
-export PATH="$HOME/.local/bin:$PATH"
+# Create the isolated Python 3.14 venv used for buildozer + p4a develop.
+python3.14 -m venv ~/venv_p4a_develop
+source ~/venv_p4a_develop/bin/activate
+pip install --upgrade pip
+pip install git+https://github.com/kivy/buildozer
+pip install legacy-cgi setuptools 'cython==0.29.34'
+
+# Verify (should print 1.6.x.dev0 from git).
+buildozer --version
 ```
+
+> **Why a venv?** `build.sh` auto-detects `~/venv_p4a_develop/bin/buildozer`
+> first, then falls back to `~/.local/bin/buildozer`. Keeping the Python 3.14
+> build env separate avoids polluting your system Python.
 
 Set the env vars the build script expects (also add to your shell rc):
 
@@ -47,22 +68,26 @@ export ANDROID_SDK_ROOT=/opt/android-sdk
 export PATH="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$JAVA_HOME/bin:$PATH"
 ```
 
-## 2. Install Android SDK + NDK 25b
+## 2. Install Android SDK + NDK r29
+
+p4a `develop` requires **API 36 / NDK r29**. The old `NDK 25b` path does not
+work with Python 3.14.
 
 ```bash
 # Accept all licenses first.
 yes | sdkmanager --licenses
 
-# Platform 34 + matching build-tools + NDK 25b (the only NDK p4a is happy with).
+# Platform 36 + matching build-tools + NDK r29 (matches buildozer.spec pins).
 sdkmanager \
     "platform-tools" \
-    "platforms;android-34" \
-    "build-tools;34.0.0" \
-    "ndk;25.1.8937393"
+    "platforms;android-36" \
+    "build-tools;36.0.0" \
+    "ndk;29.0.13599879"
 ```
 
-After this, `$ANDROID_SDK_ROOT/ndk/25.1.8937393` must exist. The build script
-exports `ANDROIDNDK` to that exact path.
+After this, `$ANDROID_SDK_ROOT/ndk/29.*` must exist. `build.sh` auto-resolves
+`ANDROIDNDK` by globbing that directory, so the exact patch version doesn't
+matter — any `29.x.y` install will be picked up.
 
 ## 3. Clone and check out the fix branch
 
@@ -74,7 +99,11 @@ git checkout fix/android-build
 
 ## 4. Build
 
+Activate the venv first so `buildozer` resolves to the Python 3.14 install:
+
 ```bash
+source ~/venv_p4a_develop/bin/activate
+
 # Always start from a clean cache the first time after pulling toolchain changes.
 ./build.sh clean
 
@@ -278,12 +307,14 @@ the other forms are Console-only.
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
-| `Py_DEPRECATED(VERSION_UNUSED) __attribute__((__deprecated__))` during `toolchain create` | NDK too new (>= 26) | Re-install NDK 25b: `sdkmanager "ndk;25.1.8937393"` |
+| `_PyLong_AsByteArray ... too few arguments to function call, expected 6, have 5` while compiling Kivy/Cython | Python 3.14 changed the `_PyLong_AsByteArray` C-API; Kivy 2.3.x ships pre-generated Cython C with the old 5-arg call | Use `kivy==master` in `requirements`, `p4a.branch = develop`, `android.api = 36`, `android.ndk = 29`. Already pinned in this branch's `buildozer.spec`. |
 | `Recipe with name '<long-string>' not found` | Multi-line `requirements =` in `buildozer.spec` | Keep `requirements =` on one comma-separated line |
 | `Could not find ortools / faster-whisper / numpy` | Desktop-only dep in mobile requirements | Remove from `buildozer.spec`; guard import in code |
 | `Gradle build failed: Unsupported class file major version 65` | Wrong JDK | `export JAVA_HOME=/usr/lib/jvm/java-17-openjdk` |
-| `aidl is missing` | build-tools not installed | `sdkmanager "build-tools;34.0.0"` |
+| `aidl is missing` | build-tools not installed | `sdkmanager "build-tools;36.0.0"` |
+| `Py_DEPRECATED(VERSION_UNUSED) __attribute__((__deprecated__))` during `toolchain create` | Mixing p4a `master` with Python 3.14, or running NDK r25 against Python 3.14 sources | Use Python 3.14 venv + `p4a.branch = develop` + NDK r29 as documented in §1–2 |
 | Build cache wedged after upgrading p4a | Stale `.buildozer/` | `./build.sh clean` |
+| `buildozer not found` from `build.sh` | Venv not activated or installed elsewhere | `source ~/venv_p4a_develop/bin/activate` (see §1) |
 
 ## Reference
 
