@@ -25,24 +25,19 @@ import sys
 
 import pytest
 
-
     try:
         importlib.import_module(name)
         return True
     except ImportError:
         return False
 
-
 def _cmd_exists(cmd: str) -> bool:
     return shutil.which(cmd) is not None
-
 
 FIELDSNEK_ROOT = pathlib.Path(__file__).parent.parent
 
 
-# ══════════════════════════════════════════════════════════════════════════
-# 1. PYTHON VERSION — must be ≥3.9 on all targets
-# ══════════════════════════════════════════════════════════════════════════
+
 
 
 @pytest.mark.linux
@@ -53,9 +48,8 @@ def test_python_version():
     assert sys.version_info >= (3, 9), f'Python 3.9+ required, running {sys.version}'
 
 
-# ══════════════════════════════════════════════════════════════════════════
-# 2. CORE RUNTIME IMPORTS — packages that must exist on all targets
-# ══════════════════════════════════════════════════════════════════════════
+
+
 
 CORE_DEPS = [
     ('pandas', 'Data parsing (CSV/Excel)'),
@@ -67,7 +61,6 @@ CORE_DEPS = [
     ('dotenv', 'python-dotenv env loading'),
 ]
 
-
 @pytest.mark.linux
 @pytest.mark.windows
 @pytest.mark.android
@@ -78,7 +71,6 @@ def test_core_import(module, purpose):
         f"Cannot import '{module}' — needed for {purpose}. "
         f'Run: pip install -r requirements.txt'
     )
-
 
 class TestLinuxCompat:
     """Checks for PyInstaller one-file build on Linux x86_64."""
@@ -146,9 +138,7 @@ class TestLinuxCompat:
                 )
 
 
-# ══════════════════════════════════════════════════════════════════════════
-# 4. WINDOWS 11 SPECIFIC
-# ══════════════════════════════════════════════════════════════════════════
+
 
 
 class TestWindowsCompat:
@@ -212,9 +202,7 @@ class TestWindowsCompat:
         )
 
 
-# ══════════════════════════════════════════════════════════════════════════
-# 5. ANDROID / BUILDOZER SPECIFIC
-# ══════════════════════════════════════════════════════════════════════════
+
 
 
 class TestAndroidCompat:
@@ -321,7 +309,7 @@ class TestAndroidCompat:
         config_src = (FIELDSNEK_ROOT / 'config' / 'settings.py').read_text()
         combined = main_src + config_src
         if 'load_dotenv' in combined:
-            # Acceptable if it's inside a try block
+
             assert 'try' in combined, (
                 'load_dotenv() is called at module level without try/except. '
                 'On Android, .env files may not exist — wrap in try/except.'
@@ -368,9 +356,7 @@ class TestAndroidCompat:
         pytest.fail('android.minapi not found in buildozer.spec')
 
 
-# ══════════════════════════════════════════════════════════════════════════
-# 6. DEPENDENCY VERSIONS — python-for-android recipe compatibility
-# ══════════════════════════════════════════════════════════════════════════
+
 
 
 class TestDependencyVersions:

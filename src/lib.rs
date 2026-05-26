@@ -47,7 +47,7 @@ fn haversine_matrix(coords: Vec<(f64, f64)>) -> PyResult<Vec<f64>> {
 }
 
 fn haversine(lat1: f64, lon1: f64, lat2: f64, lon2: f64) -> f64 {
-    let r = 6_371_000.0_f64; // metres
+    let r = 6_371_000.0_f64;
     let dlat = (lat2 - lat1).to_radians();
     let dlon = (lon2 - lon1).to_radians();
     let a = (dlat / 2.0).sin().powi(2)

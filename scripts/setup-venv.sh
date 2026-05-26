@@ -1,15 +1,4 @@
 #!/usr/bin/env bash
-# /qompassai/FieldSnek/scripts/setup-venv.sh
-# Copyright (C) 2026 Qompass AI, All rights reserved
-# -----------------------------------------------------------------------------
-# One-shot bootstrap for the Python 3.14 venv that build.sh expects at
-# ~/venv_p4a_develop.
-#
-# Idempotent: re-running is safe; existing venv is reused unless --recreate
-# is passed.
-#
-# Run this once per machine, then ./build.sh release just works.
-# -----------------------------------------------------------------------------
 set -euo pipefail
 
 VENV_DIR="${HOME}/venv_p4a_develop"
@@ -36,7 +25,6 @@ EOF
     esac
 done
 
-# ── Sanity checks ────────────────────────────────────────────────────────────
 if ! command -v python3.14 >/dev/null 2>&1; then
     echo "[setup-venv] python3.14 not on PATH." >&2
     echo "             Arch: install via 'pacman -S python' if system python" >&2
@@ -48,7 +36,6 @@ if ! command -v git >/dev/null 2>&1; then
     exit 127
 fi
 
-# ── (Re)create venv ──────────────────────────────────────────────────────────
 if [ "${RECREATE}" = "1" ] && [ -d "${VENV_DIR}" ]; then
     echo "[setup-venv] --recreate: removing existing ${VENV_DIR}"
     rm -rf "${VENV_DIR}"
@@ -61,23 +48,17 @@ else
     echo "[setup-venv] reusing existing venv at ${VENV_DIR}"
 fi
 
-# shellcheck disable=SC1091
 source "${VENV_DIR}/bin/activate"
 
-# ── Strip pip mirrors that break p4a wheel resolution ────────────────────────
 unset PIP_INDEX_URL PIP_EXTRA_INDEX_URL PIP_FIND_LINKS
 
 python -m pip install --upgrade pip setuptools wheel
 
-# Pinned per docs/ANDROID_BUILD.md and Buildozer 1.6.x.dev0 requirements.
-# Cython 0.29.34 is the last release whose generated C is compatible with
-# both the legacy Kivy 2.3 sources AND Python 3.14's stricter C-API.
 python -m pip install --upgrade \
     "cython==0.29.34" \
     "legacy-cgi" \
     "git+https://github.com/kivy/buildozer.git@master#egg=buildozer"
 
-# ── Verify ───────────────────────────────────────────────────────────────────
 echo
 echo "[setup-venv] versions:"
 python --version

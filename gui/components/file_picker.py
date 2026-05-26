@@ -33,7 +33,6 @@ _HDR = '#9DB8D6'
 
 _VALID_EXTENSIONS = {'.csv', '.xlsx', '.xls'}
 
-
 class FilePicker(ctk.CTkFrame):
     """
     File picker widget for CSV/Excel address files.
@@ -55,7 +54,7 @@ class FilePicker(ctk.CTkFrame):
         parent,
         on_file: Optional[Callable[[str], None]] = None,
         on_clear: Optional[Callable[[], None]] = None,
-        label: str = '📂  Choose File',
+        label: str = '  Choose File',
         **kwargs,
     ):
         super().__init__(parent, fg_color=_SURFACE, corner_radius=8, **kwargs)
@@ -66,14 +65,14 @@ class FilePicker(ctk.CTkFrame):
 
         self._build()
 
-    # ── Layout ─────────────────────────────────────────────────────────────
+
 
     def _build(self) -> None:
-        self.grid_columnconfigure(0, weight=0)  # button
-        self.grid_columnconfigure(1, weight=1)  # filename label
-        self.grid_columnconfigure(2, weight=0)  # clear button
+        self.grid_columnconfigure(0, weight=0)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_columnconfigure(2, weight=0)
 
-        # ── Pick button ──
+
         self._pick_btn = ctk.CTkButton(
             self,
             text=self._label,
@@ -88,7 +87,7 @@ class FilePicker(ctk.CTkFrame):
         )
         self._pick_btn.grid(row=0, column=0, padx=(8, 6), pady=8, sticky='w')
 
-        # ── Filename display ──
+
         self._file_var = tk.StringVar(value='No file selected')
         self._file_lbl = ctk.CTkLabel(
             self,
@@ -99,10 +98,10 @@ class FilePicker(ctk.CTkFrame):
         )
         self._file_lbl.grid(row=0, column=1, padx=(0, 6), pady=8, sticky='ew')
 
-        # ── Clear button (hidden until a file is selected) ──
+
         self._clear_btn = ctk.CTkButton(
             self,
-            text='✕',
+            text='',
             width=30,
             height=30,
             fg_color='#3B1A1A',
@@ -112,9 +111,9 @@ class FilePicker(ctk.CTkFrame):
             font=ctk.CTkFont(size=11),
             command=self._clear,
         )
-        # Not gridded until a file is loaded
 
-        # ── Validation error label ──
+
+
         self._error_var = tk.StringVar(value='')
         self._error_lbl = ctk.CTkLabel(
             self,
@@ -127,7 +126,7 @@ class FilePicker(ctk.CTkFrame):
             row=1, column=0, columnspan=3, padx=10, pady=(0, 6), sticky='w'
         )
 
-    # ── Public API ─────────────────────────────────────────────────────────
+
 
     @property
     def path(self) -> Optional[str]:
@@ -143,7 +142,7 @@ class FilePicker(ctk.CTkFrame):
         self._reset_ui()
         self._path = None
 
-    # ── Interaction ────────────────────────────────────────────────────────
+
 
     def _open_dialog(self) -> None:
         path = filedialog.askopenfilename(
@@ -173,7 +172,7 @@ class FilePicker(ctk.CTkFrame):
         self._file_var.set(os.path.basename(path))
         self._file_lbl.configure(text_color=_GREEN)
 
-        # Show clear button
+
         self._clear_btn.grid(row=0, column=2, padx=(0, 8), pady=8, sticky='e')
 
         if self._on_file:
@@ -185,7 +184,7 @@ class FilePicker(ctk.CTkFrame):
         if self._on_clear:
             self._on_clear()
 
-    # ── Validation ─────────────────────────────────────────────────────────
+
 
     @staticmethod
     def _validate(path: str) -> str:
@@ -199,7 +198,7 @@ class FilePicker(ctk.CTkFrame):
             return 'File is empty.'
         return ''
 
-    # ── Helpers ────────────────────────────────────────────────────────────
+
 
     def _reset_ui(self) -> None:
         self._file_var.set('No file selected')

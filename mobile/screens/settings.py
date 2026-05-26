@@ -26,11 +26,9 @@ C_WHITE   = get_color_from_hex("#FFFFFFff")
 C_GRAY    = get_color_from_hex("#6B7280ff")
 C_GREEN   = get_color_from_hex("#22C55Eff")
 
-
 def _btn(text, bg=C_BLUE, **kw) -> Button:
     return Button(text=text, background_color=bg, color=C_WHITE,
                   size_hint_y=None, height=dp(42), **kw)
-
 
 class SettingsScreen(Screen):
     def __init__(self, **kw):
@@ -95,7 +93,7 @@ class SettingsScreen(Screen):
         sv.add_widget(content)
         root.add_widget(sv)
 
-        save_btn = _btn("💾 Save Settings", bg=C_BLUE)
+        save_btn = _btn(" Save Settings", bg=C_BLUE)
         save_btn.height = dp(50)
         save_btn.bind(on_release=lambda *_: self._save())
         root.add_widget(save_btn)
@@ -123,9 +121,9 @@ class SettingsScreen(Screen):
                 os.environ[k] = v
             elif k in os.environ:
                 del os.environ[k]
-        # Try to persist to a local file (works on Android in app storage)
+
         try:
-            from android.storage import app_storage_path  # type: ignore
+            from android.storage import app_storage_path
             env_path = os.path.join(app_storage_path(), ".fieldsnek.env")
         except ImportError:
             env_path = os.path.expanduser("~/.fieldsnek.env")
@@ -141,5 +139,5 @@ class SettingsScreen(Screen):
         import config.settings as cs
         importlib.reload(cs)
 
-        self.status_lbl.text = "✓ Saved"
+        self.status_lbl.text = " Saved"
         Clock.schedule_once(lambda dt: setattr(self.status_lbl, "text", ""), 3)

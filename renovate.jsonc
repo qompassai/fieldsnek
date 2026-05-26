@@ -1,7 +1,3 @@
-// /qompassai/fieldsnek/renovate.jsonc
-// Qompass AI FieldSnek Renovate Config
-// Copyright (C) 2025 Qompass AI, All rights reserved
-/////////////////////////////////////////////////////
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": [

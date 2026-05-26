@@ -30,7 +30,6 @@ C_GRAY    = get_color_from_hex("#6B7280ff")
 C_RED     = get_color_from_hex("#EF4444ff")
 C_GREEN   = get_color_from_hex("#22C55Eff")
 
-
 class VoiceScreen(Screen):
     """
     Full-screen voice input:
@@ -42,18 +41,18 @@ class VoiceScreen(Screen):
 
     def __init__(self, on_result=None, **kw):
         super().__init__(**kw)
-        self._on_result = on_result   # callback(text: str)
+        self._on_result = on_result
         self._recognizer = None
         self._build()
 
     def on_enter(self):
-        # Lazy-import to avoid loading whisper at app start.
-        # On Android builds, `faster-whisper`, `sounddevice`, and `numpy`
-        # are intentionally not bundled (no python-for-android recipe) — in
-        # that case we show an "unavailable" notice instead of crashing.
+
+
+
+
         try:
-            from core.voice import VoiceRecognizer  # noqa: F401
-        except Exception as exc:  # ImportError, RuntimeError, jnius errors
+            from core.voice import VoiceRecognizer
+        except Exception as exc:
             self._voice_unavailable(str(exc))
             return
         from core.voice import VoiceRecognizer
@@ -62,7 +61,7 @@ class VoiceScreen(Screen):
             try:
                 VoiceRecognizer.preload_model("base")
             except Exception:
-                # Preload is best-effort; model will load on demand.
+
                 pass
 
     def _voice_unavailable(self, reason: str):
@@ -92,7 +91,7 @@ class VoiceScreen(Screen):
         root = BoxLayout(orientation="vertical", spacing=dp(12),
                          padding=[dp(16), dp(12)])
 
-        # Header
+
         header = BoxLayout(size_hint_y=None, height=dp(48), spacing=dp(8))
         back = Button(text="← Back",
                       background_color=C_NAVY, color=C_WHITE,
@@ -106,7 +105,7 @@ class VoiceScreen(Screen):
         ))
         root.add_widget(header)
 
-        # Instruction
+
         self.instruction_lbl = Label(
             text="Tap the mic and say an address",
             color=C_GRAY, font_size=dp(14),
@@ -114,9 +113,9 @@ class VoiceScreen(Screen):
         )
         root.add_widget(self.instruction_lbl)
 
-        # Big mic button
+
         self.mic_btn = Button(
-            text="🎤",
+            text="",
             font_size=dp(64),
             background_color=C_SURFACE,
             color=C_WHITE,
@@ -130,7 +129,7 @@ class VoiceScreen(Screen):
         mic_wrapper.add_widget(self.mic_btn)
         root.add_widget(mic_wrapper)
 
-        # Status / waveform label
+
         self.status_lbl = Label(
             text="",
             color=C_GRAY, font_size=dp(14),
@@ -138,14 +137,14 @@ class VoiceScreen(Screen):
         )
         root.add_widget(self.status_lbl)
 
-        # Progress bar (shown during transcription)
+
         self.progress = ProgressBar(
             max=100, value=0,
             size_hint_y=None, height=dp(6),
         )
         root.add_widget(self.progress)
 
-        # Result box
+
         self.result_lbl = Label(
             text="",
             color=C_WHITE, font_size=dp(16),
@@ -155,12 +154,12 @@ class VoiceScreen(Screen):
         )
         root.add_widget(self.result_lbl)
 
-        # Action buttons (hidden until result ready)
+
         self.action_row = BoxLayout(
             size_hint_y=None, height=dp(48), spacing=dp(10),
             opacity=0,
         )
-        confirm_btn = Button(text="✓ Use This Address",
+        confirm_btn = Button(text=" Use This Address",
                              background_color=C_GREEN, color=C_WHITE)
         confirm_btn.bind(on_release=lambda *_: self._confirm())
         retry_btn = Button(text="↩ Retry",
@@ -173,7 +172,7 @@ class VoiceScreen(Screen):
 
         self.add_widget(root)
 
-    # ── Recording control ──────────────────────────────────────────────────
+
 
     def _toggle_recording(self):
         from core.voice import RecordingState
@@ -221,7 +220,7 @@ class VoiceScreen(Screen):
         else:
             self.status_lbl.text = "● Listening…"
 
-    # ── Action buttons ─────────────────────────────────────────────────────
+
 
     def _confirm(self):
         text = self.result_lbl.text.strip()

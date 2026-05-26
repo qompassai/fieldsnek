@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 solver.py — TSP/VRP route solver for FieldSnek.
 
@@ -14,17 +12,16 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 try:
-    from fieldsnek import solve_greedy as _solve_greedy_rs  # type: ignore[import-not-found]
+    from fieldsnek import solve_greedy as _solve_greedy_rs
     _HAS_RUST = True
 except ImportError:
     _HAS_RUST = False
 
 try:
-    from ortools.constraint_solver import routing_enums_pb2, pywrapcp  # type: ignore[import-not-found]
+    from ortools.constraint_solver import routing_enums_pb2, pywrapcp
     ORTOOLS_AVAILABLE = True
 except ImportError:
     ORTOOLS_AVAILABLE = False
-
 
 @dataclass
 class RouteResult:
@@ -33,7 +30,6 @@ class RouteResult:
     total_duration_seconds: float
     dropped_nodes: list[int] = field(default_factory=list)
     backend_used: str = "unknown"
-
 
 def _nn_solve(
     locations: list[dict],
@@ -86,10 +82,8 @@ def _nn_solve(
         backend_used="nearest-neighbor",
     )
 
-
 def _scale_matrix(matrix: list[list[float]], scale: int = 1) -> list[list[int]]:
     return [[int(matrix[i][j] / scale) for j in range(len(matrix))] for i in range(len(matrix))]
-
 
 def _ortools_solve(
     locations: list[dict],
@@ -158,7 +152,6 @@ def _ortools_solve(
         backend_used="ortools",
     )
 
-
 def solve_tsp(
     locations: list[dict],
     matrix: list[list[float]],
@@ -206,7 +199,6 @@ def solve_tsp(
             max_duration_seconds, time_limit_seconds, scale,
         )
     return _nn_solve(locations, matrix, depot_index)
-
 
 def solve_open_tsp(
     locations: list[dict],

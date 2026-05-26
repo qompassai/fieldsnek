@@ -1,5 +1,3 @@
-# vi: ft=nix
-#
 {
   description = "FieldSnek — Route Optimization app (Linux · Android · Windows)";
   inputs = {

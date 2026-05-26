@@ -18,7 +18,6 @@ from core.exporter import export_csv, build_maps_url
 
 MAPS_BASE = 'https://www.google.com/maps/dir/'
 
-
 class TestExportCSV:
     def test_header_and_rows(self, tmp_path, three_addresses):
         out = str(tmp_path / 'route.csv')
@@ -68,8 +67,6 @@ class TestExportCSV:
         assert rows[1] == ['1', 'Only Stop']
 
 
-# ── build_maps_url ─────────────────────────────────────────────────────────
-
 
 class TestBuildMapsURL:
     def test_starts_with_base(self, three_addresses):
@@ -79,7 +76,7 @@ class TestBuildMapsURL:
     def test_all_addresses_present(self, three_addresses):
         url = build_maps_url(three_addresses)
         for addr in three_addresses:
-            # addresses may be encoded as + or %20 depending on urllib quoting
+
             assert addr.split()[0] in url
 
     def test_spaces_replaced(self):

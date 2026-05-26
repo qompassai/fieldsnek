@@ -23,7 +23,6 @@ import tkinter as tk
 from typing import Callable, Optional
 
 
-# ── Palette (mirrors results.py / home.py constants) ──────────────────────
 _BLUE    = "#0057A8"
 _BLUE = '#0057A8'
 _NAVY = '#002855'
@@ -36,7 +35,6 @@ _ROW_A = '#1A2535'
 _ROW_B = '#1F2D42'
 _HDR = '#9DB8D6'
 _INPUT = '#243044'
-
 
 class AddressTable(ctk.CTkFrame):
     """
@@ -84,14 +82,14 @@ class AddressTable(ctk.CTkFrame):
             corner_radius=6,
         )
         self._scroll.grid(row=0, column=0, sticky='nsew', padx=2, pady=2)
-        self._scroll.grid_columnconfigure(0, weight=0, minsize=40)  # stop #
-        self._scroll.grid_columnconfigure(1, weight=1)  # address
-        self._scroll.grid_columnconfigure(2, weight=0, minsize=100)  # actions
+        self._scroll.grid_columnconfigure(0, weight=0, minsize=40)
+        self._scroll.grid_columnconfigure(1, weight=1)
+        self._scroll.grid_columnconfigure(2, weight=0, minsize=100)
 
         if self._show_header:
             self._build_header()
 
-    # ── Header ─────────────────────────────────────────────────────────────
+
 
     def _build_header(self):
         for col, (txt, width) in enumerate([
@@ -108,7 +106,7 @@ class AddressTable(ctk.CTkFrame):
                 anchor='w',
             ).grid(row=0, column=col, padx=(6, 4), pady=(6, 2), sticky='w')
 
-    # ── Public API ──────────────────────────────────────────────────────────
+
 
     def set_addresses(self, addresses: list[str]) -> None:
         """Replace the entire list and re-render all rows."""
@@ -177,7 +175,7 @@ class AddressTable(ctk.CTkFrame):
         self._selected_idx = None
         self._refresh()
 
-    # ── Rendering ───────────────────────────────────────────────────────────
+
 
     def _refresh(self):
         """Destroy all row widgets and rebuild from self._addresses."""
@@ -217,7 +215,7 @@ class AddressTable(ctk.CTkFrame):
         widgets: dict = {}
         text_color = _ORANGE if selected else _WHITE
 
-        # ── Stop number ──
+
         num_lbl = ctk.CTkLabel(
             self._scroll,
             text=f' {idx + 1}',
@@ -229,7 +227,7 @@ class AddressTable(ctk.CTkFrame):
         num_lbl.grid(row=grid_row, column=0, padx=(6, 2), pady=3, sticky='w')
         widgets['num'] = num_lbl
 
-        # ── Address label ──
+
         addr_lbl = ctk.CTkLabel(
             self._scroll,
             text=addr,
@@ -254,13 +252,13 @@ class AddressTable(ctk.CTkFrame):
         )
         widgets['addr'] = addr_lbl
 
-        # ── Action buttons ──
+
         act = ctk.CTkFrame(self._scroll, fg_color='transparent')
         act.grid(row=grid_row, column=2, padx=4, pady=2, sticky='e')
 
         ctk.CTkButton(
             act,
-            text='✕',
+            text='',
             width=28,
             height=26,
             fg_color='#3B1A1A',
@@ -297,7 +295,7 @@ class AddressTable(ctk.CTkFrame):
         widgets['act'] = act
         self._row_widgets.append(widgets)
 
-    # ── Interaction ─────────────────────────────────────────────────────────
+
 
     def _click_row(self, idx: int):
         self._selected_idx = idx

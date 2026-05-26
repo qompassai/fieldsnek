@@ -19,13 +19,11 @@ from core.parser import parse_addresses
 TESTS_DIR = pathlib.Path(__file__).parent
 
 
-# ── Helpers ────────────────────────────────────────────────────────────────
 
 def _write_csv(path, rows):
     df = pd.DataFrame(rows)
     df.to_csv(path, index=False)
     return str(path)
-
 
 def _write_excel(path, rows):
     df = pd.DataFrame(rows)
@@ -33,7 +31,6 @@ def _write_excel(path, rows):
     return str(path)
 
 
-# ── CSV tests ──────────────────────────────────────────────────────────────
 
 class TestParseCSV:
     def test_happy_path(self, tmp_path):
@@ -77,7 +74,7 @@ class TestParseCSV:
         rows = {"address": ["  100 A St  "]}
         p = _write_csv(tmp_path / "ws.csv", rows)
         result = parse_addresses(p)
-        # Parser should return whatever pandas reads; spaces are preserved
+
         assert "100 A St" in result[0]
 
     def test_large_file_performance(self, tmp_path):
@@ -92,7 +89,6 @@ class TestParseCSV:
         assert elapsed < 2.0, f"parse_addresses took {elapsed:.2f}s on 1 000 rows"
 
 
-# ── Excel tests ────────────────────────────────────────────────────────────
 
 class TestParseExcel:
     def test_happy_path(self, tmp_path):

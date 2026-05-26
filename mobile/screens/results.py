@@ -22,7 +22,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.textinput import TextInput
 from kivy.utils import get_color_from_hex
 
-# ── Palette ───────────────────────────────────────────────────────────────
+
 C_SURFACE = get_color_from_hex('#1A2535ff')
 C_CARD = get_color_from_hex('#243044ff')
 C_BLUE = get_color_from_hex('#0057A8ff')
@@ -33,7 +33,6 @@ C_GRAY = get_color_from_hex('#6B7280ff')
 C_RED = get_color_from_hex('#EF4444ff')
 _FM_GREEN = get_color_from_hex('#1A5F3Fff')
 
-
 def _btn(text: str, bg=C_BLUE, **kw) -> Button:
     return Button(
         text=text,
@@ -43,7 +42,6 @@ def _btn(text: str, bg=C_BLUE, **kw) -> Button:
         height=dp(42),
         **kw,
     )
-
 
 class ResultsScreen(Screen):
     """
@@ -56,7 +54,7 @@ class ResultsScreen(Screen):
         self._selected_idx: int | None = None
         self._layout_built = False
 
-    # ── Lifecycle ──────────────────────────────────────────────────────────
+
 
     def on_enter(self):
         if not self._layout_built:
@@ -64,12 +62,12 @@ class ResultsScreen(Screen):
             self._layout_built = True
         self._populate()
 
-    # ── Layout ─────────────────────────────────────────────────────────────
+
 
     def _build(self):
         root = BoxLayout(orientation='vertical', spacing=dp(8), padding=[dp(10), dp(6)])
 
-        # ── Header ──
+
         header = BoxLayout(size_hint_y=None, height=dp(46), spacing=dp(8))
         back_btn = _btn('← Back', bg=C_NAVY, size_hint_x=None, width=dp(80))
         back_btn.bind(
@@ -80,24 +78,24 @@ class ResultsScreen(Screen):
             text='Route', color=C_WHITE, font_size=dp(14), bold=True
         )
         header.add_widget(self.summary_lbl)
-        settings_btn = _btn('⚙', bg=C_NAVY, size_hint_x=None, width=dp(44))
+        settings_btn = _btn('', bg=C_NAVY, size_hint_x=None, width=dp(44))
         settings_btn.bind(
             on_release=lambda *_: App.get_running_app().navigate('settings')
         )
         header.add_widget(settings_btn)
         root.add_widget(header)
 
-        # ── Map-launch buttons ──
+
         map_row = BoxLayout(size_hint_y=None, height=dp(44), spacing=dp(8))
-        maps_btn = _btn('🗺 Google Maps', bg=C_BLUE)
+        maps_btn = _btn(' Google Maps', bg=C_BLUE)
         maps_btn.bind(on_release=lambda *_: self._open_maps_all())
         map_row.add_widget(maps_btn)
-        fm_all_btn = _btn('📐 FieldMaps', bg=_FM_GREEN)
+        fm_all_btn = _btn(' FieldMaps', bg=_FM_GREEN)
         fm_all_btn.bind(on_release=lambda *_: self._open_fieldmaps_first())
         map_row.add_widget(fm_all_btn)
         root.add_widget(map_row)
 
-        # ── Street View panel ──
+
         sv_card = BoxLayout(
             orientation='vertical',
             size_hint_y=None,
@@ -116,7 +114,7 @@ class ResultsScreen(Screen):
             )
         )
         sv_open_btn = _btn(
-            '🌐 Open', bg=C_CARD, size_hint_x=None, width=dp(80), height=dp(32)
+            ' Open', bg=C_CARD, size_hint_x=None, width=dp(80), height=dp(32)
         )
         sv_open_btn.bind(on_release=lambda *_: self._open_sv_browser())
         sv_header.add_widget(sv_open_btn)
@@ -142,7 +140,7 @@ class ResultsScreen(Screen):
         sv_card.add_widget(self.sv_image)
         root.add_widget(sv_card)
 
-        # ── Inline add stop ──
+
         add_row = BoxLayout(size_hint_y=None, height=dp(44), spacing=dp(8))
         self.add_input = TextInput(
             hint_text='Add a stop…',
@@ -160,7 +158,7 @@ class ResultsScreen(Screen):
         add_row.add_widget(add_btn)
         root.add_widget(add_row)
 
-        # ── Stop list ──
+
         scroll = ScrollView(size_hint=(1, 1))
         self.address_table = _KivyAddressTable(
             on_select=self._on_table_select,
@@ -169,8 +167,8 @@ class ResultsScreen(Screen):
         scroll.add_widget(self.address_table)
         root.add_widget(scroll)
 
-        # ── Re-solve ──
-        resolve_btn = _btn('⚡ Re-optimize Route', bg=C_ORANGE)
+
+        resolve_btn = _btn(' Re-optimize Route', bg=C_ORANGE)
         resolve_btn.font_size = dp(15)
         resolve_btn.height = dp(50)
         resolve_btn.bind(on_release=lambda *_: self._re_solve())
@@ -212,7 +210,7 @@ class ResultsScreen(Screen):
         dur = format_duration(result.total_duration_seconds)
         self.summary_lbl.text = f'{len(addresses)} stops · {dur}'
 
-    # ── Stop selection / preview ───────────────────────────────────────────
+
 
     def _select_stop(self, idx: int):
         self._selected_idx = idx
@@ -291,7 +289,7 @@ class ResultsScreen(Screen):
         self.sv_image.reload()
         self.sv_addr_lbl.text = f'Stop {idx + 1}: {addr} · {source}'
 
-    # ── Inline add ─────────────────────────────────────────────────────────
+
 
     def _add_stop(self):
         addr = self.add_input.text.strip()
@@ -304,7 +302,7 @@ class ResultsScreen(Screen):
             self.add_input.text = ''
             self.address_table.set_addresses(result.ordered_addresses)
 
-    # ── Re-solve ───────────────────────────────────────────────────────────
+
 
     def _re_solve(self):
         app = App.get_running_app()
@@ -317,7 +315,7 @@ class ResultsScreen(Screen):
         app.navigate('home', 'right')
         Clock.schedule_once(lambda _dt: home._start_solve(), 0.3)
 
-    # ── Map launches ───────────────────────────────────────────────────────
+
 
     def _open_maps_all(self):
         app = App.get_running_app()
@@ -374,8 +372,6 @@ class ResultsScreen(Screen):
         )
 
 
-# ── _KivyAddressTable ─────────────────────────────────────────────────────
-
 
 class _KivyAddressTable(BoxLayout):
     """
@@ -399,7 +395,7 @@ class _KivyAddressTable(BoxLayout):
         self._on_delete = on_delete
         self._addresses: list[str] = []
 
-    # ── Public API ──────────────────────────────────────────────────────────
+
 
     def set_addresses(self, addresses: list[str]) -> None:
         self._addresses = list(addresses)
@@ -408,7 +404,7 @@ class _KivyAddressTable(BoxLayout):
     def get_addresses(self) -> list[str]:
         return list(self._addresses)
 
-    # ── Rendering ───────────────────────────────────────────────────────────
+
 
     def _refresh(self):
         self.clear_widgets()
@@ -445,7 +441,7 @@ class _KivyAddressTable(BoxLayout):
         row.add_widget(addr_btn)
 
         del_btn = Button(
-            text='✕',
+            text='',
             background_color=C_RED,
             color=C_WHITE,
             size_hint_x=None,
@@ -455,7 +451,7 @@ class _KivyAddressTable(BoxLayout):
         row.add_widget(del_btn)
 
         fm_btn = Button(
-            text='📐',
+            text='',
             background_color=_FM_GREEN,
             color=C_WHITE,
             size_hint_x=None,
@@ -466,7 +462,7 @@ class _KivyAddressTable(BoxLayout):
 
         return row
 
-    # ── Internal handlers ───────────────────────────────────────────────────
+
 
     def _handle_select(self, idx: int):
         if self._on_select:

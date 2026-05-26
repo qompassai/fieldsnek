@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 matrix.py — Distance matrix builder for FieldSnek route optimization.
 Supports OSRM (default, free) and Google Maps Distance Matrix API.
@@ -8,7 +7,6 @@ import math
 import os
 
 import requests
-
 
 def _haversine(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
     """Straight-line distance in meters between two lat/lng points."""
@@ -22,9 +20,7 @@ def _haversine(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
     )
     return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
-
 OSRM_PUBLIC = 'http://router.project-osrm.org'
-
 
 def _osrm_matrix(
     locations: list[dict], base_url: str = OSRM_PUBLIC
@@ -42,7 +38,6 @@ def _osrm_matrix(
     if data.get('code') != 'Ok':
         raise RuntimeError(f'OSRM error: {data.get("message", "unknown")}')
     return data['durations']
-
 
 def _google_matrix(locations: list[dict], api_key: str) -> list[list[float]]:
     """
@@ -89,7 +84,6 @@ def _google_matrix(locations: list[dict], api_key: str) -> list[list[float]]:
                     matrix[i + ri][j + ci] = val
     return matrix
 
-
 def _haversine_matrix(locations: list[dict]) -> list[list[float]]:
     n = len(locations)
     return [
@@ -104,7 +98,6 @@ def _haversine_matrix(locations: list[dict]) -> list[list[float]]:
         ]
         for i in range(n)
     ]
-
 
 def build_distance_matrix(
     locations: list[dict],

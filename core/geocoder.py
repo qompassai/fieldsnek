@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 geocoder.py — Address geocoding + current-location detection for FieldSnek.
 
@@ -18,13 +17,12 @@ NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
 USER_AGENT = "fieldsnek-tds/1.0 (matt@aflabs.io)"
 
 try:
-    from android.permissions import request_permissions, Permission  # type: ignore
+    from android.permissions import request_permissions, Permission
     PLATFORM = "android"
 except ImportError:
     PLATFORM = "desktop"
 
 
-# ── Address geocoding ──────────────────────────────────────────────────────
 
 def geocode_address_nominatim(addr: str) -> dict:
     """Geocode via OpenStreetMap Nominatim (no API key required)."""
@@ -47,7 +45,6 @@ def geocode_address_nominatim(addr: str) -> dict:
         pass
     return {"address": addr, "lat": None, "lng": None}
 
-
 def geocode_address_google(addr: str, api_key: str) -> dict:
     resp = requests.get(
         "https://maps.googleapis.com/maps/api/geocode/json",
@@ -60,7 +57,6 @@ def geocode_address_google(addr: str, api_key: str) -> dict:
         loc = data["results"][0]["geometry"]["location"]
         return {"address": addr, "lat": loc["lat"], "lng": loc["lng"]}
     return {"address": addr, "lat": None, "lng": None}
-
 
 def geocode_addresses(
     addresses: list[str],
@@ -93,7 +89,6 @@ def geocode_addresses(
     return results
 
 
-# ── Current location ───────────────────────────────────────────────────────
 
 def get_current_location() -> dict | None:
     """
@@ -104,7 +99,6 @@ def get_current_location() -> dict | None:
     if PLATFORM == "android":
         return _android_location()
     return _ip_location()
-
 
 def _ip_location() -> dict | None:
     """Coarse location via IP (desktop fallback, no API key needed)."""
@@ -117,13 +111,12 @@ def _ip_location() -> dict | None:
         pass
     return None
 
-
 def _android_location() -> dict | None:
     """GPS location on Android via plyer."""
     try:
-        from plyer import gps  # type: ignore
-        # plyer GPS is event-driven; for a simple blocking call, use Android directly
-        from jnius import autoclass  # type: ignore
+        from plyer import gps
+
+        from jnius import autoclass
         Context = autoclass("android.content.Context")
         LocationManager = autoclass("android.location.LocationManager")
         PythonActivity = autoclass("org.kivy.android.PythonActivity")
@@ -136,5 +129,5 @@ def _android_location() -> dict | None:
             return {"address": "Current Location", "lat": loc.getLatitude(), "lng": loc.getLongitude()}
     except Exception:
         pass
-    # Fall back to IP on Android if GPS unavailable
+
     return _ip_location()

@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 gui/views/settings.py — API keys, preferences, and about screen.
 """
@@ -19,7 +18,6 @@ TDS_SURFACE = "#1A2535"
 TDS_BG      = "#111827"
 TDS_GREEN   = "#22C55E"
 
-
 class SettingsView(ctk.CTkFrame):
     def __init__(self, parent, app):
         super().__init__(parent, fg_color=TDS_BG, corner_radius=0)
@@ -29,14 +27,14 @@ class SettingsView(ctk.CTkFrame):
     def on_show(self):
         self._reload_values()
 
-    # ── Layout ─────────────────────────────────────────────────────────────
+
 
     def _build(self):
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
-        # Left column — API keys
+
         left = ctk.CTkScrollableFrame(self, fg_color=TDS_SURFACE, corner_radius=12)
         left.grid(row=0, column=0, padx=(16, 8), pady=16, sticky="nsew")
         left.grid_columnconfigure(0, weight=1)
@@ -72,9 +70,9 @@ class SettingsView(ctk.CTkFrame):
         for env_key, label, hint, link in settings_defs:
             self._add_field(left, env_key, label, hint, link)
 
-        # Save button
+
         ctk.CTkButton(
-            left, text="💾 Save Settings",
+            left, text=" Save Settings",
             height=42, fg_color=TDS_BLUE, hover_color=TDS_NAVY,
             text_color=TDS_WHITE, font=ctk.CTkFont(size=14, weight="bold"),
             corner_radius=8, command=self._save,
@@ -85,7 +83,7 @@ class SettingsView(ctk.CTkFrame):
                      font=ctk.CTkFont(size=12), text_color=TDS_GREEN,
                      ).pack(padx=16, pady=(0, 16), anchor="w")
 
-        # Right column — about + tips
+
         right = ctk.CTkScrollableFrame(self, fg_color=TDS_SURFACE, corner_radius=12)
         right.grid(row=0, column=1, padx=(8, 16), pady=16, sticky="nsew")
         right.grid_columnconfigure(0, weight=1)
@@ -130,7 +128,7 @@ class SettingsView(ctk.CTkFrame):
             "  when launching ArcGIS FieldMaps.\n\n"
             "• Use 'Open route type' for field routes that don't\n"
             "  need to return to the starting point.\n\n"
-            "• For large routes (20+ stops) use the '📂 Load File'\n"
+            "• For large routes (20+ stops) use the ' Load File'\n"
             "  option on the New Route screen with a CSV.\n\n"
             "• The solver time limit controls route quality:\n"
             "  longer = better routes, but slower to compute.\n\n"
@@ -170,18 +168,18 @@ class SettingsView(ctk.CTkFrame):
 
         if link:
             ctk.CTkButton(
-                btn_row, text="🔗 Get key →", width=100, height=26,
+                btn_row, text=" Get key →", width=100, height=26,
                 fg_color="transparent", hover_color="#1A2535",
                 text_color=TDS_BLUE, font=ctk.CTkFont(size=11),
                 command=lambda u=link: __import__("webbrowser").open(u),
             ).pack(side="left", padx=(0, 8))
 
-        # Toggle show/hide for secret fields
+
         if "KEY" in env_key or "TOKEN" in env_key:
             def _toggle(e=entry):
                 e.configure(show="" if e.cget("show") else "•")
             ctk.CTkButton(
-                btn_row, text="👁 Show/Hide", width=100, height=26,
+                btn_row, text=" Show/Hide", width=100, height=26,
                 fg_color="transparent", hover_color="#1A2535",
                 text_color=TDS_GRAY, font=ctk.CTkFont(size=11),
                 command=_toggle,
@@ -207,23 +205,22 @@ class SettingsView(ctk.CTkFrame):
         vals = {k: e.get().strip() for k, e in self._fields.items()}
         _write_env(env_path, vals)
 
-        # Reload into os.environ so changes take effect immediately
+
         for k, v in vals.items():
             if v:
                 os.environ[k] = v
             elif k in os.environ:
                 del os.environ[k]
 
-        # Re-load settings module
+
         import importlib
         import config.settings as cs
         importlib.reload(cs)
 
-        self._save_status.set("✓ Settings saved to .env")
+        self._save_status.set(" Settings saved to .env")
         self.after(3000, lambda: self._save_status.set(""))
 
 
-# ── .env helpers ───────────────────────────────────────────────────────────
 
 def _find_env() -> str | None:
     candidates = [
@@ -235,11 +232,9 @@ def _find_env() -> str | None:
             return os.path.realpath(p)
     return None
 
-
 def _default_env_path() -> str:
     base = os.path.join(os.path.dirname(__file__), "..", "..")
     return os.path.realpath(os.path.join(base, ".env"))
-
 
 def _parse_env(path: str) -> dict:
     result = {}
@@ -250,7 +245,6 @@ def _parse_env(path: str) -> dict:
                 k, _, v = line.partition("=")
                 result[k.strip()] = v.strip().strip('"').strip("'")
     return result
-
 
 def _write_env(path: str, vals: dict):
     existing = _parse_env(path) if os.path.exists(path) else {}

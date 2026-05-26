@@ -23,11 +23,10 @@ C_BG = get_color_from_hex('#111827')
 C_BLUE = get_color_from_hex('#0057A8')
 C_ORANGE = get_color_from_hex('#F26522')
 
-
 class FieldSnekMobileApp(App):
     title = 'FieldSnek — TDS Route Optimizer'
 
-    # Shared state (screens read/write via App.get_running_app())
+
     route_result = None
     locations = []
     current_loc = None

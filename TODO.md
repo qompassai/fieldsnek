@@ -1,8 +1,6 @@
 # FieldSnek TODO
 
-
 ---
-
 
 ###  `tests/` — no `__init__.py`
 
@@ -20,5 +18,4 @@ pythonpath = ["."]
 ```
 
 ---
-
 

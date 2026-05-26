@@ -29,4 +29,3 @@ All notable changes to FieldSnek are documented here.
 - Update
 - Update 2026-04-26
 
-

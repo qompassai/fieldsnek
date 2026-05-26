@@ -9,10 +9,8 @@ import pytest
 TESTS_DIR = pathlib.Path(__file__).parent
 SAMPLE_CSV = TESTS_DIR / 'sample_addresses.csv'
 
-
 def pytest_addoption(parser):
     parser.addoption('--hardware', action='store_true', default=False)
-
 
 def pytest_collection_modifyitems(config, items):
     if not config.getoption('--hardware'):
@@ -20,7 +18,6 @@ def pytest_collection_modifyitems(config, items):
         for item in items:
             if 'hardware' in item.keywords:
                 item.add_marker(skip)
-
 
 @pytest.fixture
 def sample_csv(tmp_path):
@@ -31,7 +28,6 @@ def sample_csv(tmp_path):
     shutil.copy(SAMPLE_CSV, dest)
     return str(dest)
 
-
 @pytest.fixture
 def three_addresses():
     return [
@@ -39,7 +35,6 @@ def three_addresses():
         '456 Elm St Spokane WA',
         '789 Oak Ave Spokane WA',
     ]
-
 
 @pytest.fixture
 def three_locations():
@@ -50,7 +45,6 @@ def three_locations():
         {'address': '789 Oak Ave Spokane WA', 'lat': 47.6615, 'lng': -117.4150},
     ]
 
-
 @pytest.fixture
 def three_matrix():
     """Synthetic 3×3 duration matrix (seconds) matching three_locations."""
@@ -59,7 +53,6 @@ def three_matrix():
         [300, 0, 350],
         [600, 350, 0],
     ]
-
 
 @pytest.fixture
 def null_location_list():

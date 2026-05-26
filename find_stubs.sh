@@ -1,14 +1,10 @@
 #!/usr/bin/env bash
-# find_stubs.sh — detect empty / stub Python files in the FieldSnek repo
-# Usage: ./find_stubs.sh [--json] [path]
-
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 JSON_MODE=false
 SCAN_ROOT="$SCRIPT_DIR"
 
-# Parse args cleanly before any find calls
 for arg in "$@"; do
     case "$arg" in
         --json) JSON_MODE=true ;;
@@ -16,7 +12,6 @@ for arg in "$@"; do
     esac
 done
 
-# ── Colours ───────────────────────────────────────────────────────────────
 if [[ "$JSON_MODE" == false ]]; then
     RED='\033[0;31m'; YELLOW='\033[0;33m'; CYAN='\033[0;36m'
     BOLD='\033[1m'; RESET='\033[0m'
@@ -24,7 +19,6 @@ else
     RED=''; YELLOW=''; CYAN=''; BOLD=''; RESET=''
 fi
 
-# ── AST stub checker (inline Python) ─────────────────────────────────────
 check_stub() {
     local file="$1"
     python3 - "$file" <<'PYEOF'
@@ -41,10 +35,9 @@ functions = [
     if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
 ]
 if not functions:
-    sys.exit(0)  # no functions → not a stub, just a module
+    sys.exit(0)
 
 def body_is_stub(body):
-    # strip leading docstring
     if body and isinstance(body[0], ast.Expr) and isinstance(body[0].value, ast.Constant):
         body = body[1:]
     if not body:
@@ -60,7 +53,7 @@ def body_is_stub(body):
                 name = getattr(exc.func, 'id', None) or getattr(exc.func, 'attr', None)
                 if name == 'NotImplementedError':
                     continue
-        return False  # found a real statement
+        return False
     return True
 
 all_stubs = all(body_is_stub(list(fn.body)) for fn in functions)
@@ -69,25 +62,21 @@ if all_stubs:
 PYEOF
 }
 
-# ── Scan ──────────────────────────────────────────────────────────────────
 EMPTY_FILES=()
 STUB_FILES=()
 INIT_ONLY=()
 
 SKIP_DIRS=(".git" "__pycache__" ".buildozer" "build" "dist" "bin" ".eggs" "*.egg-info")
 
-# Build prune expression for find
 PRUNE_EXPR=()
 for d in "${SKIP_DIRS[@]}"; do
     PRUNE_EXPR+=(-name "$d" -o)
 done
-# Remove trailing -o
 unset 'PRUNE_EXPR[${#PRUNE_EXPR[@]}-1]'
 
 while IFS= read -r file; do
     rel="${file#$SCAN_ROOT/}"
 
-    # Count non-blank, non-comment lines
     ml=$(grep -Evc '^\s*(#.*)?$' "$file" || true)
 
     if [[ "$ml" -eq 0 ]]; then
@@ -111,7 +100,6 @@ done < <(
         -o -name "*.py" -print
 )
 
-# ── Output ────────────────────────────────────────────────────────────────
 if [[ "$JSON_MODE" == true ]]; then
     python3 - \
         "${EMPTY_FILES[@]+"${EMPTY_FILES[@]}"}" \
@@ -135,7 +123,6 @@ PYEOF
     exit 0
 fi
 
-# ── Human output ──────────────────────────────────────────────────────────
 echo -e "\n${BOLD}FieldSnek stub / empty file report${RESET}"
 echo -e "Scanned: ${CYAN}${SCAN_ROOT}${RESET}\n"
 
@@ -143,24 +130,24 @@ total=$(( ${#EMPTY_FILES[@]} + ${#STUB_FILES[@]} + ${#INIT_ONLY[@]} ))
 
 if [[ "${#EMPTY_FILES[@]}" -gt 0 ]]; then
     echo -e "${RED}${BOLD}⬜ Empty files (${#EMPTY_FILES[@]})${RESET}"
-    for f in "${EMPTY_FILES[@]}"; do echo -e "   ${RED}✗${RESET}  $f"; done
+    for f in "${EMPTY_FILES[@]}"; do echo -e "   ${RED}${RESET}  $f"; done
     echo
 fi
 
 if [[ "${#STUB_FILES[@]}" -gt 0 ]]; then
-    echo -e "${YELLOW}${BOLD}🔶 Stub files (${#STUB_FILES[@]})${RESET}"
+    echo -e "${YELLOW}${BOLD} Stub files (${#STUB_FILES[@]})${RESET}"
     for f in "${STUB_FILES[@]}"; do echo -e "   ${YELLOW}~${RESET}  $f"; done
     echo
 fi
 
 if [[ "${#INIT_ONLY[@]}" -gt 0 ]]; then
-    echo -e "${CYAN}${BOLD}📄 Bare __init__.py (${#INIT_ONLY[@]})${RESET}"
+    echo -e "${CYAN}${BOLD} Bare __init__.py (${#INIT_ONLY[@]})${RESET}"
     for f in "${INIT_ONLY[@]}"; do echo -e "   ${CYAN}·${RESET}  $f"; done
     echo
 fi
 
 if [[ "$total" -eq 0 ]]; then
-    echo -e "  ✅  No empty or stub files found."
+    echo -e "    No empty or stub files found."
 else
     echo -e "${BOLD}Total flagged: $total${RESET}"
 fi

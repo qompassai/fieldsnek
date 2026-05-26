@@ -1,7 +1,3 @@
-# Cargo.toml
-# Qompass AI - [ ]
-# Copyright (C) 2026 Qompass AI, All rights reserved
-# ----------------------------------------
 [package]
 name = "fieldsnek"
 version = "0.1.0"

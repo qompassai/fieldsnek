@@ -1,6 +1,3 @@
-# -*- mode: python ; coding: utf-8 -*-
-# Build: pyinstaller fieldsnek.spec
-
 import sys
 import os
 
@@ -26,7 +23,6 @@ a = Analysis(
         "geopy.geocoders.googlev3",
         "geopy.geocoders.bing",
         "logging.handlers",
-        # openpyxl (pandas xlsx engine)
         "openpyxl",
         "openpyxl.cell._writer",
         "ortools",
@@ -128,15 +124,4 @@ exe = EXE(
         else None
     ),
 )
-#TODO: MacOS
-# app = BUNDLE(
-#     exe,
-#     name="FieldSnek.app",
-#     icon=os.path.join("assets", "icon.icns"),
-#     bundle_identifier="com.amorfatilabs.fieldsnek",
-#     info_plist={
-#         "NSHighResolutionCapable": True,
-#         "LSMinimumSystemVersion": "12.0",
-#     },
-# )
 

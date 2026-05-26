@@ -17,14 +17,12 @@ from unittest.mock import MagicMock, patch
 
 from core.geocoder import geocode_addresses
 
-
 def _make_loc(lat, lng):
     """Minimal geopy Location stand-in."""
     loc = MagicMock()
     loc.latitude = lat
     loc.longitude = lng
     return loc
-
 
 class TestGeocodeAddresses:
     def test_all_resolve(self, three_addresses):

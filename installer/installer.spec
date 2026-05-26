@@ -1,15 +1,3 @@
-#/qompassai/FieldSnek/installer/installer.spec
-# -*- mode: python ; coding: utf-8 -*-
-#
-#
-# Build:
-#   cd fieldsnek/installer
-#   pyinstaller installer.spec
-#
-# Output:
-#   dist/FieldSnekInstaller.exe   (Windows)
-#   dist/FieldSnekInstaller       (Linux)
-
 import sys
 import os
 import pathlib
@@ -105,14 +93,3 @@ exe = EXE(
     ),
     version_file=None,
 )
-#TODO: MacOS
-# app = BUNDLE(
-#     exe,
-#     name="FieldSnekInstaller.app",
-#     icon=os.path.join(APP_ROOT, "assets", "icon.icns"),
-#     bundle_identifier="com.amorfatilabs.fieldsnek.installer",
-#     info_plist={
-#         "NSHighResolutionCapable": True,
-#         "LSMinimumSystemVersion": "12.0",
-#     },
-# )

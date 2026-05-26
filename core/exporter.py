@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 exporter.py — Route export and external map integration for FieldSnek.
 
@@ -15,7 +14,6 @@ import csv
 import urllib.parse
 
 
-# ── CSV export ─────────────────────────────────────────────────────────────
 
 def export_csv(ordered_addresses: list[str], output_path: str) -> None:
     with open(output_path, "w", newline="") as f:
@@ -25,7 +23,6 @@ def export_csv(ordered_addresses: list[str], output_path: str) -> None:
             writer.writerow([i, addr])
 
 
-# ── Google Maps URLs ───────────────────────────────────────────────────────
 
 def build_maps_url(ordered_addresses: list[str]) -> str:
     """
@@ -50,7 +47,6 @@ def build_maps_url(ordered_addresses: list[str]) -> str:
 
     return base
 
-
 def build_maps_url_chunked(ordered_addresses: list[str]) -> list[str]:
     """
     For routes with > 10 stops, split into multiple Google Maps URLs (max 10 per URL).
@@ -61,7 +57,6 @@ def build_maps_url_chunked(ordered_addresses: list[str]) -> list[str]:
     return [build_maps_url(chunk) for chunk in chunks]
 
 
-# ── Street View Static API ─────────────────────────────────────────────────
 
 def build_streetview_url(
     lat: float | None,
@@ -99,7 +94,6 @@ def build_streetview_url(
 
     return "https://maps.googleapis.com/maps/api/streetview?" + urllib.parse.urlencode(params)
 
-
 def build_streetview_embed_url(lat: float, lng: float) -> str:
     """
     Interactive Street View embed URL (use in <iframe> or webview).
@@ -108,7 +102,6 @@ def build_streetview_embed_url(lat: float, lng: float) -> str:
     return f"https://www.google.com/maps/@{lat},{lng},3a,90y,0h,90t/data=!3m4!1e1!3m2!1s!2e0"
 
 
-# ── ArcGIS FieldMaps deep link ─────────────────────────────────────────────
 
 def build_fieldmaps_url(
     address: str,
@@ -143,13 +136,11 @@ def build_fieldmaps_url(
     return "https://fieldmaps.arcgis.app?" + "&".join(f"{k}={v}" for k, v in params.items())
 
 
-# ── Waze deep link ─────────────────────────────────────────────────────────
 
 def build_waze_url(lat: float, lng: float) -> str:
     return f"https://waze.com/ul?ll={lat},{lng}&navigate=yes&zoom=17"
 
 
-# ── Route summary ──────────────────────────────────────────────────────────
 
 def format_duration(seconds: float) -> str:
     """Format seconds into human-readable h m string."""

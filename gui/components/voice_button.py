@@ -34,7 +34,6 @@ TDS_SURFACE = "#1A2535"
 TDS_GRAY    = "#6B7280"
 TDS_WHITE   = "#FFFFFF"
 
-
 class VoiceButton(ctk.CTkFrame):
     """
     A mic button + status label widget.
@@ -43,7 +42,7 @@ class VoiceButton(ctk.CTkFrame):
       IDLE       — grey mic icon, "Hold to speak" or "Click to speak"
       RECORDING  — red pulsing mic, "Listening…"
       PROCESSING — spinner, "Transcribing…"
-      ERROR      — red ✗, error message
+      ERROR      — red , error message
     """
 
     def __init__(
@@ -61,11 +60,11 @@ class VoiceButton(ctk.CTkFrame):
         self._on_result   = on_result
         self._hold        = hold_to_talk
         self._recognizer  = VoiceRecognizer(model_size=model_size, language=language)
-        self._status_var  = tk.StringVar(value="🎤 Speak")
+        self._status_var  = tk.StringVar(value=" Speak")
         self._blink_job:  Optional[str] = None
         self._blink_state = False
 
-        # Preload model in background so first use is fast
+
         VoiceRecognizer.preload_model(model_size)
 
         self._build(width)
@@ -96,13 +95,13 @@ class VoiceButton(ctk.CTkFrame):
         if self._hold:
             self._btn.bind("<ButtonPress-1>",   lambda e: self._start())
             self._btn.bind("<ButtonRelease-1>", lambda e: self._stop())
-            self._status_var.set("🎤 Hold")
+            self._status_var.set(" Hold")
 
-    # ── State transitions ──────────────────────────────────────────────────
+
 
     def _on_click(self):
         if self._hold:
-            return  # handled by bind
+            return
         state = self._recognizer.state
         if state == RecordingState.IDLE:
             self._start()
@@ -126,17 +125,17 @@ class VoiceButton(ctk.CTkFrame):
     def _on_done(self, result: VoiceResult):
         self._btn.configure(state="normal")
         if result.error:
-            self._status_var.set("🎤 Speak")
+            self._status_var.set(" Speak")
             self._btn.configure(fg_color=TDS_SURFACE)
             self._error_lbl.configure(text=f"Error: {result.error[:60]}")
         elif result.text.strip():
-            self._status_var.set("✓ Done")
+            self._status_var.set(" Done")
             self._btn.configure(fg_color=TDS_GREEN)
             self._on_result(result.text.strip())
-            # Reset after 2s
+
             self.after(2000, self._reset_ui)
         else:
-            self._status_var.set("🎤 Speak")
+            self._status_var.set(" Speak")
             self._btn.configure(fg_color=TDS_SURFACE)
             self._error_lbl.configure(text="No speech detected.")
 
@@ -155,11 +154,11 @@ class VoiceButton(ctk.CTkFrame):
             self._blink_job = None
 
     def _reset_ui(self):
-        label = "🎤 Hold" if self._hold else "🎤 Speak"
+        label = " Hold" if self._hold else " Speak"
         self._status_var.set(label)
         self._btn.configure(fg_color=TDS_SURFACE)
 
-    # ── Public helpers ─────────────────────────────────────────────────────
+
 
     def set_language(self, lang: Optional[str]):
         self._recognizer.language = lang

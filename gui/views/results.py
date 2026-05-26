@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 gui/views/results.py — Route results, map preview, and map launch.
 
@@ -50,7 +49,6 @@ TDS_RED = '#EF4444'
 OSM_TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
 OSM_HEADERS = {'User-Agent': 'FieldSnek-TDS/2.0 (field route optimizer)'}
 
-
 def _latlon_to_tile(lat: float, lng: float, zoom: int) -> tuple[int, int]:
     x = int((lng + 180) / 360 * 2**zoom)
     y = int(
@@ -64,7 +62,6 @@ def _latlon_to_tile(lat: float, lng: float, zoom: int) -> tuple[int, int]:
     )
     return x, y
 
-
 def _fetch_osm_tile(lat: float, lng: float, zoom: int = 16) -> Image.Image | None:
     """Fetch a single OSM tile and return a PIL Image, or None on failure."""
     try:
@@ -75,7 +72,6 @@ def _fetch_osm_tile(lat: float, lng: float, zoom: int = 16) -> Image.Image | Non
         return Image.open(io.BytesIO(resp.content)).convert('RGB')
     except Exception:
         return None
-
 
 def _build_map_image(
     lat: float, lng: float, width: int = 300, height: int = 200
@@ -89,7 +85,7 @@ def _build_map_image(
     cx, cy = _latlon_to_tile(lat, lng, zoom)
     tile_size = 256
 
-    # Fetch 3×3 grid around the centre tile
+
     canvas = Image.new('RGB', (tile_size * 3, tile_size * 3), (30, 40, 60))
     for dy in range(-1, 2):
         for dx in range(-1, 2):
@@ -102,9 +98,9 @@ def _build_map_image(
                 tile = Image.new('RGB', (tile_size, tile_size), (30, 40, 60))
             canvas.paste(tile, ((dx + 1) * tile_size, (dy + 1) * tile_size))
 
-    # Precise pixel offset of the lat/lng within the centre tile
+
     n = 2**zoom
-    x_frac = (lng + 180) / 360 * n - cx  # 0..1 within tile
+    x_frac = (lng + 180) / 360 * n - cx
     lat_rad = math.radians(lat)
     y_frac = (
         1 - math.log(math.tan(lat_rad) + 1 / math.cos(lat_rad)) / math.pi
@@ -113,14 +109,14 @@ def _build_map_image(
     pin_x = int(tile_size + x_frac * tile_size)
     pin_y = int(tile_size + y_frac * tile_size)
 
-    # Crop around the pin
+
     left = max(0, pin_x - width // 2)
     top = max(0, pin_y - height // 2)
     right = left + width
     bottom = top + height
     cropped = canvas.crop((left, top, right, bottom))
 
-    # Draw a red pin circle
+
     draw = ImageDraw.Draw(cropped)
     px, py = pin_x - left, pin_y - top
     r = 8
@@ -130,7 +126,6 @@ def _build_map_image(
     draw.ellipse([px - 3, py - 3, px + 3, py + 3], fill='white')
 
     return cropped
-
 
 class ResultsView(ctk.CTkFrame):
     def __init__(self, parent, app):
@@ -144,14 +139,14 @@ class ResultsView(ctk.CTkFrame):
         if self.app.route_result:
             self._populate()
 
-    # ── Layout ─────────────────────────────────────────────────────────────
+
 
     def _build(self):
         self.grid_columnconfigure(0, weight=2, minsize=420)
         self.grid_columnconfigure(1, weight=1, minsize=320)
         self.grid_rowconfigure(1, weight=1)
 
-        # ── Summary banner ──
+
         banner = ctk.CTkFrame(self, fg_color=TDS_NAVY, corner_radius=0, height=52)
         banner.grid(row=0, column=0, columnspan=2, sticky='ew')
         banner.grid_propagate(False)
@@ -171,10 +166,10 @@ class ResultsView(ctk.CTkFrame):
         action_bar.grid(row=0, column=2, padx=12, pady=8, sticky='e')
 
         for text, color, cmd in [
-            ('🗺 Open in Maps', TDS_BLUE, self._open_in_maps),
-            ('📐 ArcGIS FieldMaps', '#1A5F3F', self._open_fieldmaps_all),
+            (' Open in Maps', TDS_BLUE, self._open_in_maps),
+            (' ArcGIS FieldMaps', '#1A5F3F', self._open_fieldmaps_all),
             ('↩ Waze', '#2563EB', self._open_waze_first),
-            ('💾 Export CSV', '#374151', self._export_csv),
+            (' Export CSV', '#374151', self._export_csv),
         ]:
             ctk.CTkButton(
                 action_bar,
@@ -189,13 +184,13 @@ class ResultsView(ctk.CTkFrame):
                 command=cmd,
             ).pack(side='left', padx=4)
 
-        # ── Left: Stop table + inline edit ──
+
         left = ctk.CTkFrame(self, fg_color=TDS_SURFACE, corner_radius=12)
         left.grid(row=1, column=0, padx=(14, 7), pady=14, sticky='nsew')
         left.grid_rowconfigure(1, weight=1)
         left.grid_columnconfigure(0, weight=1)
 
-        # Inline add stop
+
         add_row = ctk.CTkFrame(left, fg_color='transparent')
         add_row.grid(row=0, column=0, padx=12, pady=(12, 4), sticky='ew')
         add_row.grid_columnconfigure(0, weight=1)
@@ -221,16 +216,16 @@ class ResultsView(ctk.CTkFrame):
             command=self._add_inline_stop,
         ).grid(row=0, column=1)
 
-        # Route table (canvas-scrolled)
+
         self.table_frame = ctk.CTkScrollableFrame(
             left, fg_color='#1A2535', corner_radius=8
         )
         self.table_frame.grid(row=1, column=0, padx=12, pady=(0, 8), sticky='nsew')
-        self.table_frame.grid_columnconfigure(0, weight=0)  # stop #
-        self.table_frame.grid_columnconfigure(1, weight=1)  # address
-        self.table_frame.grid_columnconfigure(2, weight=0)  # actions
+        self.table_frame.grid_columnconfigure(0, weight=0)
+        self.table_frame.grid_columnconfigure(1, weight=1)
+        self.table_frame.grid_columnconfigure(2, weight=0)
 
-        # Column headers
+
         for col, (txt, w) in enumerate([
             ('  #', 40),
             ('Address', 300),
@@ -245,15 +240,15 @@ class ResultsView(ctk.CTkFrame):
                 anchor='w',
             ).grid(row=0, column=col, padx=(6, 4), pady=(6, 2), sticky='w')
 
-        self._row_widgets: list[dict] = []  # track per-row widgets for refresh
+        self._row_widgets: list[dict] = []
 
-        # ── Right: Street View + per-stop actions ──
+
         right = ctk.CTkFrame(self, fg_color=TDS_SURFACE, corner_radius=12)
         right.grid(row=1, column=1, padx=(7, 14), pady=14, sticky='nsew')
         right.grid_rowconfigure(2, weight=1)
         right.grid_columnconfigure(0, weight=1)
 
-        # Panel header row
+
         preview_header = ctk.CTkFrame(right, fg_color='transparent')
         preview_header.grid(row=0, column=0, padx=14, pady=(14, 2), sticky='ew')
         preview_header.grid_columnconfigure(0, weight=1)
@@ -265,7 +260,7 @@ class ResultsView(ctk.CTkFrame):
             text_color=TDS_WHITE,
         ).grid(row=0, column=0, sticky='w')
 
-        # Small badge showing data source
+
         self._preview_source_var = tk.StringVar(value='OpenStreetMap')
         ctk.CTkLabel(
             preview_header,
@@ -283,7 +278,7 @@ class ResultsView(ctk.CTkFrame):
             wraplength=290,
         ).grid(row=1, column=0, padx=16, pady=(0, 4), sticky='w')
 
-        # Preview image canvas (OSM map tile by default, Street View if key present)
+
         self.sv_canvas = tk.Canvas(
             right, bg='#0D1421', highlightthickness=0, width=300, height=200
         )
@@ -297,13 +292,13 @@ class ResultsView(ctk.CTkFrame):
             justify='center',
         )
 
-        # Per-stop action buttons
+
         sv_actions = ctk.CTkFrame(right, fg_color='transparent')
         sv_actions.grid(row=3, column=0, padx=14, pady=10, sticky='ew')
 
         ctk.CTkButton(
             sv_actions,
-            text='🗺 Navigate',
+            text=' Navigate',
             width=100,
             height=32,
             fg_color=TDS_BLUE,
@@ -314,7 +309,7 @@ class ResultsView(ctk.CTkFrame):
 
         ctk.CTkButton(
             sv_actions,
-            text='📐 FieldMaps',
+            text=' FieldMaps',
             width=100,
             height=32,
             fg_color='#1A5F3F',
@@ -325,7 +320,7 @@ class ResultsView(ctk.CTkFrame):
 
         ctk.CTkButton(
             sv_actions,
-            text='🌐 Street View',
+            text=' Street View',
             width=110,
             height=32,
             fg_color='#374151',
@@ -334,10 +329,10 @@ class ResultsView(ctk.CTkFrame):
             command=self._open_streetview_browser,
         ).pack(side='left')
 
-        # Re-solve button
+
         ctk.CTkButton(
             right,
-            text='⚡ Re-optimize Route',
+            text=' Re-optimize Route',
             height=40,
             fg_color=TDS_ORANGE,
             hover_color='#D4541A',
@@ -347,14 +342,14 @@ class ResultsView(ctk.CTkFrame):
             command=self._re_solve,
         ).grid(row=4, column=0, padx=14, pady=(4, 14), sticky='ew')
 
-    # ── Populate table ─────────────────────────────────────────────────────
+
 
     def _populate(self):
         result = self.app.route_result
         if not result:
             return
 
-        # Clear old rows
+
         for rw in self._row_widgets:
             for w in rw.values():
                 try:
@@ -367,11 +362,11 @@ class ResultsView(ctk.CTkFrame):
         dur = format_duration(result.total_duration_seconds)
         n = len(result.ordered_addresses)
         self._summary_var.set(
-            f'✓  {n} stops  ·  Est. {dur}  ·  Backend: {result.backend_used}'
+            f'  {n} stops  ·  Est. {dur}  ·  Backend: {result.backend_used}'
         )
 
         for i, addr in enumerate(result.ordered_addresses):
-            row = i + 1  # header is row 0
+            row = i + 1
             widgets = {}
 
             num_lbl = ctk.CTkLabel(
@@ -408,7 +403,7 @@ class ResultsView(ctk.CTkFrame):
 
             del_btn = ctk.CTkButton(
                 act_frame,
-                text='✕',
+                text='',
                 width=28,
                 height=26,
                 fg_color='#3B1A1A',
@@ -449,11 +444,11 @@ class ResultsView(ctk.CTkFrame):
             widgets['act'] = act_frame
             self._row_widgets.append(widgets)
 
-        # Auto-select first stop for Street View
+
         if result.ordered_addresses:
             self._select_stop(0)
 
-    # ── Stop selection + Street View ───────────────────────────────────────
+
 
     def _select_stop(self, idx: int):
         result = self.app.route_result
@@ -463,10 +458,10 @@ class ResultsView(ctk.CTkFrame):
         addr = result.ordered_addresses[idx]
         self._sv_addr_var.set(f'Stop {idx + 1}: {addr}')
 
-        # Check location for this stop
+
         locs = self.app.locations
         lat, lng = None, None
-        # Try to find matching geocoded location
+
         for loc in locs:
             if loc['address'] == addr:
                 lat, lng = loc.get('lat'), loc.get('lng')
@@ -497,7 +492,7 @@ class ResultsView(ctk.CTkFrame):
             img: Image.Image | None = None
             sv_img: Image.Image | None = None
 
-            # ── 1. Google Street View (if key available) ──────────────────
+
             if key and lat is not None and lng is not None:
                 try:
                     sv_url = build_streetview_url(
@@ -505,14 +500,14 @@ class ResultsView(ctk.CTkFrame):
                     )
                     resp = requests.get(sv_url, timeout=10)
                     resp.raise_for_status()
-                    # Google returns a grey "no imagery" image for missing locations;
-                    # check Content-Type — real SV images are image/jpeg
+
+
                     if 'image/jpeg' in resp.headers.get('Content-Type', ''):
                         sv_img = Image.open(io.BytesIO(resp.content))
                 except Exception:
-                    pass  # fall through to OSM
+                    pass
 
-            # ── 2. OSM map tile (free fallback, always works) ─────────────
+
             if sv_img is not None:
                 img = sv_img
             elif lat is not None and lng is not None:
@@ -549,10 +544,10 @@ class ResultsView(ctk.CTkFrame):
         self.sv_canvas.create_image(
             w // 2, h // 2, image=photo, anchor='center', tags='img'
         )
-        self._current_photo = photo  # keep reference
+        self._current_photo = photo
         self._preview_source_var.set(source)
 
-    # ── Inline stop editing ────────────────────────────────────────────────
+
 
     def _add_inline_stop(self):
         addr = self.add_entry.get().strip()
@@ -587,7 +582,7 @@ class ResultsView(ctk.CTkFrame):
                 locs[idx], locs[new_idx] = locs[new_idx], locs[idx]
             self._populate()
 
-    # ── Re-solve ───────────────────────────────────────────────────────────
+
 
     def _re_solve(self):
         """Push the current (possibly edited) addresses back to home view and re-solve."""
@@ -603,7 +598,7 @@ class ResultsView(ctk.CTkFrame):
         self.app.navigate_to('home')
         home._start_solve()
 
-    # ── Map launch actions ─────────────────────────────────────────────────
+
 
     def _open_in_maps(self):
         result = self.app.route_result
@@ -650,7 +645,7 @@ class ResultsView(ctk.CTkFrame):
             url = build_fieldmaps_url(addr, lat, lng, item_id=ARCGIS_ITEM_ID or None)
             if i == 0:
                 webbrowser.open(url)
-            # For bulk, just open first — user can navigate from within FieldMaps
+
         messagebox.showinfo(
             'ArcGIS FieldMaps',
             'Opened stop 1 in ArcGIS FieldMaps.\n\n'
@@ -698,14 +693,14 @@ class ResultsView(ctk.CTkFrame):
                 url = f'https://www.google.com/maps/@{lat},{lng},3a,90y,0h,90t/data=!3m4!1e1'
                 webbrowser.open(url)
                 return
-        # Fallback: open Maps search
+
         import urllib.parse
 
         webbrowser.open(
             f'https://www.google.com/maps/search/{urllib.parse.quote_plus(addr)}'
         )
 
-    # ── Export ─────────────────────────────────────────────────────────────
+
 
     def _export_csv(self):
         result = self.app.route_result

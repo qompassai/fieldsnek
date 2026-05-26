@@ -25,15 +25,14 @@ from core.matrix import (
 )
 
 
-# ── _haversine ─────────────────────────────────────────────────────────────
 
 class TestHaversine:
     def test_same_point_is_zero(self):
         assert _haversine(47.0, -117.0, 47.0, -117.0) == 0.0
 
     def test_known_distance(self):
-        # Spokane WA (47.6588, -117.4260) to Coeur d'Alene ID (47.6777, -116.7805)
-        # Great-circle ≈ 48 km (straight line, not road distance)
+
+
         dist = _haversine(47.6588, -117.4260, 47.6777, -116.7805)
         assert 45_000 < dist < 55_000, f"Expected ~48 km great-circle, got {dist:.0f} m"
 
@@ -46,7 +45,6 @@ class TestHaversine:
         assert _haversine(0, 0, 1, 1) > 0
 
 
-# ── haversine backend ──────────────────────────────────────────────────────
 
 class TestHaversineBackend:
     def test_shape(self, three_locations):
@@ -76,7 +74,6 @@ class TestHaversineBackend:
                     assert m[i][j] > 0
 
 
-# ── OSRM backend ───────────────────────────────────────────────────────────
 
 def _osrm_response(n):
     """Minimal successful OSRM Table response."""
@@ -85,7 +82,6 @@ def _osrm_response(n):
     mock.raise_for_status = MagicMock()
     mock.json.return_value = {"code": "Ok", "durations": durations}
     return mock
-
 
 class TestOSRMBackend:
     def test_happy_path(self, three_locations):
@@ -116,7 +112,6 @@ class TestOSRMBackend:
         assert call_url.startswith(custom_url)
 
 
-# ── Google backend ─────────────────────────────────────────────────────────
 
 def _google_response(n, status="OK"):
     rows = [
@@ -132,7 +127,6 @@ def _google_response(n, status="OK"):
     mock.raise_for_status = MagicMock()
     mock.json.return_value = {"status": status, "rows": rows}
     return mock
-
 
 class TestGoogleBackend:
     def test_happy_path(self, three_locations):
@@ -162,7 +156,6 @@ class TestGoogleBackend:
         assert call_kwargs["params"]["key"] == "ENV_KEY"
 
 
-# ── Validation ─────────────────────────────────────────────────────────────
 
 class TestBuildDistanceMatrixValidation:
     def test_invalid_backend_raises(self, three_locations):
@@ -180,6 +173,6 @@ class TestBuildDistanceMatrixValidation:
             {"address": "C",   "lat": 47.6615, "lng": -117.415},
         ]
         m = build_distance_matrix(mixed, backend="haversine")
-        # Only 2 resolved points → 2×2 matrix
+
         assert len(m) == 2
         assert all(len(row) == 2 for row in m)

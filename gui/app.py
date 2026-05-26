@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 gui/app.py — FieldSnek desktop application root (CustomTkinter).
 Manages navigation between views and shared state.
@@ -12,7 +11,7 @@ from gui.views.settings import SettingsView
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
-# TDS brand colors
+
 TDS_BLUE    = "#0057A8"
 TDS_NAVY    = "#002855"
 TDS_ORANGE  = "#F26522"
@@ -22,7 +21,6 @@ TDS_GRAY    = "#6B7280"
 TDS_SURFACE = "#1A2535"
 TDS_BG      = "#111827"
 
-
 class FieldSnekApp(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -31,23 +29,23 @@ class FieldSnekApp(ctk.CTk):
         self.minsize(900, 600)
         self.configure(fg_color=TDS_BG)
 
-        # Shared state
-        self.route_result    = None   # core.solver.RouteResult
-        self.locations       = []     # geocoded list[dict]
-        self.raw_addresses   = []     # list[str]
-        self.current_loc     = None   # {"lat":, "lng":, "address":}
+
+        self.route_result    = None
+        self.locations       = []
+        self.raw_addresses   = []
+        self.current_loc     = None
 
         self._build_layout()
         self._show_view("home")
 
-    # ── Layout ─────────────────────────────────────────────────────────────
+
 
     def _build_layout(self):
-        self.grid_rowconfigure(0, weight=0)   # header
-        self.grid_rowconfigure(1, weight=1)   # content
+        self.grid_rowconfigure(0, weight=0)
+        self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        # Header / nav bar
+
         self.header = ctk.CTkFrame(self, fg_color=TDS_NAVY, height=56, corner_radius=0)
         self.header.grid(row=0, column=0, sticky="ew")
         self.header.grid_propagate(False)
@@ -55,7 +53,7 @@ class FieldSnekApp(ctk.CTk):
 
         logo_lbl = ctk.CTkLabel(
             self.header,
-            text="  🗺  FieldSnek",
+            text="    FieldSnek",
             font=ctk.CTkFont(family="Segoe UI", size=20, weight="bold"),
             text_color=TDS_WHITE,
         )
@@ -89,13 +87,13 @@ class FieldSnekApp(ctk.CTk):
             btn.pack(side="left", padx=4)
             self._nav_buttons[name] = btn
 
-        # Content area
+
         self.content = ctk.CTkFrame(self, fg_color=TDS_BG, corner_radius=0)
         self.content.grid(row=1, column=0, sticky="nsew")
         self.content.grid_rowconfigure(0, weight=1)
         self.content.grid_columnconfigure(0, weight=1)
 
-        # Instantiate views
+
         self.views = {
             "home":     HomeView(self.content, app=self),
             "results":  ResultsView(self.content, app=self),
@@ -104,7 +102,7 @@ class FieldSnekApp(ctk.CTk):
         for view in self.views.values():
             view.grid(row=0, column=0, sticky="nsew")
 
-    # ── Navigation ─────────────────────────────────────────────────────────
+
 
     def _show_view(self, name: str):
         self._current_view = name

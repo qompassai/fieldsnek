@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 gui/views/home.py — Route input view.
 
@@ -34,7 +33,6 @@ TDS_BG = '#111827'
 TDS_GREEN = '#22C55E'
 TDS_RED = '#EF4444'
 
-
 class HomeView(ctk.CTkFrame):
     def __init__(self, parent, app):
         super().__init__(parent, fg_color=TDS_BG, corner_radius=0)
@@ -50,7 +48,7 @@ class HomeView(ctk.CTkFrame):
         self.grid_columnconfigure(1, weight=2)
         self.grid_rowconfigure(0, weight=1)
 
-        # Left panel — address entry
+
         left = ctk.CTkFrame(self, fg_color=TDS_SURFACE, corner_radius=12)
         left.grid(row=0, column=0, padx=(16, 8), pady=16, sticky='nsew')
         left.grid_columnconfigure(0, weight=1)
@@ -106,7 +104,7 @@ class HomeView(ctk.CTkFrame):
 
         ctk.CTkButton(
             btn_row,
-            text='📂 Load File',
+            text=' Load File',
             width=120,
             height=32,
             fg_color='#243044',
@@ -117,7 +115,7 @@ class HomeView(ctk.CTkFrame):
 
         ctk.CTkButton(
             btn_row,
-            text='📍 My Location',
+            text=' My Location',
             width=120,
             height=32,
             fg_color='#243044',
@@ -128,7 +126,7 @@ class HomeView(ctk.CTkFrame):
 
         ctk.CTkButton(
             btn_row,
-            text='🗑 Clear',
+            text=' Clear',
             width=70,
             height=32,
             fg_color='#3B1A1A',
@@ -199,7 +197,7 @@ class HomeView(ctk.CTkFrame):
         ).pack(side='left', padx=(0, 6))
         ctk.CTkButton(
             reorder_frame,
-            text='✕ Remove',
+            text=' Remove',
             width=90,
             height=28,
             fg_color='#3B1A1A',
@@ -208,7 +206,7 @@ class HomeView(ctk.CTkFrame):
             command=self._remove_selected,
         ).pack(side='left')
 
-        # Right panel — options + solve
+
         right = ctk.CTkFrame(self, fg_color=TDS_SURFACE, corner_radius=12)
         right.grid(row=0, column=1, padx=(8, 16), pady=16, sticky='nsew')
         right.grid_columnconfigure(0, weight=1)
@@ -261,7 +259,7 @@ class HomeView(ctk.CTkFrame):
         )
         self.depot_menu.grid(row=1, column=1, sticky='w')
 
-        # Advanced toggle — row 2
+
         self._adv_open = tk.BooleanVar(value=False)
         adv_toggle = ctk.CTkButton(
             right,
@@ -277,7 +275,7 @@ class HomeView(ctk.CTkFrame):
         adv_toggle.grid(row=2, column=0, padx=16, pady=(2, 0), sticky='w')
         self._adv_toggle_btn = adv_toggle
 
-        # Advanced options frame (hidden by default) — row 3
+
         self._adv_frame = ctk.CTkFrame(right, fg_color='#1A2535', corner_radius=8)
         self._adv_frame.grid_columnconfigure(1, weight=1)
 
@@ -315,7 +313,7 @@ class HomeView(ctk.CTkFrame):
             text_color=TDS_WHITE,
         ).grid(row=1, column=1, sticky='w', pady=5, padx=(0, 12))
 
-        # Status label — sits below adv_toggle (shares row 2 space visually via pady)
+
         self._status_var = tk.StringVar(value='Add stops to get started.')
         ctk.CTkLabel(
             right,
@@ -325,17 +323,17 @@ class HomeView(ctk.CTkFrame):
             wraplength=440,
         ).grid(row=2, column=0, padx=20, pady=(12, 4), sticky='w')
 
-        # Progress bar — row 4 (clear of adv_frame at row 3)
+
         self.progress = ctk.CTkProgressBar(
             right, mode='indeterminate', progress_color=TDS_BLUE
         )
         self.progress.grid(row=4, column=0, padx=20, pady=4, sticky='ew')
         self.progress.set(0)
 
-        # Solve button — row 5
+
         self.solve_btn = ctk.CTkButton(
             right,
-            text='⚡  Optimize Route',
+            text='  Optimize Route',
             height=52,
             fg_color=TDS_ORANGE,
             hover_color='#D4541A',
@@ -346,11 +344,11 @@ class HomeView(ctk.CTkFrame):
         )
         self.solve_btn.grid(row=5, column=0, padx=20, pady=(12, 20), sticky='ew')
 
-        # Hint text — row 6
+
         ctk.CTkLabel(
             right,
             text=(
-                "Tip: Click '📍 My Location' to start from your current position.\n"
+                "Tip: Click ' My Location' to start from your current position.\n"
                 'Drag stops in the list to manually reorder before solving.\n'
                 'Delete key removes the selected stop.'
             ),
@@ -359,7 +357,7 @@ class HomeView(ctk.CTkFrame):
             justify='left',
         ).grid(row=6, column=0, padx=20, pady=0, sticky='w')
 
-    # ── Address list management ────────────────────────────────────────────
+
 
     def _on_voice_address(self, text: str):
         """Called when voice recognition returns a transcribed address."""
@@ -419,7 +417,7 @@ class HomeView(ctk.CTkFrame):
     def _on_location(self, loc):
         if loc:
             self.app.current_loc = loc
-            label = f'📍 {loc["lat"]:.4f}, {loc["lng"]:.4f}'
+            label = f' {loc["lat"]:.4f}, {loc["lng"]:.4f}'
             self.stop_listbox.insert(0, label)
             self._update_count()
             self._refresh_depot_menu()
@@ -585,19 +583,19 @@ class HomeView(ctk.CTkFrame):
 
         self.progress.stop()
         self.progress.set(1)
-        self.solve_btn.configure(state='normal', text='⚡  Optimize Route')
+        self.solve_btn.configure(state='normal', text='  Optimize Route')
 
         from core.exporter import format_duration
 
         dur = format_duration(result.total_duration_seconds)
         n = len(result.ordered_addresses)
-        self._status_var.set(f'✓ Route ready: {n} stops · {dur} estimated')
+        self._status_var.set(f' Route ready: {n} stops · {dur} estimated')
 
         self.app.navigate_to('results')
 
     def _on_solve_error(self, msg: str):
         self.progress.stop()
         self.progress.set(0)
-        self.solve_btn.configure(state='normal', text='⚡  Optimize Route')
+        self.solve_btn.configure(state='normal', text='  Optimize Route')
         self._status_var.set(f'Error: {msg}')
         messagebox.showerror('Route Error', msg)

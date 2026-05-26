@@ -43,20 +43,18 @@ from typing import Optional
 import numpy as np
 import pytest
 
-# ── Fixtures & helpers ─────────────────────────────────────────────────────
+
 
 @pytest.fixture
 def silence_audio() -> np.ndarray:
     """1 second of silence at 16 kHz int16."""
     return np.zeros(16_000, dtype=np.int16)
 
-
 @pytest.fixture
 def tone_audio() -> np.ndarray:
     """1 second of 440 Hz sine wave at 16 kHz int16 (≈ speech-level amplitude)."""
     t = np.linspace(0, 1.0, 16_000, endpoint=False)
     return (np.sin(2 * np.pi * 440 * t) * 8192).astype(np.int16)
-
 
 @pytest.fixture
 def sample_wav(tmp_path, tone_audio) -> str:
@@ -68,7 +66,6 @@ def sample_wav(tmp_path, tone_audio) -> str:
         wf.setframerate(16_000)
         wf.writeframes(tone_audio.tobytes())
     return p
-
 
 @pytest.fixture
 def mock_faster_whisper():
@@ -84,7 +81,6 @@ def mock_faster_whisper():
 
     with patch.dict("sys.modules", {"faster_whisper": MagicMock(WhisperModel=MagicMock(return_value=mock_model))}):
         yield mock_model
-
 
 @pytest.fixture
 def mock_sounddevice():
@@ -104,7 +100,6 @@ def mock_sounddevice():
         yield mock_sd
 
 
-# ── Unit: VoiceResult ──────────────────────────────────────────────────────
 
 class TestVoiceResult:
     def test_truthy_when_text_present(self):
@@ -129,7 +124,6 @@ class TestVoiceResult:
         assert bool(r) is False
 
 
-# ── Unit: RecordingState ───────────────────────────────────────────────────
 
 class TestRecordingState:
     def test_idle_by_default(self):
@@ -155,7 +149,6 @@ class TestRecordingState:
         assert "recording" in result.error.lower()
 
 
-# ── Unit: audio constants ──────────────────────────────────────────────────
 
 class TestAudioConstants:
     def test_sample_rate_is_16k(self):
@@ -171,7 +164,6 @@ class TestAudioConstants:
         assert 10 <= MAX_RECORD_S <= 300
 
 
-# ── Unit: device listing (sounddevice mocked) ──────────────────────────────
 
 class TestDeviceListing:
     def test_list_devices_returns_list(self, mock_sounddevice):
@@ -199,20 +191,19 @@ class TestDeviceListing:
                 sys.modules["sounddevice"] = saved
 
 
-# ── Unit: PipeWire node selection ─────────────────────────────────────────
 
 class TestPipeWireNodeSelection:
     def test_env_var_selects_device(self, mock_sounddevice, monkeypatch):
         monkeypatch.setenv("FIELDSNEK_PIPEWIRE_NODE", "FieldSnek Echo Cancel")
         from core.voice import _get_sounddevice_device
         idx = _get_sounddevice_device()
-        assert idx == 0  # first device in mock list matches
+        assert idx == 0
 
     def test_no_env_returns_none(self, mock_sounddevice, monkeypatch):
         monkeypatch.delenv("FIELDSNEK_PIPEWIRE_NODE", raising=False)
         from core.voice import _get_sounddevice_device
         idx = _get_sounddevice_device()
-        assert idx is None  # use system default
+        assert idx is None
 
     def test_unknown_node_returns_none(self, mock_sounddevice, monkeypatch):
         monkeypatch.setenv("FIELDSNEK_PIPEWIRE_NODE", "NonExistentDevice")
@@ -221,7 +212,6 @@ class TestPipeWireNodeSelection:
         assert idx is None
 
 
-# ── Unit: _transcribe() with mocked model ─────────────────────────────────
 
 class TestTranscribeUnit:
     def test_empty_audio_returns_error(self):
@@ -261,7 +251,7 @@ class TestTranscribeUnit:
         original = v._load_model
         try:
             v._load_model = MagicMock(side_effect=ImportError("faster-whisper not found"))
-            # Clear cache so _load_model is called
+
             v._model_cache.clear()
             result = v._transcribe(tone_audio)
             assert result.error is not None
@@ -270,7 +260,6 @@ class TestTranscribeUnit:
             v._model_cache.clear()
 
 
-# ── Unit: transcribe_file ──────────────────────────────────────────────────
 
 class TestTranscribeFile:
     def test_transcribes_wav_file(self, mock_faster_whisper, sample_wav):
@@ -284,7 +273,6 @@ class TestTranscribeFile:
         assert result.error is not None
 
 
-# ── Unit: async stop_and_transcribe ───────────────────────────────────────
 
 class TestAsyncTranscription:
     def test_callback_called(self, mock_faster_whisper, mock_sounddevice, tone_audio):
@@ -321,7 +309,6 @@ class TestAsyncTranscription:
         assert vr.state == RecordingState.IDLE
 
 
-# ── Unit: model path helpers ───────────────────────────────────────────────
 
 class TestModelPath:
     def test_default_model_env_var(self, monkeypatch):
@@ -337,7 +324,6 @@ class TestModelPath:
         assert "fieldsnek" in str(WHISPER_CACHE)
 
 
-# ── Integration tests (need real faster-whisper) ───────────────────────────
 
 @pytest.mark.integration
 class TestIntegration:
@@ -356,7 +342,7 @@ class TestIntegration:
     def test_transcribe_silence_returns_empty(self, silence_audio):
         from core.voice import _transcribe
         result = _transcribe(silence_audio, model_size="tiny")
-        # Silence may produce empty text or a noise segment — no crash
+
         assert isinstance(result.text, str)
 
     def test_transcribe_completes_in_reasonable_time(self, tone_audio):
@@ -364,7 +350,7 @@ class TestIntegration:
         start = time.monotonic()
         result = _transcribe(tone_audio, model_size="tiny")
         elapsed = time.monotonic() - start
-        # 1 second of audio with tiny model should complete within 30s even on slow CPU
+
         assert elapsed < 30.0, f"Transcription took {elapsed:.1f}s"
 
     def test_transcribe_file_wav(self, sample_wav):
@@ -374,12 +360,11 @@ class TestIntegration:
 
     def test_preload_model_does_not_crash(self):
         from core.voice import VoiceRecognizer
-        # Should complete without raising
+
         VoiceRecognizer.preload_model("tiny")
-        time.sleep(2)  # give background thread time
+        time.sleep(2)
 
 
-# ── Hardware tests (require real microphone) ──────────────────────────────
 
 @pytest.mark.hardware
 class TestHardware:
@@ -416,7 +401,6 @@ class TestHardware:
         assert result.error is None
 
 
-# ── conftest additions ─────────────────────────────────────────────────────
 
 def pytest_addoption(parser):
     """Register --hardware flag so hardware tests can be opted in."""
@@ -428,4 +412,4 @@ def pytest_addoption(parser):
             help="Run hardware tests (requires microphone)",
         )
     except ValueError:
-        pass  # already registered
+        pass

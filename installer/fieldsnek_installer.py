@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-#/qompassai/FieldSnek/installer/fieldsnek_installer.spec
 """
 FieldSnek — GUI Installer
 """
@@ -38,7 +36,6 @@ APP_ORG     = "TDS Telecom"
 IS_WINDOWS  = platform.system() == "Windows"
 IS_LINUX    = platform.system() == "Linux"
 
-
 def default_install_dir() -> str:
     if IS_WINDOWS:
         base = os.environ.get("LOCALAPPDATA", os.path.expanduser("~\\AppData\\Local"))
@@ -50,7 +47,6 @@ def desktop_dir() -> str:
         return os.path.join(os.path.expanduser("~"), "Desktop")
     xdg = os.environ.get("XDG_DESKTOP_DIR", "")
     return xdg if xdg else os.path.expanduser("~/Desktop")
-
 
 def source_root() -> pathlib.Path:
     """
@@ -64,7 +60,6 @@ def source_root() -> pathlib.Path:
 
 def requirements_path() -> pathlib.Path:
     return source_root() / "requirements.txt"
-
 
 class InstallerWorker:
     """Runs installation steps on a background thread."""
@@ -201,7 +196,6 @@ $Shortcut.Save()
             desk_file.write_text(desktop_entry)
             desk_file.chmod(desk_file.stat().st_mode | stat.S_IEXEC)
 
-
 class FieldSnekInstaller(ctk.CTk):
     PAGE_WELCOME  = 0
     PAGE_OPTIONS  = 1
@@ -230,14 +224,14 @@ class FieldSnekInstaller(ctk.CTk):
         self._show_page(self.PAGE_WELCOME)
 
     def _build(self):
-        # Header strip
+
         header = ctk.CTkFrame(self, fg_color=TDS_NAVY, corner_radius=0, height=72)
         header.pack(fill="x")
         header.pack_propagate(False)
 
         ctk.CTkLabel(
             header,
-            text=f"  🗺  {APP_NAME}",
+            text=f"    {APP_NAME}",
             font=ctk.CTkFont(size=26, weight="bold"),
             text_color=TDS_WHITE,
         ).pack(side="left", padx=20)
@@ -249,7 +243,7 @@ class FieldSnekInstaller(ctk.CTk):
             text_color="#9DB8D6",
         ).pack(side="left")
 
-        # Body — stacked pages (only one visible at a time)
+
         self.body = ctk.CTkFrame(self, fg_color=TDS_BG, corner_radius=0)
         self.body.pack(fill="both", expand=True)
 
@@ -430,7 +424,7 @@ class FieldSnekInstaller(ctk.CTk):
 
     def _build_done(self, p: ctk.CTkFrame):
         self._done_icon_lbl = ctk.CTkLabel(
-            p, text="✓",
+            p, text="",
             font=ctk.CTkFont(size=52),
             text_color=TDS_GREEN,
         )
@@ -456,7 +450,7 @@ class FieldSnekInstaller(ctk.CTk):
         btn_row.pack()
 
         self._launch_btn = ctk.CTkButton(
-            btn_row, text="🚀 Launch FieldSnek", width=180, height=44,
+            btn_row, text=" Launch FieldSnek", width=180, height=44,
             fg_color=TDS_ORANGE, hover_color="#D4541A",
             font=ctk.CTkFont(size=15, weight="bold"),
             text_color=TDS_WHITE,
@@ -532,7 +526,7 @@ class FieldSnekInstaller(ctk.CTk):
         self.after(0, lambda: self._show_done_error(msg))
 
     def _show_done_error(self, msg: str):
-        self._done_icon_lbl.configure(text="✗", text_color=TDS_RED)
+        self._done_icon_lbl.configure(text="", text_color=TDS_RED)
         self._done_title_lbl.configure(text="Installation Failed")
         self._done_body_lbl.configure(
             text=f"An error occurred during installation:\n\n{msg}\n\n"
@@ -565,7 +559,6 @@ class FieldSnekInstaller(ctk.CTk):
             messagebox.showerror("Launch Error", str(e))
             return
         self.quit()
-
 
 class UninstallHelper:
     """Removes FieldSnek from the machine. Run with --uninstall flag."""
@@ -600,7 +593,7 @@ class UninstallHelper:
         def _do_uninstall():
             try:
                 shutil.rmtree(install_dir, ignore_errors=True)
-                # Remove .desktop file on Linux
+
                 if IS_LINUX:
                     desk = pathlib.Path.home() / ".local/share/applications/fieldsnek.desktop"
                     desk.unlink(missing_ok=True)
@@ -624,7 +617,6 @@ class UninstallHelper:
         ).pack(side="left", padx=8)
 
         root.mainloop()
-
 
 if __name__ == "__main__":
     if "--uninstall" in sys.argv:

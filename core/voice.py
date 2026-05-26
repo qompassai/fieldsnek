@@ -48,26 +48,26 @@ from typing import Callable, Optional
 
 import numpy as np
 
-# ── Constants ──────────────────────────────────────────────────────────────
 
-SAMPLE_RATE    = 16_000   # Whisper expects 16 kHz mono
+
+SAMPLE_RATE    = 16_000
 CHANNELS       = 1
-SAMPLE_WIDTH   = 2        # int16 = 2 bytes
-CHUNK_FRAMES   = 1024     # frames per sounddevice callback (~64ms at 16kHz)
-SILENCE_THRESH = 0.01     # RMS below this → silence
-SILENCE_PAD_S  = 0.6      # seconds of silence to keep after speech ends
-MAX_RECORD_S   = 60       # hard cap on recording length
+SAMPLE_WIDTH   = 2
+CHUNK_FRAMES   = 1024
+SILENCE_THRESH = 0.01
+SILENCE_PAD_S  = 0.6
+MAX_RECORD_S   = 60
 
 WHISPER_CACHE  = pathlib.Path.home() / ".cache" / "fieldsnek" / "whisper"
 DEFAULT_MODEL  = os.getenv("FIELDSNEK_WHISPER_MODEL", "base")
 
-# ── Platform detection ─────────────────────────────────────────────────────
 
-_PLATFORM = platform.system()  # "Linux", "Windows", "Darwin"
+
+_PLATFORM = platform.system()
 if importlib.util.find_spec("android") is not None:
     _PLATFORM = "Android"
 
-# ── State ──────────────────────────────────────────────────────────────────
+
 
 class RecordingState(Enum):
     IDLE        = auto()
@@ -75,24 +75,21 @@ class RecordingState(Enum):
     PROCESSING  = auto()
     ERROR       = auto()
 
-
 @dataclass
 class VoiceResult:
     text:     str
     language: str
-    duration: float   # seconds of audio transcribed
-    elapsed:  float   # wall-clock seconds for transcription
+    duration: float
+    elapsed:  float
     error:    Optional[str] = None
 
     def __bool__(self):
         return self.error is None and bool(self.text.strip())
 
 
-# ── Model management ───────────────────────────────────────────────────────
 
 _model_lock   = threading.Lock()
 _model_cache: dict[str, object] = {}
-
 
 def _load_model(model_size: str = DEFAULT_MODEL):
     """
@@ -104,7 +101,7 @@ def _load_model(model_size: str = DEFAULT_MODEL):
             return _model_cache[model_size]
 
         try:
-            from faster_whisper import WhisperModel  # type: ignore
+            from faster_whisper import WhisperModel
         except ImportError as exc:
             raise ImportError(
                 "faster-whisper is not installed. "
@@ -114,7 +111,7 @@ def _load_model(model_size: str = DEFAULT_MODEL):
         WHISPER_CACHE.mkdir(parents=True, exist_ok=True)
 
         try:
-            import torch  # type: ignore
+            import torch
             device  = "cuda" if torch.cuda.is_available() else "cpu"
             compute = "float16" if device == "cuda" else "int8"
         except ImportError:
@@ -130,7 +127,6 @@ def _load_model(model_size: str = DEFAULT_MODEL):
         return model
 
 
-# ── Audio helpers ──────────────────────────────────────────────────────────
 
 def _resample(audio: np.ndarray, src_sr: int, dst_sr: int = SAMPLE_RATE) -> np.ndarray:
     """
@@ -148,7 +144,6 @@ def _resample(audio: np.ndarray, src_sr: int, dst_sr: int = SAMPLE_RATE) -> np.n
     return resampled.astype(np.int16)
 
 
-# ── Audio capture — desktop (sounddevice) ─────────────────────────────────
 
 def _get_sounddevice_device() -> Optional[int]:
     """
@@ -163,7 +158,7 @@ def _get_sounddevice_device() -> Optional[int]:
         return None
 
     try:
-        import sounddevice as sd  # type: ignore
+        import sounddevice as sd
         devices = sd.query_devices()
         for i, dev in enumerate(devices):
             if node_name.lower() in dev["name"].lower() and dev["max_input_channels"] > 0:
@@ -171,7 +166,6 @@ def _get_sounddevice_device() -> Optional[int]:
     except Exception:
         pass
     return None
-
 
 class _DesktopRecorder:
     """
@@ -187,7 +181,7 @@ class _DesktopRecorder:
         self._running = False
 
     def start(self):
-        import sounddevice as sd  # type: ignore
+        import sounddevice as sd
 
         device_idx = _get_sounddevice_device()
         self._chunks.clear()
@@ -228,7 +222,7 @@ class _DesktopRecorder:
     @staticmethod
     def list_devices() -> list[dict]:
         try:
-            import sounddevice as sd  # type: ignore
+            import sounddevice as sd
             devs = sd.query_devices()
             return [
                 {"index": i, "name": d["name"], "channels": d["max_input_channels"]}
@@ -239,7 +233,6 @@ class _DesktopRecorder:
             return []
 
 
-# ── Audio capture — Android ────────────────────────────────────────────────
 
 class _AndroidRecorder:
     """
@@ -253,8 +246,8 @@ class _AndroidRecorder:
         self._thread:  Optional[threading.Thread] = None
 
     def start(self):
-        from jnius import autoclass as jnius_autoclass  # type: ignore
-        from android.permissions import request_permissions, Permission  # type: ignore
+        from jnius import autoclass as jnius_autoclass
+        from android.permissions import request_permissions, Permission
 
         request_permissions([Permission.RECORD_AUDIO])
 
@@ -283,7 +276,7 @@ class _AndroidRecorder:
         self._thread.start()
 
     def _read_loop(self):
-        import jarray  # type: ignore
+        import jarray
         buf = jarray.array("b", [0] * self._buf_size)
         while self._running:
             n = self._ar.read(buf, 0, self._buf_size)
@@ -306,7 +299,6 @@ class _AndroidRecorder:
         return [{"index": 0, "name": "Android Microphone", "channels": 1}]
 
 
-# ── Transcription ──────────────────────────────────────────────────────────
 
 def _transcribe(
     audio: np.ndarray,
@@ -357,7 +349,6 @@ def _transcribe(
         )
 
 
-# ── Public API ─────────────────────────────────────────────────────────────
 
 class VoiceRecognizer:
     """
@@ -484,7 +475,6 @@ class VoiceRecognizer:
             self._auto_stop_timer = None
 
 
-# ── Convenience: one-shot transcribe from file ─────────────────────────────
 
 def transcribe_file(
     path: str,
@@ -494,7 +484,7 @@ def transcribe_file(
     """Transcribe a WAV/MP3/etc. audio file and return a VoiceResult."""
     try:
         try:
-            import soundfile as sf  # type: ignore
+            import soundfile as sf
             audio, sr = sf.read(path, dtype="int16", always_2d=False)
             audio = _resample(audio, sr)
         except ImportError:

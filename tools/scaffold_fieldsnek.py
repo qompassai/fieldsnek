@@ -1,7 +1,3 @@
-#!/usr/bin/env python3
-# NOTE: This is a one-time project bootstrapper. All files it would create
-# already exist with full implementations. Do not run this on an existing checkout.
-
 import os
 
 structure = {
@@ -106,17 +102,15 @@ OSRM_BASE_URL = os.getenv("OSRM_BASE_URL", "http://router.project-osrm.org")
     'build/.gitkeep': '',
 }
 
-
 def create_structure(base, files):
     for path, content in files.items():
         full_path = os.path.join(base, path)
         os.makedirs(os.path.dirname(full_path), exist_ok=True)
         if content is None:
-            continue  # skip binary placeholders
+            continue
         if not os.path.exists(full_path):
             with open(full_path, 'w') as f:
                 f.write(content)
-
 
 if __name__ == '__main__':
     base = os.getcwd()

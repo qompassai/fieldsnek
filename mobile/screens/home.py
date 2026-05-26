@@ -24,7 +24,7 @@ from kivy.clock import Clock
 from kivy.utils import get_color_from_hex
 from kivy.metrics import dp
 
-# ── Palette ───────────────────────────────────────────────────────────────
+
 C_SURFACE = get_color_from_hex('#1A2535ff')
 C_CARD = get_color_from_hex('#243044ff')
 C_BLUE = get_color_from_hex('#0057A8ff')
@@ -34,8 +34,6 @@ C_WHITE = get_color_from_hex('#FFFFFFff')
 C_GRAY = get_color_from_hex('#6B7280ff')
 C_RED = get_color_from_hex('#EF4444ff')
 
-
-# ── Widget helpers ─────────────────────────────────────────────────────────
 
 
 def _btn(text: str, bg=C_BLUE, **kw) -> Button:
@@ -50,8 +48,6 @@ def _btn(text: str, bg=C_BLUE, **kw) -> Button:
     )
 
 
-# ── HomeScreen ─────────────────────────────────────────────────────────────
-
 
 class HomeScreen(Screen):
     """
@@ -63,7 +59,7 @@ class HomeScreen(Screen):
         self._stop_list: list[str] = []
         self._build()
 
-    # ── Layout ─────────────────────────────────────────────────────────────
+
 
     def _build(self):
         root = BoxLayout(
@@ -73,7 +69,7 @@ class HomeScreen(Screen):
             size_hint=(1, 1),
         )
 
-        # ── Header ──
+
         header = BoxLayout(size_hint_y=None, height=dp(50))
         header.add_widget(
             Label(
@@ -83,14 +79,14 @@ class HomeScreen(Screen):
                 font_size=dp(16),
             )
         )
-        settings_btn = _btn('⚙', bg=C_NAVY, size_hint_x=None, width=dp(44))
+        settings_btn = _btn('', bg=C_NAVY, size_hint_x=None, width=dp(44))
         settings_btn.bind(
             on_release=lambda *_: App.get_running_app().navigate('settings')
         )
         header.add_widget(settings_btn)
         root.add_widget(header)
 
-        # ── Address entry ──
+
         entry_row = BoxLayout(size_hint_y=None, height=dp(48), spacing=dp(8))
         self.addr_input = TextInput(
             hint_text='Enter address (e.g. 123 Main St Spokane WA)',
@@ -109,22 +105,22 @@ class HomeScreen(Screen):
         add_btn.bind(on_release=lambda *_: self._add_address())
         entry_row.add_widget(add_btn)
 
-        mic_btn = _btn('🎤', size_hint_x=None, width=dp(44), bg=C_SURFACE)
+        mic_btn = _btn('', size_hint_x=None, width=dp(44), bg=C_SURFACE)
         mic_btn.bind(on_release=lambda *_: App.get_running_app().navigate('voice'))
         entry_row.add_widget(mic_btn)
         root.add_widget(entry_row)
 
-        # ── Quick-action bar ──
+
         actions = BoxLayout(size_hint_y=None, height=dp(44), spacing=dp(8))
-        loc_btn = _btn('📍 My Location', bg=C_SURFACE)
+        loc_btn = _btn(' My Location', bg=C_SURFACE)
         loc_btn.bind(on_release=lambda *_: self._use_location())
         actions.add_widget(loc_btn)
-        clr_btn = _btn('🗑 Clear', bg=C_RED)
+        clr_btn = _btn(' Clear', bg=C_RED)
         clr_btn.bind(on_release=lambda *_: self._clear())
         actions.add_widget(clr_btn)
         root.add_widget(actions)
 
-        # ── Scrollable stop list ──
+
         sv = ScrollView(size_hint=(1, 1))
         self.list_layout = BoxLayout(
             orientation='vertical',
@@ -136,7 +132,7 @@ class HomeScreen(Screen):
         sv.add_widget(self.list_layout)
         root.add_widget(sv)
 
-        # ── Options row ──
+
         opts = BoxLayout(size_hint_y=None, height=dp(44), spacing=dp(8))
         opts.add_widget(
             Label(text='Backend:', color=C_GRAY, size_hint_x=0.2, font_size=dp(13))
@@ -162,7 +158,7 @@ class HomeScreen(Screen):
         opts.add_widget(self.route_spinner)
         root.add_widget(opts)
 
-        # ── Status label ──
+
         self.status_lbl = Label(
             text='Add stops to get started.',
             color=C_GRAY,
@@ -172,12 +168,12 @@ class HomeScreen(Screen):
         )
         root.add_widget(self.status_lbl)
 
-        # ── Progress bar ──
+
         self.progress = ProgressBar(max=100, value=0, size_hint_y=None, height=dp(6))
         root.add_widget(self.progress)
 
-        # ── Solve button ──
-        self.solve_btn = _btn('⚡  Optimize Route', bg=C_ORANGE)
+
+        self.solve_btn = _btn('  Optimize Route', bg=C_ORANGE)
         self.solve_btn.font_size = dp(16)
         self.solve_btn.bold = True
         self.solve_btn.height = dp(54)
@@ -186,7 +182,7 @@ class HomeScreen(Screen):
 
         self.add_widget(root)
 
-    # ── Stop management ────────────────────────────────────────────────────
+
 
     def _add_address(self):
         addr = self.addr_input.text.strip()
@@ -209,7 +205,7 @@ class HomeScreen(Screen):
     def _on_loc(self, loc):
         if loc:
             App.get_running_app().current_loc = loc
-            label = f'📍 {loc["lat"]:.5f}, {loc["lng"]:.5f}'
+            label = f' {loc["lat"]:.5f}, {loc["lng"]:.5f}'
             self._stop_list.insert(0, label)
             self._refresh_list()
             self.status_lbl.text = 'Current location added as first stop.'
@@ -251,7 +247,7 @@ class HomeScreen(Screen):
                 )
             )
             del_btn = Button(
-                text='✕',
+                text='',
                 background_color=C_RED,
                 color=C_WHITE,
                 size_hint_x=None,
@@ -264,7 +260,7 @@ class HomeScreen(Screen):
         n = len(self._stop_list)
         self.status_lbl.text = f'{n} stop{"s" if n != 1 else ""}'
 
-    # ── Solve ──────────────────────────────────────────────────────────────
+
 
     def _start_solve(self):
         if len(self._stop_list) < 2:
@@ -330,15 +326,15 @@ class HomeScreen(Screen):
         from core.exporter import format_duration
 
         dur = format_duration(result.total_duration_seconds)
-        self.status_lbl.text = f'✓ {len(result.ordered_addresses)} stops · {dur}'
+        self.status_lbl.text = f' {len(result.ordered_addresses)} stops · {dur}'
         self.progress.value = 100
         self.solve_btn.disabled = False
-        self.solve_btn.text = '⚡  Optimize Route'
+        self.solve_btn.text = '  Optimize Route'
         App.get_running_app().navigate('results')
 
     def _on_error(self, msg: str):
         self.solve_btn.disabled = False
-        self.solve_btn.text = '⚡  Optimize Route'
+        self.solve_btn.text = '  Optimize Route'
         self.progress.value = 0
         self.status_lbl.text = f'Error: {msg}'
         self._popup('Route Error', msg)

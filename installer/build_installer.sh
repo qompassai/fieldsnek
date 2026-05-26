@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# /qompassai/FieldSnek/installer/build_installer.sh
 set -euo pipefail
 cd "$(dirname "$0")"
 echo "=== FieldSnek Installer Build ==="

@@ -12,21 +12,21 @@ Google Maps or ArcGIS FieldMaps.
 
 | Feature | Desktop | Android |
 |---|---|---|
-| Manual address entry | ✓ | ✓ |
-| CSV / Excel import | ✓ | – |
-| Current location as start | ✓ (IP) | ✓ (GPS) |
-| Drag-to-reorder stops | ✓ | ✓ (delete/add) |
+| Manual address entry |  |  |
+| CSV / Excel import |  | – |
+| Current location as start |  (IP) |  (GPS) |
+| Drag-to-reorder stops |  |  (delete/add) |
 | TSP route optimization | OR-Tools | Nearest-neighbor |
-| Distance backend: OSRM | ✓ | ✓ |
-| Distance backend: Google | ✓ (key) | ✓ (key) |
-| Street View preview | ✓ (key) | ✓ (key) |
-| Launch Google Maps | ✓ | ✓ |
-| Launch ArcGIS FieldMaps | ✓ | ✓ |
-| Launch Waze | ✓ | ✓ |
-| Add/remove stops after solve | ✓ | ✓ |
-| Re-optimize after edits | ✓ | ✓ |
-| CSV export | ✓ | – |
-| Voice address entry | ✓ | ✓ |
+| Distance backend: OSRM |  |  |
+| Distance backend: Google |  (key) |  (key) |
+| Street View preview |  (key) |  (key) |
+| Launch Google Maps |  |  |
+| Launch ArcGIS FieldMaps |  |  |
+| Launch Waze |  |  |
+| Add/remove stops after solve |  |  |
+| Re-optimize after edits |  |  |
+| CSV export |  | – |
+| Voice address entry |  |  |
 
 </details>
 

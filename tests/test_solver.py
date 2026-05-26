@@ -19,7 +19,6 @@ import pytest
 from core.solver import solve_tsp, solve_open_tsp, RouteResult, _scale_matrix
 
 
-# ── _scale_matrix ──────────────────────────────────────────────────────────
 
 class TestScaleMatrix:
     def test_no_scale(self):
@@ -31,12 +30,11 @@ class TestScaleMatrix:
         assert _scale_matrix(m, scale=60) == [[0, 60], [60, 0]]
 
     def test_truncation_not_rounding(self):
-        # int() truncates toward zero
+
         m = [[0, 299], [299, 0]]
         assert _scale_matrix(m, scale=60) == [[0, 4], [4, 0]]
 
 
-# ── solve_tsp ─────────────────────────────────────────────────────────────
 
 class TestSolveTSP:
     def test_happy_path(self, three_locations, three_matrix):
@@ -46,7 +44,7 @@ class TestSolveTSP:
 
     def test_visits_all_nodes(self, three_locations, three_matrix):
         result = solve_tsp(three_locations, three_matrix, time_limit_seconds=5)
-        # All 3 addresses must appear in the route (no drops on a trivial 3-node graph)
+
         addr_set = set(result.ordered_addresses)
         expected = {loc["address"] for loc in three_locations}
         assert addr_set == expected
@@ -94,7 +92,6 @@ class TestSolveTSP:
         assert result.ordered_addresses == ["Only Stop"]
 
 
-# ── Input validation ───────────────────────────────────────────────────────
 
 class TestSolveTSPValidation:
     def test_empty_locations_raises(self):
@@ -102,7 +99,7 @@ class TestSolveTSPValidation:
             solve_tsp([], [], time_limit_seconds=5)
 
     def test_matrix_shape_mismatch_raises(self, three_locations):
-        bad_matrix = [[0, 1], [1, 0]]  # 2×2 for 3 locations
+        bad_matrix = [[0, 1], [1, 0]]
         with pytest.raises(ValueError, match="Matrix shape"):
             solve_tsp(three_locations, bad_matrix, time_limit_seconds=5)
 
@@ -115,7 +112,6 @@ class TestSolveTSPValidation:
             solve_tsp(three_locations, three_matrix, depot_index=-1, time_limit_seconds=5)
 
 
-# ── solve_open_tsp ─────────────────────────────────────────────────────────
 
 class TestSolveOpenTSP:
     def test_returns_route_result(self, three_locations, three_matrix):
@@ -129,7 +125,7 @@ class TestSolveOpenTSP:
     def test_no_dummy_index(self, three_locations, three_matrix):
         n = len(three_locations)
         result = solve_open_tsp(three_locations, three_matrix, time_limit_seconds=5)
-        assert n not in result.ordered_indices  # dummy was index n
+        assert n not in result.ordered_indices
 
     def test_start_index(self, three_locations, three_matrix):
         result = solve_open_tsp(three_locations, three_matrix, start_index=1, time_limit_seconds=5)

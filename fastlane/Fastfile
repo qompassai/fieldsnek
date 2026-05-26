@@ -1,33 +1,9 @@
 default_platform(:android)
 
-# Play Developer API track names (per Google):
-#   production | beta | alpha | internal
-# The Play Console UI calls them:
-#   Production | Open testing | Closed testing | Internal testing
-# So lane :closed uploads to the API's `alpha` track (= Closed Testing).
-# If you've created a *custom* closed-testing track in Console (e.g.
-# "qompass-internal"), pass its exact name via the FASTLANE_TRACK env var.
-#
-# Pre-flight (required ONE TIME before any upload lane will work):
-#   1. Sign in to https://play.google.com/console as phaedrusflow
-#   2. Create app -> Application name = FieldSnek,
-#      Package name = com.qompassai.fieldsnek  (must match Appfile)
-#   3. Manually upload one signed AAB to Internal testing via the Console UI
-#      (this is what registers the package_name with the API; fastlane
-#      cannot create the app, only update it).
-#   4. Grant the fastlane service account Release permissions for FieldSnek
-#      under Users & permissions in Play Console.
-#   See fastlane/INIT.md for the full runbook.
-
 FIELDSNEK_PACKAGE         = "com.qompassai.fieldsnek"
 FIELDSNEK_BIN_DEFAULT     = "/var/tmp/buildozer/fieldsnek/bin"
 FIELDSNEK_VERSION_DEFAULT = "2.0.0"
 
-# Helper: resolve the AAB path. Buildozer names the file
-#   <package.name>-<version>-<archs>-release.aab
-# e.g. fieldsnek-2.0.0-arm64-v8a_armeabi-v7a-release.aab
-# Honors FIELDSNEK_AAB env override if set, else globs bin_dir for the
-# newest matching release AAB.
 def resolve_aab(root)
   override = ENV["FIELDSNEK_AAB"]
   return override if override && File.exist?(override)
@@ -38,8 +14,6 @@ def resolve_aab(root)
   matches.last
 end
 
-# Helper: build the AAB via buildozer unless FIELDSNEK_SKIP_BUILD=1
-# and a cached AAB is already on disk.
 def ensure_aab(root)
   existing = resolve_aab(root)
   if ENV["FIELDSNEK_SKIP_BUILD"] == "1" && existing && File.exist?(existing)
@@ -53,10 +27,6 @@ def ensure_aab(root)
   aab
 end
 
-# Helper: wrap upload_to_play_store with a friendly error when the Play
-# Console app hasn't been bootstrapped yet. The Play Developer API v3
-# cannot create new apps; fastlane only updates existing ones, so the
-# first AAB MUST be uploaded manually through the Console UI.
 def upload_with_bootstrap_hint(**opts)
   upload_to_play_store(**opts)
 rescue => e
@@ -123,7 +93,7 @@ platform :android do
   desc "Validate service-account credentials only (no build, no AAB needed)"
   lane :check_auth do
     json_key = File.expand_path(
-      "#{ENV['XDG_CONFIG_HOME'] || "#{ENV['HOME']}/.config"}/fastlane/google-play-fieldsnek.json"
+      "#{ENV['XDG_CONFIG_HOME'] || "
     )
     validate_play_store_json_key(json_key: json_key)
   end
