@@ -62,7 +62,11 @@ android.copy_libs            = 1
 android.hide_statusbar       = 0
 android.manifest.application_name = ONTrack
 android.category             = PRODUCTIVITY
-android.features             = android.hardware.location,android.hardware.location.gps
+# android.features was removed: p4a develop dropped the --feature CLI flag
+# (kivy/python-for-android, build.py on develop has no add_argument for it).
+# <uses-feature> nodes are now injected via the file below.
+# android.features           = android.hardware.location,android.hardware.location.gps
+android.extra_manifest_xml   = ./android_manifest_extras.xml
 android.accept_sdk_license   = True
 
 # AAB / Play target requirements:

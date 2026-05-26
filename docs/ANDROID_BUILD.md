@@ -315,6 +315,7 @@ the other forms are Console-only.
 | `Py_DEPRECATED(VERSION_UNUSED) __attribute__((__deprecated__))` during `toolchain create` | Mixing p4a `master` with Python 3.14, or running NDK r25 against Python 3.14 sources | Use Python 3.14 venv + `p4a.branch = develop` + NDK r29 as documented in §1–2 |
 | Build cache wedged after upgrading p4a | Stale `.buildozer/` | `./build.sh clean` |
 | `buildozer not found` from `build.sh` | Venv not activated or installed elsewhere | `source ~/venv_p4a_develop/bin/activate` (see §1) |
+| `python -m pythonforandroid.toolchain: error: unrecognized arguments: --feature ...` | p4a develop removed the `--feature` CLI flag; buildozer still emits it for any value in `android.features` | Don't use `android.features` — declare `<uses-feature>` nodes in `android_manifest_extras.xml` and reference it with `android.extra_manifest_xml = ./android_manifest_extras.xml`. Already configured in this branch. |
 
 ## Reference
 
