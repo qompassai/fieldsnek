@@ -34,18 +34,15 @@ Usage:
     vr.stop_and_transcribe_async(callback=lambda text, err: ...)
 """
 
-from __future__ import annotations
-
+import importlib.util
 import os
-import sys
 import time
 import queue
 import threading
 import platform
 import pathlib
-import tempfile
 import wave
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Callable, Optional
 
@@ -67,11 +64,8 @@ DEFAULT_MODEL  = os.getenv("ONTRACK_WHISPER_MODEL", "base")
 # ── Platform detection ─────────────────────────────────────────────────────
 
 _PLATFORM = platform.system()  # "Linux", "Windows", "Darwin"
-try:
-    import android  # type: ignore
+if importlib.util.find_spec("android") is not None:
     _PLATFORM = "Android"
-except ImportError:
-    pass
 
 # ── State ──────────────────────────────────────────────────────────────────
 
@@ -80,6 +74,7 @@ class RecordingState(Enum):
     RECORDING   = auto()
     PROCESSING  = auto()
     ERROR       = auto()
+
 
 @dataclass
 class VoiceResult:
@@ -92,10 +87,12 @@ class VoiceResult:
     def __bool__(self):
         return self.error is None and bool(self.text.strip())
 
+
 # ── Model management ───────────────────────────────────────────────────────
 
 _model_lock   = threading.Lock()
 _model_cache: dict[str, object] = {}
+
 
 def _load_model(model_size: str = DEFAULT_MODEL):
     """
@@ -108,19 +105,18 @@ def _load_model(model_size: str = DEFAULT_MODEL):
 
         try:
             from faster_whisper import WhisperModel  # type: ignore
-        except ImportError as e:
+        except ImportError as exc:
             raise ImportError(
                 "faster-whisper is not installed. "
                 "Run: pip install faster-whisper"
-            ) from e
+            ) from exc
 
         WHISPER_CACHE.mkdir(parents=True, exist_ok=True)
 
-        # Device selection: GPU if available, else CPU
         try:
             import torch  # type: ignore
-            device    = "cuda" if torch.cuda.is_available() else "cpu"
-            compute   = "float16" if device == "cuda" else "int8"
+            device  = "cuda" if torch.cuda.is_available() else "cpu"
+            compute = "float16" if device == "cuda" else "int8"
         except ImportError:
             device, compute = "cpu", "int8"
 
@@ -133,6 +129,25 @@ def _load_model(model_size: str = DEFAULT_MODEL):
         _model_cache[model_size] = model
         return model
 
+
+# ── Audio helpers ──────────────────────────────────────────────────────────
+
+def _resample(audio: np.ndarray, src_sr: int, dst_sr: int = SAMPLE_RATE) -> np.ndarray:
+    """
+    Resample int16 PCM from src_sr to dst_sr using linear interpolation.
+    Pure-numpy — no scipy required.
+    """
+    if src_sr == dst_sr:
+        return audio
+    num = int(len(audio) * dst_sr / src_sr)
+    resampled = np.interp(
+        np.linspace(0, len(audio), num),
+        np.arange(len(audio)),
+        audio.astype(np.float32),
+    )
+    return resampled.astype(np.int16)
+
+
 # ── Audio capture — desktop (sounddevice) ─────────────────────────────────
 
 def _get_sounddevice_device() -> Optional[int]:
@@ -141,12 +156,11 @@ def _get_sounddevice_device() -> Optional[int]:
 
     On Linux with PipeWire:
       - If ONTRACK_PIPEWIRE_NODE is set, find the device matching that name.
-        This lets WirePlumber route through its echo-cancel virtual source.
       - Otherwise use the system default (PipeWire's default source).
     """
     node_name = os.getenv("ONTRACK_PIPEWIRE_NODE", "")
     if not node_name:
-        return None  # use default
+        return None
 
     try:
         import sounddevice as sd  # type: ignore
@@ -179,17 +193,17 @@ class _DesktopRecorder:
         self._chunks.clear()
         self._running = True
 
-        def _cb(indata, frames, time_info, status):
+        def _cb(indata, _frames, _time_info, _status):
             if self._running:
                 self._q.put(indata.copy())
 
         self._stream = sd.InputStream(
-            samplerate  = SAMPLE_RATE,
-            channels    = CHANNELS,
-            dtype       = "int16",
-            blocksize   = CHUNK_FRAMES,
-            device      = device_idx,
-            callback    = _cb,
+            samplerate = SAMPLE_RATE,
+            channels   = CHANNELS,
+            dtype      = "int16",
+            blocksize  = CHUNK_FRAMES,
+            device     = device_idx,
+            callback   = _cb,
         )
         self._stream.start()
 
@@ -200,7 +214,6 @@ class _DesktopRecorder:
             self._stream.close()
             self._stream = None
 
-        # Drain the queue
         while not self._q.empty():
             try:
                 self._chunks.append(self._q.get_nowait())
@@ -210,8 +223,7 @@ class _DesktopRecorder:
         if not self._chunks:
             return np.zeros(0, dtype=np.int16)
 
-        audio = np.concatenate(self._chunks, axis=0).flatten()
-        return audio
+        return np.concatenate(self._chunks, axis=0).flatten()
 
     @staticmethod
     def list_devices() -> list[dict]:
@@ -241,14 +253,14 @@ class _AndroidRecorder:
         self._thread:  Optional[threading.Thread] = None
 
     def start(self):
-        from jnius import autoclass  # type: ignore
+        from jnius import autoclass as jnius_autoclass  # type: ignore
         from android.permissions import request_permissions, Permission  # type: ignore
 
         request_permissions([Permission.RECORD_AUDIO])
 
-        AudioRecord    = autoclass("android.media.AudioRecord")
-        AudioFormat    = autoclass("android.media.AudioFormat")
-        AudioSource    = autoclass("android.media.MediaRecorder$AudioSource")
+        AudioRecord = jnius_autoclass("android.media.AudioRecord")
+        AudioFormat = jnius_autoclass("android.media.AudioFormat")
+        AudioSource = jnius_autoclass("android.media.MediaRecorder$AudioSource")
 
         buf_size = AudioRecord.getMinBufferSize(
             SAMPLE_RATE,
@@ -271,7 +283,6 @@ class _AndroidRecorder:
         self._thread.start()
 
     def _read_loop(self):
-        from jnius import autoclass  # type: ignore
         import jarray  # type: ignore
         buf = jarray.array("b", [0] * self._buf_size)
         while self._running:
@@ -288,8 +299,7 @@ class _AndroidRecorder:
 
         if not self._chunks:
             return np.zeros(0, dtype=np.int16)
-        raw = b"".join(self._chunks)
-        return np.frombuffer(raw, dtype=np.int16)
+        return np.frombuffer(b"".join(self._chunks), dtype=np.int16)
 
     @staticmethod
     def list_devices() -> list[dict]:
@@ -316,14 +326,13 @@ def _transcribe(
 
     try:
         model = _load_model(model_size)
-        # faster-whisper expects float32 in [-1, 1]
         audio_f32 = audio.astype(np.float32) / 32768.0
 
         segments, info = model.transcribe(
             audio_f32,
-            language    = language,
-            beam_size   = 5,
-            vad_filter  = True,              # skip silence automatically
+            language       = language,
+            beam_size      = 5,
+            vad_filter     = True,
             vad_parameters = {
                 "min_silence_duration_ms": 300,
                 "speech_pad_ms": 200,
@@ -340,11 +349,11 @@ def _transcribe(
             elapsed  = elapsed,
         )
 
-    except Exception as e:
+    except Exception as exc:
         return VoiceResult(
             text="", language="", duration=duration,
             elapsed=time.monotonic() - t0,
-            error=str(e),
+            error=str(exc),
         )
 
 
@@ -383,9 +392,8 @@ class VoiceRecognizer:
         self.max_seconds = max_seconds
         self.state       = RecordingState.IDLE
 
-        # Choose recorder based on platform
         if _PLATFORM == "Android":
-            self._recorder = _AndroidRecorder()
+            self._recorder: _DesktopRecorder | _AndroidRecorder = _AndroidRecorder()
         else:
             self._recorder = _DesktopRecorder()
 
@@ -401,33 +409,24 @@ class VoiceRecognizer:
         self._audio = None
         self._recorder.start()
 
-        # Auto-stop after max_seconds
-        self._auto_stop_timer = threading.Timer(
-            self.max_seconds, self._auto_stop
-        )
+        self._auto_stop_timer = threading.Timer(self.max_seconds, self._auto_stop)
         self._auto_stop_timer.daemon = True
         self._auto_stop_timer.start()
 
     def stop_and_transcribe(self) -> VoiceResult:
-        """
-        Stop recording and block until transcription completes.
-        Returns a VoiceResult.
-        """
+        """Stop recording and block until transcription completes."""
         if self.state != RecordingState.RECORDING:
             return VoiceResult(text="", language="", duration=0.0, elapsed=0.0,
                                error="Not currently recording.")
 
         self._cancel_auto_stop()
         audio = self._recorder.stop()
-        self.state  = RecordingState.PROCESSING
+        self.state = RecordingState.PROCESSING
         result = _transcribe(audio, self.model_size, self.language)
-        self.state  = RecordingState.IDLE
+        self.state = RecordingState.IDLE
         return result
 
-    def stop_and_transcribe_async(
-        self,
-        callback: Callable[[VoiceResult], None],
-    ):
+    def stop_and_transcribe_async(self, callback: Callable[[VoiceResult], None]):
         """
         Stop recording; run transcription on a background thread.
         `callback(result)` is called when transcription completes.
@@ -497,17 +496,15 @@ def transcribe_file(
         try:
             import soundfile as sf  # type: ignore
             audio, sr = sf.read(path, dtype="int16", always_2d=False)
-            if sr != SAMPLE_RATE:
-                import scipy.signal as sps  # type: ignore
-                num = int(len(audio) * SAMPLE_RATE / sr)
-                audio = sps.resample(audio.astype(np.float32), num).astype(np.int16)
+            audio = _resample(audio, sr)
         except ImportError:
-            # Fallback: read raw WAV with stdlib
             with wave.open(path, "rb") as wf:
+                sr = wf.getframerate()
                 frames = wf.readframes(wf.getnframes())
                 audio = np.frombuffer(frames, dtype=np.int16)
-    except Exception as e:
+                audio = _resample(audio, sr)
+    except Exception as exc:
         return VoiceResult(text="", language="", duration=0.0, elapsed=0.0,
-                           error=str(e))
+                           error=str(exc))
 
     return _transcribe(audio, model_size, language)

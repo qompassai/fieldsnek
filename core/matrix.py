@@ -4,8 +4,9 @@ matrix.py — Distance matrix builder for OnTrack route optimization.
 Supports OSRM (default, free) and Google Maps Distance Matrix API.
 """
 
-import os
 import math
+import os
+
 import requests
 
 
@@ -43,22 +44,27 @@ def _osrm_matrix(
     return data['durations']
 
 
-
-
 def _google_matrix(locations: list[dict], api_key: str) -> list[list[float]]:
     """
     Build an NxN duration matrix (seconds) via Google Distance Matrix API.
+    Uses pre-geocoded lat/lng coordinates instead of address strings to avoid
+    a second server-side geocoding round-trip and canonical form mismatches.
     Batches in groups of 10 (API row/col limit).
     """
-    addrs = [p['address'] for p in locations]
-    n = len(addrs)
+    n = len(locations)
     matrix = [[0.0] * n for _ in range(n)]
     batch = 10
 
     for i in range(0, n, batch):
-        origins = '|'.join(addrs[i : i + batch])
+        origins = '|'.join(
+            f'{locations[i + ri]["lat"]},{locations[i + ri]["lng"]}'
+            for ri in range(min(batch, n - i))
+        )
         for j in range(0, n, batch):
-            dests = '|'.join(addrs[j : j + batch])
+            dests = '|'.join(
+                f'{locations[j + ci]["lat"]},{locations[j + ci]["lng"]}'
+                for ci in range(min(batch, n - j))
+            )
             resp = requests.get(
                 'https://maps.googleapis.com/maps/api/distancematrix/json',
                 params={'origins': origins, 'destinations': dests, 'key': api_key},
@@ -82,6 +88,7 @@ def _google_matrix(locations: list[dict], api_key: str) -> list[list[float]]:
                     )
                     matrix[i + ri][j + ci] = val
     return matrix
+
 
 def _haversine_matrix(locations: list[dict]) -> list[list[float]]:
     n = len(locations)
@@ -144,3 +151,4 @@ def build_distance_matrix(
         return _google_matrix(resolved, api_key=key)
 
     return _haversine_matrix(resolved)
+

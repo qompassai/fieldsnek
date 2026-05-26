@@ -2,22 +2,32 @@
 conftest.py — shared fixtures for OnTrack test suite.
 """
 
-import os
 import pathlib
+
 import pytest
 
-# ── Paths ──────────────────────────────────────────────────────────────────
 TESTS_DIR = pathlib.Path(__file__).parent
-SAMPLE_CSV = TESTS_DIR / "sample_addresses.csv"
+SAMPLE_CSV = TESTS_DIR / 'sample_addresses.csv'
 
 
-# ── Fixtures ───────────────────────────────────────────────────────────────
+def pytest_addoption(parser):
+    parser.addoption('--hardware', action='store_true', default=False)
+
+
+def pytest_collection_modifyitems(config, items):
+    if not config.getoption('--hardware'):
+        skip = pytest.mark.skip(reason='Pass --hardware to run')
+        for item in items:
+            if 'hardware' in item.keywords:
+                item.add_marker(skip)
+
 
 @pytest.fixture
 def sample_csv(tmp_path):
     """Copy sample CSV into a temp dir so tests that write don't corrupt it."""
     import shutil
-    dest = tmp_path / "addresses.csv"
+
+    dest = tmp_path / 'addresses.csv'
     shutil.copy(SAMPLE_CSV, dest)
     return str(dest)
 
@@ -25,9 +35,9 @@ def sample_csv(tmp_path):
 @pytest.fixture
 def three_addresses():
     return [
-        "123 Main St Spokane WA",
-        "456 Elm St Spokane WA",
-        "789 Oak Ave Spokane WA",
+        '123 Main St Spokane WA',
+        '456 Elm St Spokane WA',
+        '789 Oak Ave Spokane WA',
     ]
 
 
@@ -35,9 +45,9 @@ def three_addresses():
 def three_locations():
     """Pre-geocoded locations so network is never needed for solver/matrix tests."""
     return [
-        {"address": "123 Main St Spokane WA",   "lat": 47.6588, "lng": -117.4260},
-        {"address": "456 Elm St Spokane WA",    "lat": 47.6601, "lng": -117.4200},
-        {"address": "789 Oak Ave Spokane WA",   "lat": 47.6615, "lng": -117.4150},
+        {'address': '123 Main St Spokane WA', 'lat': 47.6588, 'lng': -117.4260},
+        {'address': '456 Elm St Spokane WA', 'lat': 47.6601, 'lng': -117.4200},
+        {'address': '789 Oak Ave Spokane WA', 'lat': 47.6615, 'lng': -117.4150},
     ]
 
 
@@ -45,9 +55,9 @@ def three_locations():
 def three_matrix():
     """Synthetic 3×3 duration matrix (seconds) matching three_locations."""
     return [
-        [0,   300, 600],
-        [300,   0, 350],
-        [600, 350,   0],
+        [0, 300, 600],
+        [300, 0, 350],
+        [600, 350, 0],
     ]
 
 
@@ -55,6 +65,6 @@ def three_matrix():
 def null_location_list():
     """Locations where geocoding failed (lat/lng = None)."""
     return [
-        {"address": "Nowhere Land",   "lat": None, "lng": None},
-        {"address": "Also Nowhere",   "lat": None, "lng": None},
+        {'address': 'Nowhere Land', 'lat': None, 'lng': None},
+        {'address': 'Also Nowhere', 'lat': None, 'lng': None},
     ]

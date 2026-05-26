@@ -11,8 +11,10 @@ a = Analysis(
     pathex=["."],
     binaries=[],
     datas=[
-        ("assets", "assets"),
-        ("config", "config"),
+    ("assets",  "assets"),
+    ("config",  "config"),
+    ("gui",     "gui"),
+    ("mobile",  "mobile"),
     ],
     hiddenimports=[
         "certifi",

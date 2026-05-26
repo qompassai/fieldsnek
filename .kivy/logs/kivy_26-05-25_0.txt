@@ -1,0 +1,259 @@
+[INFO   ] Logger: Record log in /home/phaedrus/.GH/Qompass/ONTrack/.kivy/logs/kivy_26-05-25_0.txt
+[DEBUG  ] Config: Upgrading from 0 to 1
+[WARNING] Config: Upgrading configuration in progress.
+[WARNING] Config: Older configuration version detected (0 instead of 29)
+[WARNING] Kivy: KIVY_DESKTOP_PATH_ID not set. If your application targets desktop platforms, set it to provide a user-friendly application name for directories. See https://kivy.org/doc/stable/guide/environment.html
+[INFO   ] Kivy: v3.0.0.dev0
+[INFO   ] Kivy: Installed at "/tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/__init__.py"
+[INFO   ] Python: v3.14.5 (main, May 10 2026, 18:26:20) [GCC 16.1.1 20260430]
+[INFO   ] Python: Interpreter at "/home/phaedrus/.GH/Qompass/ONTrack/.venv/bin/python"
+[INFO   ] Logger: Purge log fired. Processing...
+[INFO   ] Logger: Purge finished!
+[INFO   ] creating /tmp/tmpjt5whv1l/build/tmp/tmpjt5whv1l
+[INFO   ] clang -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O3 -Wall -march=x86-64 -mtune=generic -O3 -pipe -fno-plt -fexceptions -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security -fstack-clash-protection -fcf-protection -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -g -ffile-prefix-map=/build/python/src=/usr/src/debug/python -flto=auto -ffat-lto-objects -march=x86-64 -mtune=generic -O3 -pipe -fno-plt -fexceptions -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security -fstack-clash-protection -fcf-protection -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -g -ffile-prefix-map=/build/python/src=/usr/src/debug/python -flto=auto -march=x86-64 -mtune=generic -O3 -pipe -fno-plt -fexceptions -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security -fstack-clash-protection -fcf-protection -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -g -ffile-prefix-map=/build/python/src=/usr/src/debug/python -flto=auto -fPIC -I/home/phaedrus/.GH/Qompass/ONTrack/.venv/include -I/usr/include/python3.14 -c /tmp/tmpjt5whv1l/test.c -o /tmp/tmpjt5whv1l/build/tmp/tmpjt5whv1l/test.o
+[WARNING] stderr: /tmp/pip-build-env-ff2lrmnz/overlay/lib/python3.14/site-packages/setuptools/dist.py:765: SetuptoolsDeprecationWarning: License classifiers are deprecated.
+[WARNING] stderr: !!
+[WARNING] stderr: 
+[WARNING] stderr:         ********************************************************************************
+[WARNING] stderr:         Please consider removing the following classifiers in favor of a SPDX license expression:
+[WARNING] stderr: 
+[WARNING] stderr:         License :: OSI Approved :: MIT License
+[WARNING] stderr: 
+[WARNING] stderr:         See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+[WARNING] stderr:         ********************************************************************************
+[WARNING] stderr: 
+[WARNING] stderr: !!
+[WARNING] stderr:   self._finalize_license_expression()
+[INFO   ] running egg_info
+[INFO   ] creating Kivy.egg-info
+[INFO   ] writing Kivy.egg-info/PKG-INFO
+[INFO   ] writing dependency_links to Kivy.egg-info/dependency_links.txt
+[INFO   ] writing requirements to Kivy.egg-info/requires.txt
+[INFO   ] writing top-level names to Kivy.egg-info/top_level.txt
+[INFO   ] writing manifest file 'Kivy.egg-info/SOURCES.txt'
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/properties.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/_event.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/_metrics.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/_event.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vbo.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/buffer.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/cgl.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/include/gl_redirect.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vertex.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/context_instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/transformation.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/texture.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/compiler.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/shader.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/../_event.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/context_instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/transformation.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vbo.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/buffer.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/cgl.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/include/gl_redirect.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vertex.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/compiler.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/shader.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/texture.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/../_event.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/transformation.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vbo.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/buffer.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/cgl.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/include/gl_redirect.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vertex.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/context_instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/texture.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/compiler.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/shader.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/../_event.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/opcodes.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/transformation.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/context.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vbo.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/buffer.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/cgl.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/include/gl_redirect.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vertex.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/context_instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/texture.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/compiler.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/shader.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/../_event.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/opcodes.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/cgl.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/include/gl_redirect.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vbo.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/buffer.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vertex.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/context_instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/transformation.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/texture.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/compiler.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/shader.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/../_event.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/opcodes.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/cgl.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/include/gl_redirect.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/context.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vbo.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/buffer.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vertex.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/context_instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/transformation.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/texture.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/compiler.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/shader.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/../_event.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/cgl.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/include/gl_redirect.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/opengl_utils_def.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/cgl.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/include/gl_redirect.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/cgl.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/include/gl_redirect.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vertex.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/transformation.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/context.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vbo.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/buffer.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/context_instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/texture.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/compiler.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/shader.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/../_event.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/gl_debug_logger.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/opcodes.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/cgl.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/include/gl_redirect.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/gl_debug_logger.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vbo.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/buffer.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vertex.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/context_instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/transformation.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/texture.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/compiler.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/shader.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/../_event.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/opcodes.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/cgl.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/include/gl_redirect.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/opengl_utils_def.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/context.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vbo.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/buffer.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/cgl.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/include/gl_redirect.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vertex.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/context_instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/transformation.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/texture.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/compiler.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/shader.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/../_event.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/opengl_utils.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/img_tools.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/gl_debug_logger.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/context.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vbo.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/buffer.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/cgl.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/include/gl_redirect.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vertex.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/context_instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/transformation.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/texture.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/compiler.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/shader.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/../_event.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/gl_debug_logger.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/cgl.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/include/gl_redirect.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vbo.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/buffer.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/cgl.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/include/gl_redirect.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vertex.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/context_instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/transformation.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/texture.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/compiler.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/shader.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/../_event.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vertex_instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vertex_instructions_line.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/stencil_instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/cgl.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/include/gl_redirect.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/cgl.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/include/gl_redirect.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/cgl.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/include/gl_redirect.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/cgl.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/include/gl_redirect.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/cgl.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/include/gl_redirect.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/fbo.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/cgl.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/common.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/include/gl_redirect.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vbo.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/buffer.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vertex.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/context_instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/transformation.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/texture.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/compiler.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/shader.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/../_event.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/instructions.pyx won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/opcodes.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/context.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/graphics/vertex_instructions.pxd won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/lib/pango/pangoft2.pxi won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/lib/pango/pangoft2.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] dependency /tmp/pip-install-khkebofl/kivy_38c50964b3d14b65b23ab89d0baaeb1d/kivy/lib/gstplayer/_gstplayer.h won't be automatically included in the manifest: the path must be relative
+[INFO   ] reading manifest file 'Kivy.egg-info/SOURCES.txt'
+[INFO   ] reading manifest template 'MANIFEST.in'
+[WARNING] warning: no files found matching '*.txt' under directory 'kivy/tools'
+[WARNING] warning: no files found matching '*.bat' under directory 'kivy/tools'
+[WARNING] warning: no files found matching '*.pyd' under directory 'kivy'
+[WARNING] warning: no files found matching '*.m' under directory 'kivy'
+[INFO   ] adding license file 'LICENSE'
+[INFO   ] adding license file 'AUTHORS'
+[INFO   ] writing manifest file 'Kivy.egg-info/SOURCES.txt'

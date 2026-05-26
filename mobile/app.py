@@ -18,7 +18,6 @@ from mobile.screens.results import ResultsScreen
 from mobile.screens.settings import SettingsScreen
 from mobile.screens.voice import VoiceScreen
 
-# TDS brand colors
 C_NAVY = get_color_from_hex('#002855')
 C_BG = get_color_from_hex('#111827')
 C_BLUE = get_color_from_hex('#0057A8')
