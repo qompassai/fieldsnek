@@ -47,11 +47,46 @@ class VoiceScreen(Screen):
         self._build()
 
     def on_enter(self):
-        # Lazy-import to avoid loading whisper at app start
-        from core.voice import VoiceRecognizer, RecordingState
+        # Lazy-import to avoid loading whisper at app start.
+        # On Android builds, `faster-whisper`, `sounddevice`, and `numpy`
+        # are intentionally not bundled (no python-for-android recipe) — in
+        # that case we show an "unavailable" notice instead of crashing.
+        try:
+            from core.voice import VoiceRecognizer  # noqa: F401
+        except Exception as exc:  # ImportError, RuntimeError, jnius errors
+            self._voice_unavailable(str(exc))
+            return
+        from core.voice import VoiceRecognizer
         if self._recognizer is None:
             self._recognizer = VoiceRecognizer(model_size="base")
-            VoiceRecognizer.preload_model("base")
+            try:
+                VoiceRecognizer.preload_model("base")
+            except Exception:
+                # Preload is best-effort; model will load on demand.
+                pass
+
+    def _voice_unavailable(self, reason: str):
+        """Replace the screen content with a friendly 'unavailable' notice."""
+        self.clear_widgets()
+        box = BoxLayout(orientation="vertical", spacing=dp(12),
+                        padding=[dp(16), dp(24)])
+        box.add_widget(Label(
+            text="[b]Voice input unavailable[/b]", markup=True,
+            color=C_WHITE, font_size=dp(18), size_hint_y=None, height=dp(36),
+        ))
+        box.add_widget(Label(
+            text=("Speech-to-text isn't supported in this Android build. "
+                  "Use the keyboard to enter addresses, or install the "
+                  "desktop version to use Whisper.\n\n"
+                  f"Detail: {reason}"),
+            color=C_WHITE, font_size=dp(13), halign="center", valign="middle",
+            text_size=(None, None),
+        ))
+        back = Button(text="← Back", background_color=C_NAVY, color=C_WHITE,
+                      size_hint_y=None, height=dp(48))
+        back.bind(on_release=lambda *_: self._cancel())
+        box.add_widget(back)
+        self.add_widget(box)
 
     def _build(self):
         root = BoxLayout(orientation="vertical", spacing=dp(12),

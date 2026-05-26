@@ -13,9 +13,9 @@ Current location:
 
 import os
 import requests
-from geopy.geocoders import Nominatim
 
-geolocator = Nominatim(user_agent="ontrack-tds/1.0")
+NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
+USER_AGENT = "ontrack-tds/1.0 (matt@aflabs.io)"
 
 try:
     from android.permissions import request_permissions, Permission  # type: ignore
@@ -27,9 +27,24 @@ except ImportError:
 # ── Address geocoding ──────────────────────────────────────────────────────
 
 def geocode_address_nominatim(addr: str) -> dict:
-    loc = geolocator.geocode(addr)
-    if loc:
-        return {"address": addr, "lat": loc.latitude, "lng": loc.longitude}
+    """Geocode via OpenStreetMap Nominatim (no API key required)."""
+    try:
+        resp = requests.get(
+            NOMINATIM_URL,
+            params={"q": addr, "format": "json", "limit": 1},
+            headers={"User-Agent": USER_AGENT},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        results = resp.json()
+        if results:
+            return {
+                "address": addr,
+                "lat": float(results[0]["lat"]),
+                "lng": float(results[0]["lon"]),
+            }
+    except Exception:
+        pass
     return {"address": addr, "lat": None, "lng": None}
 
 

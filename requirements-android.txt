@@ -1,7 +1,16 @@
-kivy>=2.2.0
-requests>=2.28
-geopy>=2.3
-python-dotenv>=1.0
-Pillow>=9.0
-plyer>=2.1
-faster-whisper>=1.0
+# /qompassai/ONTrack/requirements-android.txt
+# Android-only pip requirements (mirrors `requirements =` in buildozer.spec).
+# Heavy desktop deps (faster-whisper, ctranslate2, ortools, sounddevice, pandas,
+# numpy, pyproj, shapely) are intentionally absent — they have no p4a recipe.
+android
+certifi
+chardet
+charset-normalizer
+idna
+kivy==2.3.0
+pillow
+plyer
+pyjnius
+python-dotenv
+requests
+urllib3
