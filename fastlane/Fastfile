@@ -1,111 +1,138 @@
+# frozen_string_literal: true
+
 default_platform(:android)
 
-
-ONTRACK_AAB_DEFAULT     = "crates/ontrack-mobile/android/app/build/outputs/bundle/release/app-release.aab"
-ONTRACK_SYMBOLS_DEFAULT = "crates/ontrack-mobile/android/app/build/outputs/native-debug-symbols/native-debug-symbols.zip"
-ONTRACK_PACKAGE         = "com.qompassai.ontrack"
+ONTRACK_AAB_DEFAULT =
+  'crates/ontrack-mobile/android/app/build/outputs/bundle/release/app-release.aab'.freeze
+ONTRACK_METADATA_ROOT = 'fastlane/metadata/android'.freeze
+ONTRACK_PACKAGE = 'ai.qompassai.ontrack'.freeze
+ONTRACK_SYMBOLS_DEFAULT =
+  'crates/ontrack-mobile/android/app/build/outputs/native-debug-symbols/' \
+  'native-debug-symbols.zip'.freeze
 
 def ensure_aab(root)
-  aab = ENV.fetch("ONTRACK_AAB", "#{root}/#{ONTRACK_AAB_DEFAULT}")
-  unless ENV["ONTRACK_SKIP_BUILD"] == "1" && File.exist?(aab)
-    sh("bash #{root}/scripts/build-android.sh")
+  aab = ENV.fetch('ONTRACK_AAB', "#{root}/#{ONTRACK_AAB_DEFAULT}")
+
+  unless ENV['ONTRACK_SKIP_BUILD'] == '1' && File.exist?(aab)
+    sh("bash #{root}/scripts/build-android-release.sh")
   end
+
   UI.user_error!("AAB still missing at #{aab} after build") unless File.exist?(aab)
+
   aab
 end
 
 def resolve_symbols(root)
-  zip = ENV.fetch("ONTRACK_SYMBOLS", "#{root}/#{ONTRACK_SYMBOLS_DEFAULT}")
+  zip = ENV.fetch('ONTRACK_SYMBOLS', "#{root}/#{ONTRACK_SYMBOLS_DEFAULT}")
   File.exist?(zip) ? zip : nil
+end
+
+def json_key_path
+  xdg = ENV['XDG_CONFIG_HOME'] || "#{ENV['HOME']}/.config"
+  File.expand_path("#{xdg}/fastlane/google-play-ontrack.json")
+end
+
+def bootstrap_error_messages(opts)
+  [
+    '===============================================================',
+    'Play Console app not bootstrapped yet.',
+    '',
+    'The Play Developer API cannot create apps. You must do a one-',
+    'time manual upload through the Console UI before fastlane can',
+    'push releases:',
+    '',
+    '  1. https://play.google.com/console  (sign in as phaedrusflow)',
+    "  2. Create app  ->  Package name: #{ONTRACK_PACKAGE}",
+    '  3. Testing -> Internal testing -> Create new release',
+    '  4. Upload the AAB that just built:',
+    "       #{opts[:aab]}",
+    '  5. Save the draft (no rollout required).',
+    '',
+    'Full runbook: fastlane/INIT.md',
+    '==============================================================='
+  ]
 end
 
 def upload_with_bootstrap_hint(**opts)
   upload_to_play_store(**opts)
-rescue => e
+rescue StandardError => e
   msg = e.message.to_s
-  if msg.include?("Package not found") || msg.include?("applicationNotFound")
-    UI.error  "==============================================================="
-    UI.error  "Play Console app not bootstrapped yet."
-    UI.error  ""
-    UI.error  "The Play Developer API cannot create apps. You must do a one-"
-    UI.error  "time manual upload through the Console UI before fastlane can"
-    UI.error  "push releases:"
-    UI.error  ""
-    UI.error  "  1. https://play.google.com/console  (sign in as phaedrusflow)"
-    UI.error  "  2. Create app  ->  Package name: #{ONTRACK_PACKAGE}"
-    UI.error  "  3. Testing -> Internal testing -> Create new release"
-    UI.error  "  4. Upload the AAB that just built:"
-    UI.error  "       #{opts[:aab]}"
-    UI.error  "  5. Save the draft (no rollout required)."
-    UI.error  ""
-    UI.error  "Full runbook: fastlane/INIT.md"
-    UI.error  "==============================================================="
+
+  if msg.include?('Package not found') || msg.include?('applicationNotFound')
+    bootstrap_error_messages(opts).each { |line| UI.error(line) }
   end
+
   raise
 end
 
 platform :android do
-  desc "Build ONTrack Android AAB and upload to Closed Testing (API track 'alpha')"
+  desc 'Build ONTrack Android AAB and upload to Closed Testing (API track alpha)'
   lane :closed do
-    root    = File.expand_path("..", __dir__)
-    aab     = ensure_aab(root)
+    root = File.expand_path('..', __dir__)
+    aab = ensure_aab(root)
     symbols = resolve_symbols(root)
+
     UI.message("native debug symbols: #{symbols || '(none found - skipping)'}")
 
     opts = {
       aab: aab,
-      track: ENV.fetch("FASTLANE_TRACK", "alpha"),
-      release_status: "draft",
-      skip_upload_metadata: true,
+      json_key: json_key_path,
+      release_status: 'draft',
+      skip_upload_apk: true,
       skip_upload_images: true,
+      skip_upload_metadata: true,
       skip_upload_screenshots: true,
-      skip_upload_apk: true
+      track: ENV.fetch('FASTLANE_TRACK', 'alpha')
     }
+
     opts[:mapping] = symbols if symbols
     upload_with_bootstrap_hint(**opts)
   end
 
-  desc "Build ONTrack Android AAB and upload to Internal testing (fastest review path)"
-  lane :internal do
-    root    = File.expand_path("..", __dir__)
-    aab     = ensure_aab(root)
-    symbols = resolve_symbols(root)
-    UI.message("native debug symbols: #{symbols || '(none found - skipping)'}")
-
-    opts = {
-      aab: aab,
-      track: "internal",
-      release_status: "draft",
-      skip_upload_metadata: true,
-      skip_upload_images: true,
-      skip_upload_screenshots: true,
-      skip_upload_apk: true
-    }
-    opts[:mapping] = symbols if symbols
-    upload_with_bootstrap_hint(**opts)
-  end
-
-  desc "Validate service-account credentials only (no build, no AAB needed)"
+  desc 'Validate service-account credentials only (no build, no AAB needed)'
   lane :check_auth do
-    json_key = File.expand_path(
-      "#{ENV['XDG_CONFIG_HOME'] || "#{ENV['HOME']}/.config"}/fastlane/google-play-ontrack.json"
-    )
-    validate_play_store_json_key(json_key: json_key)
+    validate_play_store_json_key(json_key: json_key_path)
   end
 
-  desc "Build + dry-run upload (validate_only). Builds AAB then asks Google to validate it."
+  desc 'Build ONTrack Android AAB and upload to Internal testing'
+  lane :internal do
+    root = File.expand_path('..', __dir__)
+    aab = ensure_aab(root)
+    symbols = resolve_symbols(root)
+
+    UI.message("native debug symbols: #{symbols || '(none found - skipping)'}")
+
+    opts = {
+      aab: aab,
+      json_key: json_key_path,
+      metadata_path: ONTRACK_METADATA_ROOT,
+      release_status: 'draft',
+      screenshots_path: ONTRACK_METADATA_ROOT,
+      skip_upload_apk: true,
+      skip_upload_images: false,
+      skip_upload_metadata: false,
+      skip_upload_screenshots: false,
+      track: 'internal'
+    }
+
+    opts[:mapping] = symbols if symbols
+    upload_with_bootstrap_hint(**opts)
+  end
+
+  desc 'Build + dry-run upload (validate_only)'
   lane :validate do
-    root = File.expand_path("..", __dir__)
-    aab  = ensure_aab(root)
+    root = File.expand_path('..', __dir__)
+    aab = ensure_aab(root)
 
     upload_with_bootstrap_hint(
       aab: aab,
-      track: "internal",
-      validate_only: true,
-      skip_upload_metadata: true,
+      json_key: json_key_path,
+      skip_upload_apk: true,
       skip_upload_images: true,
+      skip_upload_metadata: true,
       skip_upload_screenshots: true,
-      skip_upload_apk: true
+      track: 'internal',
+      validate_only: true
     )
   end
 end

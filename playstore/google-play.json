@@ -1,0 +1,65 @@
+// #################################################################
+// /qompassai/.GH/Qompass/ONTrack-rs/playstore/google-play.json
+// Qompass AI Google Play
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Qompass AI
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at:
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// #################################################################
+{
+  "packageName": "ai.qompass.ontrack",
+  "track": "production",
+  "rollout": {
+    "initialPercentage": 0.2,
+    "monitor": {
+      "crashRateThreshold": 1.0,
+      "anrRateThreshold": 0.7
+    }
+  },
+  "release": {
+    "versionCode": 42,
+    "versionName": "2.0.0",
+    "status": "draft",
+    "notes": [
+      "Initial public release of ONTrack.",
+      "Route optimization and field planning for fiber installs.",
+      "OSRM-based routing with optional Google Maps integration."
+    ]
+  },
+  "listing": {
+    "title": "ONTrack – Route Optimization",
+    "shortDescription": "Optimize routes and field work for fiber installs.",
+    "fullDescription": "ONTrack helps field technicians and planners optimize daily routes, visualize fiber install jobs, and reduce drive time.\n\nKey features:\n- Import job lists and addresses\n- Automatic route optimization\n- Map visualization with OSRM/Google Maps\n- Offline-friendly workflows",
+    "defaultLanguage": "en-US",
+    "category": "PRODUCTIVITY",
+    "contentRating": "Everyone"
+  },
+  "assets": {
+    "iconPath": "assets/icon.png",
+    "featureGraphicPath": "playstore/feature-graphic.png",
+    "phoneScreenshotsDir": "screenshots/android-phone",
+    "tablet7ScreenshotsDir": "screenshots/android-tablet7",
+    "tablet10ScreenshotsDir": "screenshots/android-tablet10"
+  },
+  "privacy": {
+    "privacyPolicyUrl": "https://qompass.ai/ontrack/privacy",
+    "dataSafety": {
+      "dataCollected": [
+        { "type": "Location", "purpose": "Routing", "shared": false },
+        { "type": "Crash logs", "purpose": "Diagnostics", "shared": false }
+      ],
+      "permissions": [
+        { "name": "ACCESS_FINE_LOCATION", "reason": "Route optimization and map centering" }
+      ]
+    }
+  }
+}

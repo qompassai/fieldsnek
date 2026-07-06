@@ -1,6 +1,6 @@
 # #################################################################
-# /qompassai/ontrack/.gitignore
-# Qompass AI ONTrack Git Ignore Config
+# /qompassai/ontrack/config/android-emulator/ontrack.toml
+# Qompass AI Ontrack Android Emulator Config
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Qompass AI
 #
@@ -15,48 +15,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # #################################################################
-.bundle/cache/
-.bundle/ruby/
-buildozer_debug.log
-Cargo.lock.bak
-docs/book/book/
-.DS_Store
-.env
-.env.*.local
-.env.local
-.gradle/
-.idea/
-.nvim.lua
-.vscode/
-*.iml
-*.ipr
-*.iws
-*.jks
-*.keystore
-*.log
-*.rs.bk
-*.swp
-*.swo
-.DS_Store
-.DS_Store
-*~
-**/.cxx/
-**/.gradle/
-**/.kotlin/
-**/app/build/
-**/build/
-**/target/
-fastlane.log
-fastlane/Preview.html
-fastlane/report.xml
-fastlane/screenshots/
-fastlane/test_output/
-fastlane/*.json
-google-play-*.json
-keystore.properties
-key.properties
-local.properties
-log.txt
-target/
-vendor/bundle/
-!.env.example
+[device.phone]
+avd_name = "Pixel_6_API_34"
+orientation = "portrait"
+screenshot_dir = "/screenshots/android-phone"
+
+[device.tablet7]
+avd_name = "Nexus_7_API_30"
+orientation = "portrait"
+screenshot_dir = "/screenshots/tablet7"
+
+[device.tablet10]
+avd_name = "Pixel_C_API_30"
+orientation = "portrait"
+screenshot_dir = "~/Screenshots/ONTrack/tablet10"

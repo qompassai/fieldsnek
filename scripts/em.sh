@@ -1,6 +1,7 @@
+#!/usr/bin/env bash
 # #################################################################
-# /qompassai/ontrack/.gitignore
-# Qompass AI ONTrack Git Ignore Config
+# /qompassai/.GH/Qompass/ONTrack-rs/scripts/em.sh
+# Qompass AI Em
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Qompass AI
 #
@@ -15,48 +16,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # #################################################################
-.bundle/cache/
-.bundle/ruby/
-buildozer_debug.log
-Cargo.lock.bak
-docs/book/book/
-.DS_Store
-.env
-.env.*.local
-.env.local
-.gradle/
-.idea/
-.nvim.lua
-.vscode/
-*.iml
-*.ipr
-*.iws
-*.jks
-*.keystore
-*.log
-*.rs.bk
-*.swp
-*.swo
-.DS_Store
-.DS_Store
-*~
-**/.cxx/
-**/.gradle/
-**/.kotlin/
-**/app/build/
-**/build/
-**/target/
-fastlane.log
-fastlane/Preview.html
-fastlane/report.xml
-fastlane/screenshots/
-fastlane/test_output/
-fastlane/*.json
-google-play-*.json
-keystore.properties
-key.properties
-local.properties
-log.txt
-target/
-vendor/bundle/
-!.env.example
+set -euo pipefail
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+CFG="$PROJECT_ROOT/config/android-emulator/ontrack.toml"
+APP_PACKAGE="ai.qompass.ontrack"
+
+AVD_NAME="Pixel_6_API_34"
+emulator -avd "$AVD_NAME" -netdelay none -netspeed full &
+adb wait-for-device
+adb install -r "$PROJECT_ROOT/target/aarch64-linux-android/release/ontrack.apk"
+adb exec-out screencap -p > "$PROJECT_ROOT/screenshots/android-phone/home.png"
