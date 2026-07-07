@@ -1,6 +1,6 @@
 # #################################################################
-# /qompassai/ontrack/.gitattributes
-# Qompass AI ONTrack GitAttributes
+# /qompassai/.GH/Qompass/ONTrack-rs/.jitpack.yml
+# Qompass AI Config
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Qompass AI
 #
@@ -15,34 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # #################################################################
-*      text=auto eol=lf
-
-*.sh   text eol=lf
-*.rb   text eol=lf
-Fastfile text eol=lf
-Appfile text eol=lf
-*.[bB][aA][tT] text eol=crlf
-*.[cC][mM][dD] text eol=crlf
-*.svg text
-*.bat   text eol=crlf
-*.kts   text eol=lf diff=kotlin
-*.java  text eol=lf diff=java
-*.kt    text eol=lf diff=kotlin
-*.png  binary
-*.jpg  binary
-*.jpeg binary
-*.gif  binary
-*.ico  binary
-*.zip  binary
-*.tar  binary
-*.gz   binary
-*.mp4  binary -delta
-
-# *.psd filter=lfs diff=lfs merge=lfs -text
-
-# *.md diff=markdown
-.gitattributes export-ignore
-.gitignore     export-ignore
-docs/book/book/** export-ignore
-fastlane/report.xml export-ignore
-docs/book/book/** -whitespace
+jdk:
+  - openjdk11
+install:
+  - echo "Jitpack is not supported. Use artifacts from Maven Central (https://search.maven.org/search?q=jadx), check usage help at https://github.com/skylot/jadx/wiki/Use-jadx-as-a-library"
+  - ./gradlew intentional-fail
