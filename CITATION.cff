@@ -1,15 +1,15 @@
 cff-version: 1.2.0
-title: "ONTrack-rs"
+title: "ontrack"
 message: "If you use this software, please cite it as below."
 authors:
   - family-names: "Porter"
     given-names: "Matthew A."
     orcid: "https://orcid.org/0000-0002-0302-4812"
     affiliation: "Qompass AI"
-version: "v2026-06-29"
-date-released: "2026-06-29"
-repository-code: "https://github.com/qompassai/ONTrack-rs"
-license: "Apache 2.0"
+version: "v2026-07-27"
+date-released: "2026-07-27"
+repository-code: "https://github.com/qompassai/ontrack"
+license: "Q-CDA-1.0"
 keywords:
   - AI
   - Education
@@ -19,4 +19,4 @@ keywords:
   - performance
   - rust
   - systems programming
-abstract: "Rust Based Route Optimization"
+abstract: ""
