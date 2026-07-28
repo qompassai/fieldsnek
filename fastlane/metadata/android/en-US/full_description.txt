@@ -1,0 +1,92 @@
+# #################################################################
+# /qompassai/.GH/Qompass/ONTrack-rs/fastlane/metadata/android/en-US/full_description.txt
+# Qompass AI Full Description
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Qompass AI
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at:
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# #################################################################
+ONTrack makes route planning simple. Addresses live in CSV files, text notes, dispatch sheets, spreadsheets, and field service lists. ONTrack brings them into one fast desktop app focused on route optimization, mapping, and export.
+
+Built in Rust and designed as a GUI-first route planner, ONTrack helps you turn a list of stops into a practical route you can review, adjust, and send to the tools you already use.
+
+Plan routes visually
+
+• Desktop GUI first: ONTrack includes a native desktop interface built for Windows, Linux, and macOS, so you can optimize routes from a full graphical app instead of relying only on terminal commands.
+
+• Route optimization: load a list of addresses and let ONTrack calculate a practical stop order for the day. It is designed for real multi-stop driving routes, not just simple point-to-point navigation.
+
+• Review before you go: inspect the optimized order, confirm stops, and export the result once it looks right.
+
+• Flexible inputs: import addresses from CSV files with an address column or from plain text files with one address per line.
+
+• Interactive workflows: whether you start with a prepared list or enter stops manually, ONTrack is built to fit the way real route planning happens.
+
+Open by default
+
+No API key is required to get useful results.
+
+• Nominatim for geocoding: by default, ONTrack uses OpenStreetMap's Nominatim service for address lookup.
+
+• OSRM for routing: distances can come from the public OSRM router, which means practical road-based routing without proprietary lock-in.
+
+• OSM tiles for previews: map previews use OpenStreetMap tiles when available.
+
+• Plain URL navigation: open the finished route in Google Maps without requiring a dedicated closed backend.
+
+If you want commercial backends, they are there when you need them.
+
+• Google backend support: provide GOOGLE_MAPS_API_KEY to enable Google geocoding, Google distance matrix routing, and Street View-related flows.
+
+• ArcGIS support: optionally use an ARCGIS_ITEM_ID for ArcGIS Online web map workflows and open the first stop in ArcGIS Field Maps.
+
+Fast Rust core
+
+The route engine is practical, fast, and written entirely in Rust.
+
+• Pure Rust solver: no C++ FFI, no OR-Tools dependency, and no heavyweight runtime bridge.
+
+• Default algorithm: Nearest-Neighbour seeded route construction followed by 2-opt local search. This gives near-optimal routes for typical field scenarios while staying fast.
+
+• Fast enough for real work: for typical field routes with up to around 50 stops, the default 2-opt workflow is designed to deliver near-optimal results quickly, with a greedy nearest-neighbour option available when speed matters more than quality.
+
+• Built for practical use: ONTrack is a strong fit for technicians, inspectors, field service teams, trainers on the road, and anyone planning multi-stop travel from plain address lists.
+
+Desktop-focused workflow
+
+ONTrack is positioned as a graphical desktop route optimizer, while still keeping a powerful Rust workspace underneath.
+
+• Easy import and export: bring in stop lists, optimize them, then export routes to CSV for records, handoff, or downstream processing.
+
+• Mapping integration: open optimized routes in Google Maps or hand off the first stop to ArcGIS Field Maps when needed.
+
+• Cross-platform builds: native binaries can be built for Linux, Windows, and macOS.
+
+• Portable deployment: ONTrack can also be built as a static Linux binary for self-contained distribution.
+
+Workspace architecture
+
+The codebase is split so the core logic remains reusable across interfaces.
+
+• ontrack-core: shared library for geocoding, distance matrix work, solving, parsing, config loading, and export features.
+
+• ontrack-cli: terminal binary for command-line workflows with progress bars and coloured output.
+
+• ontrack-gui: native desktop GUI built with egui.
+
+Private, portable, practical
+
+ONTrack does not require a Python runtime, a browser tab, or a heavy external solver stack to plan useful routes.
+
+It is a native Rust application for people who want route planning that is visual, scriptable when needed, fast, portable, and easy to ship as a real binary.
+
+Whether you are planning service calls, inspections, delivery runs, training visits, or personal multi-stop travel, ONTrack gives you a clean GUI for turning address lists into optimized routes.
