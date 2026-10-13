@@ -1,6 +1,7 @@
 # ontrack-rs — TDS Telecom Field Route Optimizer (Rust)
 
 Rust implementation of [OnTrack](../ontrack/README.md) — same features, faster binary, no Python runtime required.
+<a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License: Apache 2.0"></a>
 
 ---
 
@@ -190,3 +191,7 @@ ontrack-rs/
     ├── Cargo.toml
     └── src/main.rs             # egui three-panel desktop GUI
 ```
+
+## License
+
+This project is licensed under the [Apache License, Version 2.0](./LICENSE).
