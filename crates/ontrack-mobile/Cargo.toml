@@ -38,7 +38,7 @@ ndk-context      = { workspace = true }
 slint-build = { workspace = true }
 
 [package.metadata.android]
-package         = "com.qompassai.ontrack"
+package         = "com.qompassai.fieldsnek"
 build_targets   = ["aarch64-linux-android", "armv7-linux-androideabi"]
 runtime_libs    = "runtime_libs"
 resources       = "android/app/src/main/res"

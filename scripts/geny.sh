@@ -3,7 +3,7 @@
 # ----------------------------------------
 set -euo pipefail
 ROOT="$(pwd)"
-APP_ID="${APP_ID:-com.qompassai.ontrack}"
+APP_ID="${APP_ID:-com.qompassai.fieldsnek}"
 APK_PATH="${APK_PATH:-$ROOT/ontrack-mobile/android/app/build/outputs/apk/release/app-release.apk}"
 SCREENSHOT_DIR="${SCREENSHOT_DIR:-$ROOT/screenshots}"
 ADB_BIN="${ADB_BIN:-adb}"

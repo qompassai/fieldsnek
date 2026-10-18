@@ -25,7 +25,7 @@
 ```gradle
 android {
     defaultConfig {
-        applicationId "ai.qompass.ontrack"
+        applicationId "com.qompassai.fieldsnek"
         minSdk 24
         targetSdk 34
 

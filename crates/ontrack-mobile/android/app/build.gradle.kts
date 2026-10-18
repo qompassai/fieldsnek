@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace   = "com.qompassai.ontrack"
+    namespace   = "com.qompassai.fieldsnek"
     compileSdk  = 36
 
     val ndkHomeEnv: String? = System.getenv("ANDROID_NDK_HOME")
@@ -12,7 +12,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.qompassai.ontrack"
+        applicationId = "com.qompassai.fieldsnek"
         minSdk        = 26
         targetSdk     = 35
         versionCode   = 201
