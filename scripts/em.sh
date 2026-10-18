@@ -19,7 +19,7 @@
 set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CFG="$PROJECT_ROOT/config/android-emulator/ontrack.toml"
-APP_PACKAGE="ai.qompass.ontrack"
+APP_PACKAGE="com.qompassai.fieldsnek"
 
 AVD_NAME="Pixel_6_API_34"
 emulator -avd "$AVD_NAME" -netdelay none -netspeed full &

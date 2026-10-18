@@ -16,7 +16,7 @@
 // limitations under the License.
 // #################################################################
 {
-  "packageName": "ai.qompass.ontrack",
+  "packageName": "com.qompassai.fieldsnek",
   "track": "production",
   "rollout": {
     "initialPercentage": 0.2,

@@ -69,7 +69,7 @@ jarsigner -verify -verbose -certs app-release.aab
 emulator -avd Pixel_6_API_34 -netdelay none -netspeed full &
 
 adb wait-for-device
-adb shell monkey -p ai.qompass.ontrack -c android.intent.category.LAUNCHER 1
+adb shell monkey -p com.qompassai.fieldsnek -c android.intent.category.LAUNCHER 1
 
 adb exec-out screencap -p > screenshots/android-phone/home.png
 ```
@@ -192,7 +192,7 @@ rollout:
 - Script to quickly pull crash/ANR info (example for your own dashboard):
 
 ```bash
-play_console_export.sh --app ai.qompass.ontrack --out reports/play_vitals.json
+play_console_export.sh --app com.qompassai.fieldsnek --out reports/play_vitals.json
 ```
 
 - Keep a simple changelog file for each release:
