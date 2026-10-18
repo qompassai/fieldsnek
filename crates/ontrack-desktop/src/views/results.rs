@@ -52,7 +52,8 @@ pub fn ui(app: &mut OnTrackApp, ui: &mut egui::Ui) {
                 if let Some(loc) = loc {
                     if let (Some(la), Some(ln)) = (loc.lat, loc.lng) {
                         if ui.button("Maps").clicked() {
-                            let url = ontrack_core::exporter::build_maps_url(&vec![addr.clone()]);
+                            let url =
+                                ontrack_core::exporter::build_maps_url(std::slice::from_ref(addr));
                             ui.output_mut(|o| o.copied_text = url);
                         }
                         if ui.button("FieldMaps").clicked() {

@@ -40,6 +40,6 @@ fn csv_export_roundtrip() {
 
 #[test]
 fn maps_url_single_stop_smoke() {
-    let url = build_maps_url(&vec!["123 Main".to_string()]);
+    let url = build_maps_url(&["123 Main".to_string()]);
     assert!(url.contains("destination=123"));
 }

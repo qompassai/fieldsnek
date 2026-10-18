@@ -39,10 +39,7 @@ pub fn build_maps_url(ordered_addresses: &[String]) -> String {
 }
 
 pub fn build_maps_url_chunked(ordered_addresses: &[String]) -> Vec<String> {
-    ordered_addresses
-        .chunks(10)
-        .map(|chunk| build_maps_url(&chunk.to_vec()))
-        .collect()
+    ordered_addresses.chunks(10).map(build_maps_url).collect()
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -133,7 +130,7 @@ mod tests {
 
     #[test]
     fn single_destination_url() {
-        let url = build_maps_url(&vec!["123 Main St".to_string()]);
+        let url = build_maps_url(&["123 Main St".to_string()]);
         assert!(
             url.contains("destination=123%20Main%20St")
                 || url.contains("destination=123+Main+St")

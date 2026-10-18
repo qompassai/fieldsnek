@@ -12,16 +12,11 @@ pub struct RouteResult {
     pub backend_used: String,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum SolverBackend {
     NearestNeighbor,
+    #[default]
     NearestNeighborTwoOpt,
-}
-
-impl Default for SolverBackend {
-    fn default() -> Self {
-        Self::NearestNeighborTwoOpt
-    }
 }
 
 #[derive(Debug, Clone)]
@@ -69,7 +64,7 @@ fn nearest_neighbor(matrix: &[Vec<f64>], start: usize) -> Vec<usize> {
     order
 }
 
-fn two_opt(matrix: &[Vec<f64>], order: &mut Vec<usize>, max_passes: usize) {
+fn two_opt(matrix: &[Vec<f64>], order: &mut [usize], max_passes: usize) {
     let n = order.len();
     if n < 4 {
         return;
