@@ -1,4 +1,3 @@
-
 use anyhow::{anyhow, Result};
 use reqwest::blocking::Client;
 use serde::Deserialize;
@@ -31,8 +30,7 @@ pub fn haversine(lat1: f64, lng1: f64, lat2: f64, lng2: f64) -> f64 {
     let phi2 = lat2.to_radians();
     let dphi = (lat2 - lat1).to_radians();
     let dlam = (lng2 - lng1).to_radians();
-    let a = (dphi / 2.0).sin().powi(2)
-        + phi1.cos() * phi2.cos() * (dlam / 2.0).sin().powi(2);
+    let a = (dphi / 2.0).sin().powi(2) + phi1.cos() * phi2.cos() * (dlam / 2.0).sin().powi(2);
     r * 2.0 * a.sqrt().asin()
 }
 
@@ -43,7 +41,6 @@ fn http_client() -> Result<Client> {
         .build()
         .map_err(|e| anyhow!("http client build: {e}"))
 }
-
 
 #[derive(Deserialize)]
 struct OsrmResp {
@@ -76,7 +73,6 @@ fn osrm_matrix(locations: &[&Location], base_url: &str) -> Result<Vec<Vec<f64>>>
     resp.durations
         .ok_or_else(|| anyhow!("OSRM response missing durations"))
 }
-
 
 #[derive(Deserialize)]
 struct GoogleResp {
@@ -121,7 +117,11 @@ fn google_matrix(locations: &[&Location], api_key: &str) -> Result<Vec<Vec<f64>>
 
             let resp: GoogleResp = http_client()?
                 .get("https://maps.googleapis.com/maps/api/distancematrix/json")
-                .query(&[("origins", &origins), ("destinations", &dests), ("key", &api_key.to_string())])
+                .query(&[
+                    ("origins", &origins),
+                    ("destinations", &dests),
+                    ("key", &api_key.to_string()),
+                ])
                 .send()?
                 .error_for_status()?
                 .json()?;

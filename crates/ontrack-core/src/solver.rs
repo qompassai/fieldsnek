@@ -1,4 +1,3 @@
-
 use anyhow::{anyhow, Result};
 use serde::{Deserialize, Serialize};
 
@@ -43,10 +42,7 @@ impl Default for SolverConfig {
 }
 
 fn route_cost(matrix: &[Vec<f64>], order: &[usize]) -> f64 {
-    order
-        .windows(2)
-        .map(|w| matrix[w[0]][w[1]])
-        .sum()
+    order.windows(2).map(|w| matrix[w[0]][w[1]]).sum()
 }
 
 fn nearest_neighbor(matrix: &[Vec<f64>], start: usize) -> Vec<usize> {
@@ -184,7 +180,11 @@ pub fn solve_open_tsp(
 mod tests {
     use super::*;
     fn loc(addr: &str) -> Location {
-        Location { address: addr.to_string(), lat: Some(0.0), lng: Some(0.0) }
+        Location {
+            address: addr.to_string(),
+            lat: Some(0.0),
+            lng: Some(0.0),
+        }
     }
 
     #[test]
@@ -209,7 +209,10 @@ mod tests {
             vec![2.0, 1.0, 0.0, 1.0],
             vec![1.0, 2.0, 1.0, 0.0],
         ];
-        let cfg_nn = SolverConfig { backend: SolverBackend::NearestNeighbor, ..Default::default() };
+        let cfg_nn = SolverConfig {
+            backend: SolverBackend::NearestNeighbor,
+            ..Default::default()
+        };
         let cfg_opt = SolverConfig::default();
         let r_nn = solve_tsp(&locs, &matrix, cfg_nn).unwrap();
         let r_opt = solve_tsp(&locs, &matrix, cfg_opt).unwrap();

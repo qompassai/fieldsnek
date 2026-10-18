@@ -20,7 +20,10 @@ fn fieldmaps_url_includes_item_id_when_present() {
 #[test]
 fn waze_url_format() {
     let url = build_waze_url(47.6, -117.4);
-    assert_eq!(url, "https://waze.com/ul?ll=47.6,-117.4&navigate=yes&zoom=17");
+    assert_eq!(
+        url,
+        "https://waze.com/ul?ll=47.6,-117.4&navigate=yes&zoom=17"
+    );
 }
 
 #[test]

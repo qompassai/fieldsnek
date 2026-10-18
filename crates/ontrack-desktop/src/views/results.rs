@@ -1,4 +1,3 @@
-
 use eframe::egui;
 
 use crate::app::OnTrackApp;
@@ -49,10 +48,7 @@ pub fn ui(app: &mut OnTrackApp, ui: &mut egui::Ui) {
             ui.horizontal(|ui| {
                 ui.label(format!("{:>2}.", i + 1));
                 ui.label(addr);
-                let loc = locations
-                    .iter()
-                    .find(|l| l.address == *addr)
-                    .cloned();
+                let loc = locations.iter().find(|l| l.address == *addr).cloned();
                 if let Some(loc) = loc {
                     if let (Some(la), Some(ln)) = (loc.lat, loc.lng) {
                         if ui.button("Maps").clicked() {
