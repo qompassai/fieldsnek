@@ -4,6 +4,7 @@ use std::fs;
 use std::path::PathBuf;
 
 use eframe::egui;
+use ontrack_core::solver::SolverBackend;
 
 use crate::app::OnTrackApp;
 
@@ -41,6 +42,43 @@ pub fn ui(app: &mut OnTrackApp, ui: &mut egui::Ui) {
             );
             ui.end_row();
         });
+
+    ui.add_space(12.0);
+    ui.heading("Route solver");
+    ui.add_space(8.0);
+
+    egui::Grid::new("solver_grid")
+        .num_columns(2)
+        .spacing([8.0, 6.0])
+        .show(ui, |ui| {
+            ui.label("Solver backend:");
+            egui::ComboBox::from_id_salt("solver_backend_combo")
+                .selected_text(match app.solver_backend {
+                    SolverBackend::NearestNeighbor => "Nearest neighbor",
+                    SolverBackend::NearestNeighborTwoOpt => "Nearest neighbor + 2-opt",
+                })
+                .show_ui(ui, |ui| {
+                    ui.selectable_value(
+                        &mut app.solver_backend,
+                        SolverBackend::NearestNeighbor,
+                        "Nearest neighbor",
+                    );
+                    ui.selectable_value(
+                        &mut app.solver_backend,
+                        SolverBackend::NearestNeighborTwoOpt,
+                        "Nearest neighbor + 2-opt",
+                    );
+                });
+            ui.end_row();
+
+            ui.label("2-opt passes:");
+            ui.add(egui::DragValue::new(&mut app.two_opt_passes).range(0..=500));
+            ui.end_row();
+        });
+
+    ui.add_space(4.0);
+    ui.checkbox(&mut app.return_to_start, "Return to start (closed loop)");
+    ui.label("Unchecked: the route ends at the last stop instead of returning to the depot.");
 
     ui.add_space(8.0);
     #[cfg(not(target_arch = "wasm32"))]

@@ -2,7 +2,7 @@ use eframe::{egui, App, CreationContext, Frame};
 use ontrack_core::config::Settings;
 use ontrack_core::geocoder::Location;
 use ontrack_core::matrix::Backend;
-use ontrack_core::solver::RouteResult;
+use ontrack_core::solver::{RouteResult, SolverBackend, SolverConfig};
 use std::sync::{Arc, Mutex};
 #[cfg(not(target_arch = "wasm32"))]
 use std::thread;
@@ -37,6 +37,9 @@ pub struct OnTrackApp {
     pub address_input: String,
     pub backend: Backend,
     pub use_google: bool,
+    pub solver_backend: SolverBackend,
+    pub two_opt_passes: usize,
+    pub return_to_start: bool,
     pub settings: Settings,
     pub worker: Arc<Mutex<WorkerState>>,
 }
@@ -49,6 +52,9 @@ impl OnTrackApp {
             address_input: String::new(),
             backend: Backend::Osrm,
             use_google: false,
+            solver_backend: SolverBackend::default(),
+            two_opt_passes: SolverConfig::default().two_opt_passes,
+            return_to_start: true,
             settings: Settings::from_env(),
             worker: Arc::new(Mutex::new(WorkerState::default())),
         }
@@ -59,6 +65,12 @@ impl OnTrackApp {
         let backend = self.backend;
         let use_google = self.use_google;
         let settings = self.settings.clone();
+        let solver_cfg = SolverConfig {
+            depot_index: 0,
+            two_opt_passes: self.two_opt_passes,
+            backend: self.solver_backend,
+        };
+        let return_to_start = self.return_to_start;
         let worker = self.worker.clone();
 
         {
@@ -120,8 +132,12 @@ impl OnTrackApp {
 
             let resolved: Vec<Location> =
                 locs.iter().filter(|l| l.is_resolved()).cloned().collect();
-            let cfg = ontrack_core::solver::SolverConfig::default();
-            match ontrack_core::solver::solve_tsp(&resolved, &matrix, cfg) {
+            let solved = if return_to_start {
+                ontrack_core::solver::solve_tsp(&resolved, &matrix, solver_cfg)
+            } else {
+                ontrack_core::solver::solve_open_tsp(&resolved, &matrix, solver_cfg)
+            };
+            match solved {
                 Ok(r) => {
                     let mut w = worker.lock().unwrap();
                     w.busy = false;
@@ -192,8 +208,12 @@ impl OnTrackApp {
 
             let resolved: Vec<Location> =
                 locs.iter().filter(|l| l.is_resolved()).cloned().collect();
-            let cfg = ontrack_core::solver::SolverConfig::default();
-            match ontrack_core::solver::solve_tsp(&resolved, &matrix, cfg) {
+            let solved = if return_to_start {
+                ontrack_core::solver::solve_tsp(&resolved, &matrix, solver_cfg)
+            } else {
+                ontrack_core::solver::solve_open_tsp(&resolved, &matrix, solver_cfg)
+            };
+            match solved {
                 Ok(r) => {
                     let mut w = worker.lock().unwrap();
                     w.busy = false;
