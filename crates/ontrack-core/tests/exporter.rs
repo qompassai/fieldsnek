@@ -1,5 +1,6 @@
 use ontrack_core::{
     build_fieldmaps_url, build_maps_url, build_maps_url_chunked, build_waze_url, export_csv,
+    route_csv_string,
 };
 use std::fs;
 
@@ -42,4 +43,19 @@ fn csv_export_roundtrip() {
 fn maps_url_single_stop_smoke() {
     let url = build_maps_url(&["123 Main".to_string()]);
     assert!(url.contains("destination=123"));
+}
+
+#[test]
+fn route_csv_string_matches_export_csv() {
+    let stops = vec!["123 Main".to_string(), "456 \"Elm\" St, Apt 2".to_string()];
+    let path = std::env::temp_dir().join("ontrack-rs-test-string.csv");
+    export_csv(&stops, &path).unwrap();
+    let body = fs::read_to_string(&path).unwrap();
+    assert_eq!(body, route_csv_string(&stops));
+    fs::remove_file(&path).ok();
+}
+
+#[test]
+fn route_csv_string_empty_is_header_only() {
+    assert_eq!(route_csv_string(&[]), "stop,address\n");
 }
