@@ -60,3 +60,6 @@ log.txt
 target/
 vendor/bundle/
 !.env.example
+
+# Trunk web bundle output (see docs/WEB.md)
+dist/
